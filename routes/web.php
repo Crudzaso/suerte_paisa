@@ -24,6 +24,6 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::post('usuarios', [UserController::class, 'store'])->name('usuarios.store'); 
     Route::get('pruebalayout', function(){
         return view('layouts.component-layout');
-    });
+    })->name('usuarios.layouts'); 
 });
 

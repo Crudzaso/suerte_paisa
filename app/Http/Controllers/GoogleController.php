@@ -45,7 +45,7 @@ class GoogleController extends Controller
                 $this->sendMessageToDiscord("Nuevo registro a través de Google: {$user->email} en {$dateTime}");
             }
 
-            return redirect()->route('usuarios.index')->with('success', 'Has iniciado sesión correctamente');
+            return redirect()->route('usuarios.layouts')->with('success', 'Has iniciado sesión correctamente');
         } catch (\Exception $e) {
             \Log::error('Google login error:', ['message' => $e->getMessage()]);
             return redirect()->route('auth.google')->with('error', 'Error al iniciar sesión con Google.');
