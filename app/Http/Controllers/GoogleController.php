@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\RegistroExitoso;
 
 class GoogleController extends Controller
 {
@@ -42,6 +44,9 @@ class GoogleController extends Controller
                 ]);
 
                 Auth::login($user);
+
+                $this->sendEmail($user);
+
                 $this->sendMessageToDiscord("Nuevo registro a través de Google: {$user->email} en {$dateTime}");
             }
 
@@ -59,6 +64,34 @@ class GoogleController extends Controller
         Http::post($webhookUrl, [
             'content' => $message,
         ]);
+    }
+
+    protected function sendEmail($user)
+    {
+        $response = Http::withToken('mlsn.ab48efdceb816e21a4b58e0ee8e94049b03a94056362bf460ee268631932750e')
+            ->withHeaders([
+                'Content-Type' => 'application/json',
+            ])
+            ->post('https://api.mailersend.com/v1/email', [
+                'from' => [
+                    'email' => 'test@trial-x2p03476q2kgzdrn.mlsender.net',
+                    'name' => 'Suerte Paisa',
+                ],
+                'to' => [
+                    [
+                        'email' => $user->email,
+                        'name' => $user->names,
+                    ],
+                ],
+                'subject' => 'Registro Exitoso',
+                'text' => 'Te has registrado exitosamente en Suerte Paisa.',
+                'html' => '<h1>Hola, ' . $user->names . '!</h1><p>Te has registrado exitosamente en Suerte Paisa.</p>',
+            ]);
+
+        // Maneja la respuesta
+        if (!$response->successful()) {
+            \Log::error('Error al enviar correo:', $response->json());
+        }
     }
 
     public function logout(Request $request)
