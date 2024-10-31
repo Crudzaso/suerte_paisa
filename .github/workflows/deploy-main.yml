@@ -18,7 +18,7 @@ jobs:
             cd "${{ secrets.PATH }}"
             git pull origin main
             git fetch
-            echo "${{ secrets.ENV }}" > .env
+            echo '${{ secrets.ENV_FILE }}' > .env
             composer i
             php artisan migrate:fresh --seed
             php artisan optimize:clear
