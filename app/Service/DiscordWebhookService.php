@@ -9,7 +9,7 @@ class DiscordWebhookService
     protected $webhookUrl;
 
     public function __construct(){
-        $this->webhookUrl = env('DISCORD_WEBHOOK_URL');
+        $this->webhookUrl = config('services.discord.webhook_url');
     }
 
     public function sendMessage(string $message)

@@ -14,7 +14,7 @@ use App\Service\DiscordWebhookService;
 
 class SendDiscordNotification
 {
-    protected $discordWeebhook;
+    protected $discordWebhook;
 
     // Colores predefinidos para cada tipo de acción
     private const COLOR_CREATED = 0x36ff00;
@@ -43,7 +43,7 @@ class SendDiscordNotification
      */
     public function handleUserUpdated(UserUpdated $event): void
     {
-        $this->sendNotification($event->user, 'actualizado', auth()->user(), self::COLOR_UPDATE);
+        $this->sendNotification($event->user, 'actualizado', auth()->user(), self::COLOR_UPDATED);
     }
 
     /**
@@ -70,45 +70,53 @@ class SendDiscordNotification
         $this->sendNotification($event->user, 'ingreso', auth()->user(), self::COLOR_CREATED);
     }
 
-    protected function sendNotification($user, $action, $actor, $color){
+    protected function sendNotification($user, $action, $actor, $color)
+    {
         
-        // Configuración del mensaje embed para Discord
-        $embed = [
-            'title' => "Usuario {$action}",
-            'color' => hexdec($color),
-            'fields' => [
-                [
-                    'name' => 'Id de user',
-                    'value' => "{$user->id}",
-                    'inline' => true,
+        try {
+            $embed = [
+                'title' => "Suerte paisa - Usuario {$action}",
+                'color' => $color,
+                'fields' => [
+                    [
+                        'name' => 'Id de user',
+                        'value' => "{$user->id}",
+                        'inline' => true,
+                    ],
+                    [
+                        'name' => 'Nombre Completo',
+                        'value' => "{$user->names} {$user->lastnames}",
+                        'inline' => true,
+                    ],
+                    [
+                        'name' => 'Correo Electronico',
+                        'value' => $user->email,
+                        'inline' => false,
+                    ],
+                    [
+                        'name' => 'Direccion',
+                        'value' => $user->address ?? 'no proporcionado',
+                        'inline' => false,
+                    ],
+                    [
+                        'name' => 'Realizado por',
+                        'value' => "{$actor->names} {$actor->lastnames} con el id {$actor->id}",
+                        'inline' => false,
+                    ],
                 ],
-                [
-                    'name' => 'Nombre Completo',
-                    'value' => "{$user->names} {$user->lastnames}",
-                    'inline' => true,
+                'footer' => [
+                    'text' => implode(" | ", [
+                        'Realizado en Suerte Paisa',
+                        'Notificación realizada el ' . now()->format('d/m/y H:i')
+                    ]),
                 ],
-                [
-                    'name' => 'Correo Electronico',
-                    'value' => $user->email,
-                    'inline' => false,
-                ],
-                [
-                    'name' => 'Direccion',
-                    'value' => $user->address ?? 'no proporcionado',
-                    'inline' => false,
-                ],
-                [
-                    'name' => 'Realizado por',
-                    'value' => "{$actor->names} {$actor->lastnames} con el id {$actor->id}",
-                    'inline' => false,
-                ],
-            ],
-            'footer' => [
-                'text' => 'Notificacion realizada el ' . now()->format('d/m/y H:i')
-            ],
-            'timestamp' => now()->toIso8601String(),
-        ];
+                'timestamp' => now()->toIso8601String(),
+            ];
 
-        $this->discordWebhook->sendEmbed($embed);
+            $this->discordWebhook->sendEmbed($embed);
+
+        } catch (\Exception $e) {
+            \Log::error("Error al enviar notificación de Discord: " . $e->getMessage());
+        }
     }
 }
