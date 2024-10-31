@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use App\Helpers\DiscordHelper;
 use App\Helpers\EmailHelper;
 
+
 class UserController extends Controller
 {
     protected $discordHelper;
