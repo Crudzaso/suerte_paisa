@@ -16,6 +16,14 @@ use App\Events\UserCreated;
 
 class GoogleController extends Controller
 {
+    protected $discordHelper;
+    protected $emailHelper;
+
+    public function __construct()
+    {
+        $this->discordHelper = new DiscordHelper();
+        $this->emailHelper = new EmailHelper();
+    }
 
     public function login()
     {
@@ -48,18 +56,14 @@ class GoogleController extends Controller
             return redirect()->route('usuarios.layouts')->with('success', 'Has iniciado sesión correctamente ');
 
         } catch (\Exception $e) {
-            \Log::error('Google login error:', ['message' => $e->getMessage()]);
+            Log::error('Google login error:', ['message' => $e->getMessage()]);
             return redirect()->route('auth.google')->with('error', 'Error al iniciar sesión con Google.');
         }
     }
 
     public function logout(Request $request)
     {
-        // Cierra la sesión del usuario actual
         Auth::guard('web')->logout();
-
-        // Redirige a la página de login
         return redirect()->route('login')->with('success', 'Has cerrado sesión correctamente.');
     }
-
 }

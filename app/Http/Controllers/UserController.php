@@ -18,6 +18,15 @@ use App\Events\UserRestore;
 
 class UserController extends Controller
 {
+    protected $discordHelper;
+    protected $emailHelper;
+
+    public function __construct()
+    {
+        $this->discordHelper = new DiscordHelper();
+        $this->emailHelper = new EmailHelper();
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -27,7 +36,6 @@ class UserController extends Controller
             $users = User::paginate(10);
             return view('users.index', compact('users'));
         } catch (\Exception $e) {
-            
             return redirect()->route('usuarios.index')->with('error', 'Error al cargar los usuarios.');
         }
     }
