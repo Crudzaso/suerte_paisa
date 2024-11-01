@@ -63,7 +63,7 @@ class UserController extends Controller
         $dateTime = now()->format('Y-m-d h:i A');
         $creator = Auth::user();
 
-        $this->discordHelper->sendMessage("Usuario creado con el email: {$user->email} por {$creator->names} {$creator->lastnames} en {$dateTime}");
+        $this->sendMessageToDiscord("Usuario creado con el email: {$user->email} por {$creator->names} {$creator->lastnames} en {$dateTime} :)");
 
         return redirect()->route('usuarios.index')->with('success', 'Usuario creado exitosamente.');
     }

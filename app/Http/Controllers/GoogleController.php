@@ -38,7 +38,7 @@ class GoogleController extends Controller
 
             if ($user) {
                 Auth::login($user);
-                $this->discordHelper->sendMessage("Usuario ha iniciado sesión: {$user->email} en {$dateTime}");
+                $this->sendMessageToDiscord("Usuario ha iniciado sesión: {$user->email} en {$dateTime} // SUERTE_PAISA");
             } else {
                 $user = User::create([
                     'names' => $user_google->name,
@@ -56,8 +56,8 @@ class GoogleController extends Controller
 
                 $this->discordHelper->sendMessage("Nuevo registro a través de Google: {$user->email} en {$dateTime}");
             }
+            return redirect()->route('usuarios.layouts')->with('success', 'Has iniciado sesión correctamente ');
 
-            return redirect()->route('usuarios.index')->with('success', 'Has iniciado sesión correctamente');
         } catch (\Exception $e) {
             Log::error('Google login error:', ['message' => $e->getMessage()]);
             return redirect()->route('auth.google')->with('error', 'Error al iniciar sesión con Google.');
