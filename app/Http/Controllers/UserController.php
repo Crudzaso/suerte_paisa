@@ -18,14 +18,6 @@ use App\Events\UserRestore;
 
 class UserController extends Controller
 {
-    protected $discordHelper;
-    protected $emailHelper;
-
-    public function __construct()
-    {
-        $this->discordHelper = new DiscordHelper();
-        $this->emailHelper = new EmailHelper();
-    }
 
     /**
      * Display a listing of the resource.

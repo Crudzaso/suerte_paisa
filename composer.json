@@ -5,7 +5,7 @@
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
-        "php": "^8.2 ",
+        "php": "^8.2",
         "doctrine/dbal": "^4.2",
         "guzzlehttp/guzzle": "^7.9",
         "irazasyed/larasupport": "^1.1",
@@ -20,7 +20,6 @@
         "mailersend/laravel-driver": "^2.7",
         "mailgun/mailgun-php": "^4.3",
         "owen-it/laravel-auditing": "^13.6",
-        "sendinblue/api-v3-sdk": "^8.4",
         "symfony/http-client": "^7.1",
         "symfony/mailgun-mailer": "^7.1",
         "twilio/sdk": "^8.3"
@@ -40,10 +39,7 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        },
-        "files": [
-        "app/Helpers/DiscordHelper.php"
-        ]   
+        }
     },
     "autoload-dev": {
         "psr-4": {
@@ -51,10 +47,6 @@
         }
     },
     "scripts": {
-        "post-autoload-dump": [
-            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
-        ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
         ],
