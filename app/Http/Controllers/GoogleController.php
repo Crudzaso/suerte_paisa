@@ -9,19 +9,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
-
+use App\Helpers\EmailHelper;
 use App\Service\DiscordWebhookService;
 use App\Events\UserLogin;
 use App\Events\UserCreated;
 
 class GoogleController extends Controller
 {
-    protected $discordHelper;
     protected $emailHelper;
 
     public function __construct()
     {
-        $this->discordHelper = new DiscordHelper();
         $this->emailHelper = new EmailHelper();
     }
 
@@ -37,7 +35,10 @@ class GoogleController extends Controller
             $user = User::where('email', $user_google->email)->first();
 
             if ($user) {
+                Auth::login($user);
                 event(new UserLogin($user));
+
+                $this->emailHelper->sendEmail($user);
 
             } else {
                 $user = User::create([
@@ -51,12 +52,15 @@ class GoogleController extends Controller
                     'user_id' => $user->id,
                 ]);
 
+                Auth::login($user);
+
+                $this->emailHelper->sendEmail($user);
                 event(new UserCreated($user));
             }
             return redirect()->route('usuarios.layouts')->with('success', 'Has iniciado sesión correctamente ');
 
         } catch (\Exception $e) {
-            Log::error('Google login error:', ['message' => $e->getMessage()]);
+            \Log::error('Google login error:', ['message' => $e->getMessage()]);
             return redirect()->route('auth.google')->with('error', 'Error al iniciar sesión con Google.');
         }
     }
