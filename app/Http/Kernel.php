@@ -4,6 +4,7 @@ namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
+
 class Kernel extends HttpKernel
 {
     /**
@@ -31,6 +32,7 @@ class Kernel extends HttpKernel
         \Illuminate\Http\Middleware\ConvertEmptyStringsToNull::class,
         \Illuminate\Routing\Middleware\SubstituteBindings::class,
     ];
+    
 
     /**
      * The application's route middleware groups.
@@ -48,4 +50,10 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
+
+    protected $commands = [
+        \App\Console\Commands\CreateHelper::class,
+    ];
+
+    
 }

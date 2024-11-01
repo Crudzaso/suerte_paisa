@@ -8,10 +8,20 @@ use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use App\Helpers\DiscordHelper;
+use App\Helpers\EmailHelper;
 
 class GoogleController extends Controller
 {
+    protected $discordHelper;
+    protected $emailHelper;
+
+    public function __construct()
+    {
+        $this->discordHelper = new DiscordHelper();
+        $this->emailHelper = new EmailHelper();
+    }
 
     public function login()
     {
@@ -42,32 +52,21 @@ class GoogleController extends Controller
                 ]);
 
                 Auth::login($user);
-                $this->sendMessageToDiscord("Nuevo registro a través de Google: {$user->email} en {$dateTime}");
+                $this->emailHelper->sendEmail($user);
+
+                $this->discordHelper->sendMessage("Nuevo registro a través de Google: {$user->email} en {$dateTime}");
             }
             return redirect()->route('usuarios.layouts')->with('success', 'Has iniciado sesión correctamente ');
 
         } catch (\Exception $e) {
-            \Log::error('Google login error:', ['message' => $e->getMessage()]);
+            Log::error('Google login error:', ['message' => $e->getMessage()]);
             return redirect()->route('auth.google')->with('error', 'Error al iniciar sesión con Google.');
         }
     }
 
-    protected function sendMessageToDiscord($message)
-    {
-        $webhookUrl = env('DISCORD_WEBHOOK_URL');
-
-        Http::post($webhookUrl, [
-            'content' => $message,
-        ]);
-    }
-
     public function logout(Request $request)
     {
-        // Cierra la sesión del usuario actual
         Auth::guard('web')->logout();
-
-        // Redirige a la página de login
         return redirect()->route('login')->with('success', 'Has cerrado sesión correctamente.');
     }
-
 }
