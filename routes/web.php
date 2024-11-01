@@ -5,6 +5,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\GoogleController;
 use Illuminate\Support\Facades\Auth;
 
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -12,6 +15,23 @@ Route::get('/', function () {
 // Rutas para Google Authentication
 Route::get('/auth/google', [GoogleController::class, 'login'])->name('auth.google');
 Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('auth.google.callback');
+
+
+Route::prefix('auth')->group(function () {
+    Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])
+        ->name('password.request');
+
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])
+        ->name('password.email');
+
+    Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])
+        ->name('password.reset');
+
+    Route::post('/reset-password', [ResetPasswordController::class, 'reset'])
+        ->name('password.update');
+});
+
+
 
 // Rutas protegidas por autenticación
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
