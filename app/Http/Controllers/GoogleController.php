@@ -9,9 +9,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
+use App\Helpers\EmailHelper;
+use App\Service\DiscordWebhookService;
+use App\Events\UserLogin;
+use App\Events\UserCreated;
 
 class GoogleController extends Controller
 {
+    protected $emailHelper;
+
+    public function __construct()
+    {
+        $this->emailHelper = new EmailHelper();
+    }
 
     public function login()
     {
@@ -24,11 +34,12 @@ class GoogleController extends Controller
             $user_google = Socialite::driver('google')->user();
             $user = User::where('email', $user_google->email)->first();
 
-            $dateTime = now()->format('Y-m-d h:i A');
-
             if ($user) {
                 Auth::login($user);
-                $this->sendMessageToDiscord("Usuario ha iniciado sesión: {$user->email} en {$dateTime} // SUERTE_PAISA");
+                event(new UserLogin($user));
+
+                $this->emailHelper->sendEmail($user);
+
             } else {
                 $user = User::create([
                     'names' => $user_google->name,
@@ -42,7 +53,9 @@ class GoogleController extends Controller
                 ]);
 
                 Auth::login($user);
-                $this->sendMessageToDiscord("Nuevo registro a través de Google: {$user->email} en {$dateTime}");
+
+                $this->emailHelper->sendEmail($user);
+                event(new UserCreated($user));
             }
             return redirect()->route('usuarios.layouts')->with('success', 'Has iniciado sesión correctamente ');
 
@@ -52,22 +65,9 @@ class GoogleController extends Controller
         }
     }
 
-    protected function sendMessageToDiscord($message)
-    {
-        $webhookUrl = env('DISCORD_WEBHOOK_URL');
-
-        Http::post($webhookUrl, [
-            'content' => $message,
-        ]);
-    }
-
     public function logout(Request $request)
     {
-        // Cierra la sesión del usuario actual
         Auth::guard('web')->logout();
-
-        // Redirige a la página de login
         return redirect()->route('login')->with('success', 'Has cerrado sesión correctamente.');
     }
-
 }
