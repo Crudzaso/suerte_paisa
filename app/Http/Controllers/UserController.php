@@ -7,10 +7,14 @@ use Illuminate\Http\Request;
 use App\Http\Requests\UserCreateFormRequest;
 use App\Http\Requests\UserUpdateFormRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use App\Helpers\DiscordHelper;
-use App\Helpers\EmailHelper;
+use Illuminate\Support\Facades\Http;
 
+use App\Service\DiscordWebhookService;
+
+use App\Events\UserCreated;
+use App\Events\UserUpdated;
+use App\Events\UserDeleted;
+use App\Events\UserRestore;
 
 class UserController extends Controller
 {
@@ -57,13 +61,7 @@ class UserController extends Controller
             'address' => $request->address,
         ]);
 
-        // Envía el correo electrónico al nuevo usuario
-        $this->emailHelper->sendEmail($user);
-
-        $dateTime = now()->format('Y-m-d h:i A');
-        $creator = Auth::user();
-
-        $this->sendMessageToDiscord("Usuario creado con el email: {$user->email} por {$creator->names} {$creator->lastnames} en {$dateTime} :)");
+        event(new UserCreated($user));
 
         return redirect()->route('usuarios.index')->with('success', 'Usuario creado exitosamente.');
     }
@@ -109,10 +107,7 @@ class UserController extends Controller
             $user->address = $request->input('address');
             $user->save();
 
-            $dateTime = now()->format('Y-m-d h:i A');
-            $updater = Auth::user();
-
-            $this->discordHelper->sendMessage("Usuario actualizado con el email: {$user->email} por {$updater->names} {$updater->lastnames} en {$dateTime}");
+            event(new UserUpdated($user));
 
             return redirect()->route('usuarios.index')->with('success', 'Usuario actualizado correctamente.');
         } catch (\Exception $e) {
@@ -127,11 +122,10 @@ class UserController extends Controller
     {
         try {
             $user = User::findOrFail($id);
-            $currentUser = Auth::user(); 
 
             $user->delete();
 
-            $this->discordHelper->sendMessage("Usuario eliminado con el email: {$user->email} por {$currentUser->names} {$currentUser->lastnames}");
+            event(new UserDeleted($user));
 
             return redirect()->route('usuarios.index')->with('success', 'Usuario eliminado correctamente.');
         } catch (\Exception $e) {
@@ -153,10 +147,10 @@ class UserController extends Controller
     {
         try {
             $user = User::withTrashed()->findOrFail($id);
-            $currentUser = Auth::user(); 
+
             $user->restore();
 
-            $this->discordHelper->sendMessage("Usuario restaurado con el email: {$user->email} por {$currentUser->names} {$currentUser->lastnames}");
+            event(new UserRestore($user));
 
             return redirect()->route('usuarios.index')->with('success', 'Usuario restaurado exitosamente.');
         } catch (\Exception $e) {

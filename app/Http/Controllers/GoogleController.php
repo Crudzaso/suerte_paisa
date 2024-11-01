@@ -8,9 +8,11 @@ use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
-use App\Helpers\DiscordHelper;
-use App\Helpers\EmailHelper;
+use Carbon\Carbon;
+
+use App\Service\DiscordWebhookService;
+use App\Events\UserLogin;
+use App\Events\UserCreated;
 
 class GoogleController extends Controller
 {
@@ -34,11 +36,9 @@ class GoogleController extends Controller
             $user_google = Socialite::driver('google')->user();
             $user = User::where('email', $user_google->email)->first();
 
-            $dateTime = now()->format('Y-m-d h:i A');
-
             if ($user) {
-                Auth::login($user);
-                $this->sendMessageToDiscord("Usuario ha iniciado sesión: {$user->email} en {$dateTime} // SUERTE_PAISA");
+                event(new UserLogin($user));
+
             } else {
                 $user = User::create([
                     'names' => $user_google->name,
@@ -51,10 +51,7 @@ class GoogleController extends Controller
                     'user_id' => $user->id,
                 ]);
 
-                Auth::login($user);
-                $this->emailHelper->sendEmail($user);
-
-                $this->discordHelper->sendMessage("Nuevo registro a través de Google: {$user->email} en {$dateTime}");
+                event(new UserCreated($user));
             }
             return redirect()->route('usuarios.layouts')->with('success', 'Has iniciado sesión correctamente ');
 
