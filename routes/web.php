@@ -17,18 +17,17 @@ Route::get('/auth/google', [GoogleController::class, 'login'])->name('auth.googl
 Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('auth.google.callback');
 
 Route::prefix('auth')->group(function () {
-    // Rutas para la recuperación de contraseña
     Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])
-        ->name('password.request'); // Muestra el formulario para solicitar un enlace de restablecimiento de contraseña
+        ->name('password.request');
 
     Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])
-        ->name('password.email'); // Envia el enlace de restablecimiento de contraseña
+        ->name('password.email');
 
     Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])
-        ->name('password.reset'); // Muestra el formulario para restablecer la contraseña con el token
+        ->name('password.reset');
 
     Route::post('/reset-password', [ResetPasswordController::class, 'reset'])
-        ->name('password.update'); // Actualiza la contraseña del usuario
+        ->name('password.update');
 });
 
 
