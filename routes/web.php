@@ -16,7 +16,6 @@ Route::get('/', function () {
 Route::get('/auth/google', [GoogleController::class, 'login'])->name('auth.google');
 Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('auth.google.callback');
 
-
 Route::prefix('auth')->group(function () {
     Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])
         ->name('password.request');
@@ -30,7 +29,6 @@ Route::prefix('auth')->group(function () {
     Route::post('/reset-password', [ResetPasswordController::class, 'reset'])
         ->name('password.update');
 });
-
 
 
 // Rutas protegidas por autenticación
