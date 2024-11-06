@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
-use App\Helpers\EmailHelper;
+use App\Helpers\EmailHelperGlobal;
 use App\Service\DiscordWebhookService;
 use App\Events\UserLogin;
 use App\Events\UserCreated;
@@ -18,9 +18,9 @@ class GoogleController extends Controller
 {
     protected $emailHelper;
 
-    public function __construct()
+    public function __construct(EmailHelperGlobal $emailHelper)
     {
-        $this->emailHelper = new EmailHelper();
+        $this->emailHelper = $emailHelper;
     }
 
     public function login()
@@ -38,7 +38,7 @@ class GoogleController extends Controller
                 Auth::login($user);
                 event(new UserLogin($user));
 
-                $this->emailHelper->sendEmail($user);
+                $this->emailHelper::sendLoginNotification($user);
 
             } else {
                 $user = User::create([
@@ -53,8 +53,9 @@ class GoogleController extends Controller
                 ]);
 
                 Auth::login($user);
+                
+                $this->emailHelper::sendWelcomeEmail($user);
 
-                $this->emailHelper->sendEmail($user);
                 event(new UserCreated($user));
             }
             return redirect()->route('usuarios.layouts')->with('success', 'Has iniciado sesión correctamente ');
