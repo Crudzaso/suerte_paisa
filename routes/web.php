@@ -51,18 +51,23 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     })->name('usuarios.layouts'); 
     
     //THIS ROUTES WERE CREATED TO CHECK THE FUNCTIONALITY OF LOGIN VIEWS  --TO DELETE   :jarenas1
-    Route::get('new', function(){
+    //RESET PASSWORD
+    Route::get('new-password', function(){
         return view('auth.auth-plantilla.new-password');
     })->name('auth.new'); 
+
     Route::get('reset', function(){
         return view('auth.auth-plantilla.reset-password');
     })->name('auth.reset'); 
+
     Route::get('signin', function(){
         return view('auth.auth-plantilla.sign-in');
     })->name('auth.signin'); 
+    
     Route::get('signup', function(){
         return view('auth.auth-plantilla.sign-up');
     })->name('auth.sign'); 
+
     Route::get('twofactor', function(){
         return view('auth.auth-plantilla.two-factor');
     })->name('auth.twofactor'); 

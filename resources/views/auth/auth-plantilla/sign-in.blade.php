@@ -48,7 +48,14 @@ License: For each use you must have a valid license purchased only from above li
 						<!--begin::Wrapper-->
 						<div class="w-lg-500px p-10">
 							<!--begin::Form-->
-							<form class="form w-100" novalidate="novalidate" id="kt_sign_in_form" data-kt-redirect-url="index.html" action="#">
+
+							@if (session('status'))
+								<div class="mb-4 font-medium text-sm text-green-600">
+									{{ session('status') }}
+								</div>
+							@endif
+							
+							<form class="form w-100" novalidate="novalidate" id="kt_sign_in_form" data-kt-redirect-url="index.html" method="POST" action="{{ route('login') }}">
 								<!--begin::Heading-->
 								<div class="text-center mb-11">
 									<!--begin::Title-->
@@ -64,17 +71,17 @@ License: For each use you must have a valid license purchased only from above li
 									<!--begin::Col-->
 									<div class="col-md-6">
 										<!--begin::Google link=-->
-										<a href="#" class="btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100">
-										<img alt="Logo" src="assets/media/svg/brand-logos/google-icon.svg" class="h-15px me-3" />Sign in with Google</a>
+										<a href="{{ route('auth.google') }}" class="btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100">
+										<img alt="Logo de google" src="assets/logos/google-icon.svg" class="h-15px me-3" />Sign in with Google</a>
 										<!--end::Google link=-->
 									</div>
 									<!--end::Col-->
 									<!--begin::Col-->
 									<div class="col-md-6">
 										<!--begin::Google link=-->
-										<a href="#" class="btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100">
-										<img alt="Logo" src="assets/media/svg/brand-logos/apple-black.svg" class="theme-light-show h-15px me-3" />
-										<img alt="Logo" src="assets/media/svg/brand-logos/apple-black-dark.svg" class="theme-dark-show h-15px me-3" />Sign in with Apple</a>
+										<a href="{{ route('github.login') }}" class="btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100">
+										<img alt="Logo" src="assets/logos/github-icon.svg" class="theme-light-show h-15px me-3" />
+										<img alt="Logo" src="assets/media/svg/brand-logos/apple-black-dark.svg" class="theme-dark-show h-16px me-3" />Sign in with GitHub</a>
 										<!--end::Google link=-->
 									</div>
 									<!--end::Col-->
@@ -86,23 +93,28 @@ License: For each use you must have a valid license purchased only from above li
 								</div>
 								<!--end::Separator-->
 								<!--begin::Input group=-->
-								<div class="fv-row mb-8">
-									<!--begin::Email-->
-									<input type="text" placeholder="Email" name="email" autocomplete="off" class="form-control bg-transparent" />
-									<!--end::Email-->
-								</div>
-								<!--end::Input group=-->
-								<div class="fv-row mb-3">
-									<!--begin::Password-->
-									<input type="password" placeholder="Password" name="password" autocomplete="off" class="form-control bg-transparent" />
-									<!--end::Password-->
-								</div>
+									<div class="fv-row mb-8">
+										<!--begin::Email-->
+										<input type="text" placeholder="Email" name="email" autocomplete="off" class="form-control bg-transparent" />
+										<!--end::Email-->
+									</div>
+									<!--end::Input group=-->
+									<div class="fv-row mb-3">
+										<!--begin::Password-->
+										<input type="password" placeholder="Password" name="password" autocomplete="off" class="form-control bg-transparent" />
+										<!--end::Password-->
+									</div>
 								<!--end::Input group=-->
 								<!--begin::Wrapper-->
+
 								<div class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
-									<div></div>
 									<!--begin::Link-->
-									<a href="authentication/layouts/corporate/reset-password.html" class="link-primary">Forgot Password ?</a>
+									@if (Route::has('password.request'))
+									<a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('auth.reset') }}">
+										{{ __('Forgot your password?') }}
+									</a>
+									@endif
+									
 									<!--end::Link-->
 								</div>
 								<!--end::Wrapper-->
@@ -387,14 +399,199 @@ License: For each use you must have a valid license purchased only from above li
 												</div>
 												<!--end::Radio-->
 											</div>
-											<!--end::Input row-->
-											<div class='separator separator-dashed my-5'></div>
-											<!--begin::Input row-->
-											<div class="d-flex fv-row">
-												<!--begin::Radio-->
-												<div class="form-check form-check-custom form-check-solid">
-													<!--begin::Input-->
-													<input class="form-check-input me-3" name="user_role" type="radio" value="1" id="kt_modal_update_role_option_1" />
+											<!--end::Input row-->													<!--begin::Menu-->
+													<div class="min-w-100px">
+														<select class="form-select form-select-solid form-select-sm" data-control="select2" data-hide-search="true" data-placeholder="Edit">
+															<option></option>
+															<option value="1">Remove</option>
+															<option value="2">Modify</option>
+															<option value="3">Select</option>
+														</select>
+													</div>
+													<!--end::Menu-->
+												</div>
+												<!--end::File-->
+												<!--begin::File-->
+												<div class="d-flex flex-stack py-4 border border-top-0 border-left-0 border-right-0 border-dashed">
+													<div class="d-flex align-items-center">
+														<!--begin::Avatar-->
+														<div class="symbol symbol-35px">
+															<img src="assets/media/svg/files/folder-document.svg" alt="icon" />
+														</div>
+														<!--end::Avatar-->
+														<!--begin::Details-->
+														<div class="ms-6">
+															<a href="#" class="fs-5 fw-bold text-gray-900 text-hover-primary mb-2">Campaign Landing Page Source</a>
+															<div class="fw-semibold text-muted">1.12mb</div>
+														</div>
+														<!--end::Details-->
+													</div>
+													<!--begin::Menu-->
+													<div class="min-w-100px">
+														<select class="form-select form-select-solid form-select-sm" data-control="select2" data-hide-search="true" data-placeholder="Edit">
+															<option></option>
+															<option value="1">Remove</option>
+															<option value="2">Modify</option>
+															<option value="3">Select</option>
+														</select>
+													</div>
+													<!--end::Menu-->
+												</div>
+												<!--end::File-->
+												<!--begin::File-->
+												<div class="d-flex flex-stack py-4 border border-top-0 border-left-0 border-right-0 border-dashed">
+													<div class="d-flex align-items-center">
+														<!--begin::Avatar-->
+														<div class="symbol symbol-35px">
+															<img src="assets/media/svg/files/css.svg" alt="icon" />
+														</div>
+														<!--end::Avatar-->
+														<!--begin::Details-->
+														<div class="ms-6">
+															<a href="#" class="fs-5 fw-bold text-gray-900 text-hover-primary mb-2">Landing Page Styling</a>
+															<div class="fw-semibold text-muted">85kb</div>
+														</div>
+														<!--end::Details-->
+													</div>
+													<!--begin::Menu-->
+													<div class="min-w-100px">
+														<select class="form-select form-select-solid form-select-sm" data-control="select2" data-hide-search="true" data-placeholder="Edit">
+															<option></option>
+															<option value="1">Remove</option>
+															<option value="2">Modify</option>
+															<option value="3">Select</option>
+														</select>
+													</div>
+													<!--end::Menu-->
+												</div>
+												<!--end::File-->
+												<!--begin::File-->
+												<div class="d-flex flex-stack py-4 border border-top-0 border-left-0 border-right-0 border-dashed">
+													<div class="d-flex align-items-center">
+														<!--begin::Avatar-->
+														<div class="symbol symbol-35px">
+															<img src="assets/media/svg/files/ai.svg" alt="icon" />
+														</div>
+														<!--end::Avatar-->
+														<!--begin::Details-->
+														<div class="ms-6">
+															<a href="#" class="fs-5 fw-bold text-gray-900 text-hover-primary mb-2">Design Source Files</a>
+															<div class="fw-semibold text-muted">48mb</div>
+														</div>
+														<!--end::Details-->
+													</div>
+													<!--begin::Menu-->
+													<div class="min-w-100px">
+														<select class="form-select form-select-solid form-select-sm" data-control="select2" data-hide-search="true" data-placeholder="Edit">
+															<option></option>
+															<option value="1">Remove</option>
+															<option value="2">Modify</option>
+															<option value="3">Select</option>
+														</select>
+													</div>
+													<!--end::Menu-->
+												</div>
+												<!--end::File-->
+												<!--begin::File-->
+												<div class="d-flex flex-stack py-4">
+													<div class="d-flex align-items-center">
+														<!--begin::Avatar-->
+														<div class="symbol symbol-35px">
+															<img src="assets/media/svg/files/doc.svg" alt="icon" />
+														</div>
+														<!--end::Avatar-->
+														<!--begin::Details-->
+														<div class="ms-6">
+															<a href="#" class="fs-5 fw-bold text-gray-900 text-hover-primary mb-2">Campaign Plan Document</a>
+															<div class="fw-semibold text-muted">27kb</div>
+														</div>
+														<!--end::Details-->
+													</div>
+													<!--begin::Menu-->
+													<div class="min-w-100px">
+														<select class="form-select form-select-solid form-select-sm" data-control="select2" data-hide-search="true" data-placeholder="Edit">
+															<option></option>
+															<option value="1">Remove</option>
+															<option value="2">Modify</option>
+															<option value="3">Select</option>
+														</select>
+													</div>
+													<!--end::Menu-->
+												</div>
+												<!--end::File-->
+											</div>
+											<!--end::Files-->
+										</div>
+										<!--end::Input group-->
+									</div>
+									<!--end::Wrapper-->
+								</div>
+								<!--end::Step 2-->
+								<!--begin::Step 3-->
+								<div data-kt-stepper-element="content">
+									<!--begin::Wrapper-->
+									<div class="w-100">
+										<!--begin::Heading-->
+										<div class="pb-10 pb-lg-12">
+											<!--begin::Title-->
+											<h1 class="fw-bold text-gray-900">Configure Audiences</h1>
+											<!--end::Title-->
+											<!--begin::Description-->
+											<div class="text-muted fw-semibold fs-4">If you need more info, please check 
+											<a href="#" class="link-primary">Campaign Guidelines</a></div>
+											<!--end::Description-->
+										</div>
+										<!--end::Heading-->
+										<!--begin::Input group-->
+										<div class="fv-row mb-10">
+											<!--begin::Label-->
+											<label class="fs-6 fw-semibold mb-2">Gender 
+											<span class="ms-1" data-bs-toggle="tooltip" title="Show your ads to either men or women, or select 'All' for both">
+												<i class="ki-outline ki-information-5 text-gray-500 fs-6"></i>
+											</span></label>
+											<!--End::Label-->
+											<!--begin::Row-->
+											<div class="row g-9" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button='true']">
+												<!--begin::Col-->
+												<div class="col">
+													<!--begin::Option-->
+													<label class="btn btn-outline btn-outline-dashed btn-active-light-primary active d-flex text-start p-6" data-kt-button="true">
+														<!--begin::Radio-->
+														<span class="form-check form-check-custom form-check-solid form-check-sm align-items-start mt-1">
+															<input class="form-check-input" type="radio" name="campaign_gender" value="1" checked="checked" />
+														</span>
+														<!--end::Radio-->
+														<!--begin::Info-->
+														<span class="ms-5">
+															<span class="fs-4 fw-bold text-gray-800 d-block">All</span>
+														</span>
+														<!--end::Info-->
+													</label>
+													<!--end::Option-->
+												</div>
+												<!--end::Col-->
+												<!--begin::Col-->
+												<div class="col">
+													<!--begin::Option-->
+													<label class="btn btn-outline btn-outline-dashed btn-active-light-primary d-flex text-start p-6" data-kt-button="true">
+														<!--begin::Radio-->
+														<span class="form-check form-check-custom form-check-solid form-check-sm align-items-start mt-1">
+															<input class="form-check-input" type="radio" name="campaign_gender" value="2" />
+														</span>
+														<!--end::Radio-->
+														<!--begin::Info-->
+														<span class="ms-5">
+															<span class="fs-4 fw-bold text-gray-800 d-block">Male</span>
+														</span>
+														<!--end::Info-->
+													</label>
+													<!--end::Option-->
+												</div>
+												<!--end::Col-->
+												<!--begin::Col-->
+												<div class="col">
+													<!--begin::Option-->
+	role_option_1" />
 													<!--end::Input-->
 													<!--begin::Label-->
 													<label class="form-check-label" for="kt_modal_update_role_option_1">

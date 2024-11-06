@@ -1,3 +1,4 @@
+#ORIGINAL DE JETSTREAM, DONDE SE PONE EL EMAIL
 <x-guest-layout>
     <x-authentication-card>
         <x-slot name="logo">

@@ -1,3 +1,4 @@
+//PLANTILLA, DONDE SE PONE LA NUEVA CONTRASEÑA
 <!DOCTYPE html>
 <!--
 Author: Keenthemes

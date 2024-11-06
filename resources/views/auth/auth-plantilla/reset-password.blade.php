@@ -1,3 +1,4 @@
+//PLANTILLA, DONDE SE ENVIA EL EMAIL
 <!DOCTYPE html>
 <!--
 Author: Keenthemes
@@ -48,7 +49,13 @@ License: For each use you must have a valid license purchased only from above li
 						<!--begin::Wrapper-->
 						<div class="w-lg-500px p-10">
 							<!--begin::Form-->
-							<form class="form w-100" novalidate="novalidate" id="kt_password_reset_form" data-kt-redirect-url="authentication/layouts/corporate/new-password.html" action="#">
+							@if (session('status'))
+								<div class="mb-4 font-medium text-sm text-green-600">
+									{{ session('status') }}
+								</div>
+							@endif
+							<form class="form w-100" novalidate="novalidate" id="kt_password_reset_form" data-kt-redirect-url="authentication/layouts/corporate/new-password.html" method="POST" action="{{ route('password.email') }}">
+							@csrf
 								<!--begin::Heading-->
 								<div class="text-center mb-10">
 									<!--begin::Title-->
@@ -62,12 +69,13 @@ License: For each use you must have a valid license purchased only from above li
 								<!--begin::Input group=-->
 								<div class="fv-row mb-8">
 									<!--begin::Email-->
-									<input type="text" placeholder="Email" name="email" autocomplete="off" class="form-control bg-transparent" />
+									<label for="email" value="{{ __('Email') }}"></label>
+									<input id="email" type="email" placeholder="Email" name="email" class="form-control bg-transparent" required autofocus autocomplete="username" />
 									<!--end::Email-->
 								</div>
 								<!--begin::Actions-->
 								<div class="d-flex flex-wrap justify-content-center pb-lg-0">
-									<button type="button" id="kt_password_reset_submit" class="btn btn-primary me-4">
+									<button type="submit" id="kt_password_reset_submit" class="btn btn-primary me-4">
 										<!--begin::Indicator label-->
 										<span class="indicator-label">Submit</span>
 										<!--end::Indicator label-->
