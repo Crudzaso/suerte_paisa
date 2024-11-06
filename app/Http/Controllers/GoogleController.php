@@ -55,6 +55,7 @@ class GoogleController extends Controller
                 Auth::login($user);
                 
                 $this->emailHelper::sendWelcomeEmail($user);
+
                 event(new UserCreated($user));
             }
             return redirect()->route('usuarios.layouts')->with('success', 'Has iniciado sesión correctamente ');

@@ -37,7 +37,6 @@ Route::prefix('auth')->group(function () {
         ->name('password.update');
 });
 
-
 // Rutas protegidas por autenticación
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
     Route::resource('usuarios', UserController::class)->except(['show']);
