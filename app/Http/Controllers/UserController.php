@@ -80,6 +80,7 @@ class UserController extends Controller
             $user = User::findOrFail($id);
             return view('users.edit', compact('user'));
         } catch (\Exception $e) {
+            
             return redirect()->route('usuarios.index')->with('error', 'Error al cargar el usuario.');
         }
     }
@@ -103,6 +104,7 @@ class UserController extends Controller
 
             return redirect()->route('usuarios.index')->with('success', 'Usuario actualizado correctamente.');
         } catch (\Exception $e) {
+
             return redirect()->route('usuarios.index')->with('error', 'Error al actualizar el usuario.');
         }
     }
