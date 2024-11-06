@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\PermissionController;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -30,6 +33,8 @@ Route::prefix('auth')->group(function () {
         ->name('password.update');
 });
 
+Route::resource('roles', RoleController::class);
+Route::resource('permissions', PermissionController::class);
 
 // Rutas protegidas por autenticación
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
@@ -43,6 +48,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::get('pruebalayout', function(){
         return view('layouts.component-layout');
     })->name('usuarios.layouts'); 
+
+    
     
     //THIS ROUTES WERE CREATED TO CHECK THE FUNCTIONALITY OF LOGIN VIEWS  --TO DELETE   :jarenas1
     Route::get('new', function(){
