@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\GithubController;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -12,9 +13,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Rutas para Google Authentication
+// Rutas para autenticación con Google 
 Route::get('/auth/google', [GoogleController::class, 'login'])->name('auth.google');
 Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('auth.google.callback');
+
+//Rutas para autenticación con Github
+Route::get('auth/github', [GithubController::class, 'login'])->name('github.login');
+
+Route::get('auth/github/callback', [GithubController::class, 'callback'])->name('auth.github.callback');
 
 
 Route::prefix('auth')->group(function () {
@@ -30,8 +36,6 @@ Route::prefix('auth')->group(function () {
     Route::post('/reset-password', [ResetPasswordController::class, 'reset'])
         ->name('password.update');
 });
-
-
 
 // Rutas protegidas por autenticación
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
