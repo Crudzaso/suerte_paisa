@@ -49,7 +49,9 @@
             </div>
         </div>
     </header>
-
+    <main>
+        {{$slot}}
+    </main>
     <footer>
         <section class="top-footer">
             <article class="map-footer">
@@ -82,9 +84,6 @@
                     </a>
                 </div>
             </article>
-            
-
-
             <article class="social-media-footer">
                 <div class="title-media-footer">
                     <i class="bi bi-bezier2"></i>
