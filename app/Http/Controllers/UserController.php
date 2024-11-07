@@ -7,10 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\UserCreateFormRequest;
 use App\Http\Requests\UserUpdateFormRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
-
-use App\Service\DiscordWebhookService;
-
+use Spatie\Permission\Models\Role;
 use App\Events\UserCreated;
 use App\Events\UserUpdated;
 use App\Events\UserDeleted;
@@ -18,7 +15,6 @@ use App\Events\UserRestore;
 
 class UserController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      */
@@ -37,7 +33,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.create');
+        $roles = Role::all(); // Obtener todos los roles
+        return view('users.save', compact('roles'));
     }
 
     /**
@@ -51,25 +48,18 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'address' => $request->address,
+            'role' => $request->role ?? 'user',
         ]);
+
+        if ($request->role) {
+            $user->roles()->attach($request->role);
+        }
 
         event(new UserCreated($user));
 
         return redirect()->route('usuarios.index')->with('success', 'Usuario creado exitosamente.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        try {
-            $user = User::findOrFail($id);
-            return view('users.show', compact('user'));
-        } catch (\Exception $e) {
-            return redirect()->route('usuarios.index')->with('error', 'Usuario no encontrado.');
-        }
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -77,8 +67,10 @@ class UserController extends Controller
     public function edit(string $id)
     {
         try {
+            $roles = Role::all();
             $user = User::findOrFail($id);
-            return view('users.edit', compact('user'));
+
+            return view('users.save', compact('user', 'roles'));
         } catch (\Exception $e) {
             return redirect()->route('usuarios.index')->with('error', 'Error al cargar el usuario.');
         }
@@ -87,25 +79,36 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserUpdateFormRequest $request, string $id)
-    {
-        try {
-            $user = User::findOrFail($id);
-            $user->names = $request->input('names');
-            $user->lastnames = $request->input('lastnames');
-            if ($request->input('password')) {
-                $user->password = bcrypt($request->input('password'));
+    
+     public function update(UserUpdateFormRequest $request, string $id)
+     {
+         try {
+             $user = User::findOrFail($id);
+             
+             $user->names = $request->input('names');
+             $user->lastnames = $request->input('lastnames');
+             $user->email = $request->input('email');
+     
+             if ($request->input('password')) {
+                 $user->password = bcrypt($request->input('password'));
+             }
+
+             $user->address = $request->input('address');
+
+             if ($request->input('role')) {
+                $user->roles()->sync([$request->input('role')]);
             }
-            $user->address = $request->input('address');
-            $user->save();
-
-            event(new UserUpdated($user));
-
-            return redirect()->route('usuarios.index')->with('success', 'Usuario actualizado correctamente.');
-        } catch (\Exception $e) {
-            return redirect()->route('usuarios.index')->with('error', 'Error al actualizar el usuario.');
-        }
-    }
+     
+             $user->save();
+     
+             event(new UserUpdated($user));
+     
+             return redirect()->route('usuarios.index')->with('success', 'Usuario actualizado correctamente.');
+         } catch (\Exception $e) {
+             return redirect()->route('usuarios.index')->with('error', 'Error al actualizar el usuario.');
+         }
+     }
+     
 
     /**
      * Remove the specified resource from storage.
@@ -114,11 +117,9 @@ class UserController extends Controller
     {
         try {
             $user = User::findOrFail($id);
-
             $user->delete();
 
             event(new UserDeleted($user));
-
             return redirect()->route('usuarios.index')->with('success', 'Usuario eliminado correctamente.');
         } catch (\Exception $e) {
             return redirect()->route('usuarios.index')->with('error', 'Error al eliminar el usuario.');
@@ -139,11 +140,9 @@ class UserController extends Controller
     {
         try {
             $user = User::withTrashed()->findOrFail($id);
-
             $user->restore();
 
             event(new UserRestore($user));
-
             return redirect()->route('usuarios.index')->with('success', 'Usuario restaurado exitosamente.');
         } catch (\Exception $e) {
             return redirect()->route('usuarios.index')->with('error', 'Error al restaurar el usuario.');

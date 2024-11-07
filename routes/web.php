@@ -11,6 +11,8 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 
+use App\Http\Middleware\VerifyRoleMiddleware;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -33,18 +35,27 @@ Route::prefix('auth')->group(function () {
         ->name('password.update');
 });
 
-Route::resource('roles', RoleController::class);
-Route::resource('permissions', PermissionController::class);
+Route::middleware([VerifyRoleMiddleware::class, 'role:admin'])->group(function () {
+    Route::resource('usuarios', UserController::class);
+    Route::get('usuarios/eliminados', [UserController::class, 'trashed'])->name('usuarios.trashed');
+    Route::post('usuarios/{id}/restaurar', [UserController::class, 'restore'])->name('usuarios.restore');
+});
+
+
+
+Route::middleware([VerifyRoleMiddleware::class, 'role:user'])->group(function () {
+    Route::resource('roles', RoleController::class);
+    Route::resource('permissions', PermissionController::class);
+});
+
 
 // Rutas protegidas por autenticación
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
-    Route::resource('usuarios', UserController::class)->except(['show']);
-    Route::get('usuarios/{id}', [UserController::class, 'show'])->where('id', '[0-9]+')->name('usuarios.show');
-    Route::get('usuarios/eliminados', [UserController::class, 'trashed'])->name('usuarios.trashed');
-    Route::post('usuarios/{id}/restaurar', [UserController::class, 'restore'])->name('usuarios.restore');
+
+    //Route::get('usuarios/{id}', [UserController::class, 'show'])->where('id', '[0-9]+')->name('usuarios.show');
+
     Route::post('/logout', [GoogleController::class, 'logout'])->name('logout');
-    Route::get('usuarios/crear', [UserController::class, 'create'])->name('usuarios.create'); 
-    Route::post('usuarios', [UserController::class, 'store'])->name('usuarios.store'); 
+
     Route::get('pruebalayout', function(){
         return view('layouts.component-layout');
     })->name('usuarios.layouts'); 
@@ -69,3 +80,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     })->name('auth.twofactor'); 
 });
 
+Route::prefix('admin')->middleware('role:admin')->group(function(){
+    
+});
+
+Route::group(['middleware' => ['role:admin']], function () { 
+    
+ });
