@@ -1,3 +1,6 @@
+
+<x-layout-home>
+       
 <section class="first-baner">
     <h2>Suerte Paisa</h2>
     <p>Tu oportunidad de ganar al estilo paisa</p>
@@ -236,3 +239,4 @@
         <img src="./laws7.webp" alt="">
     </article>
 </section>
+</x-layout-home>

@@ -54,6 +54,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::get('new', function(){
         return view('auth.auth-plantilla.new-password');
     })->name('auth.new'); 
+    Route::get('plantilla', function(){
+        return view('home.home-main');
+    })->name('auth.new'); 
     Route::get('reset', function(){
         return view('auth.auth-plantilla.reset-password');
     })->name('auth.reset'); 
