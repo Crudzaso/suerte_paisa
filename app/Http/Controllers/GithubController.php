@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\GoogleUser;
+use App\Models\GithubUser;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +14,7 @@ use App\Service\DiscordWebhookService;
 use App\Events\UserLogin;
 use App\Events\UserCreated;
 
-class GoogleController extends Controller
+class GithubController extends Controller
 {
     protected $emailHelper;
 
@@ -25,14 +25,14 @@ class GoogleController extends Controller
 
     public function login()
     {
-        return Socialite::driver('google')->redirect();
+        return Socialite::driver('github')->redirect();
     }
 
     public function callback(Request $request)
     {
         try {
-            $user_google = Socialite::driver('google')->user();
-            $user = User::where('email', $user_google->email)->first();
+            $user_github = Socialite::driver('github')->user();
+            $user = User::where('email', $user_github->email)->first();
 
             if ($user) {
                 Auth::login($user);
@@ -42,27 +42,26 @@ class GoogleController extends Controller
 
             } else {
                 $user = User::create([
-                    'names' => $user_google->name,
-                    'email' => $user_google->email,
+                    'names' => $user_github->name,
+                    'email' => $user_github->email,
                 ]);
 
-                GoogleUser::create([
-                    'email' => $user_google->email,
-                    'name' => $user_google->name,
+                GithubUser::create([
+                    'email' => $user_github->email,
+                    'name' => $user_github->name,
                     'user_id' => $user->id,
                 ]);
 
                 Auth::login($user);
                 
                 $this->emailHelper::sendWelcomeEmail($user);
-
                 event(new UserCreated($user));
             }
             return redirect()->route('usuarios.layouts')->with('success', 'Has iniciado sesión correctamente ');
 
         } catch (\Exception $e) {
-            \Log::error('Google login error:', ['message' => $e->getMessage()]);
-            return redirect()->route('auth.google')->with('error', 'Error al iniciar sesión con Google.');
+            \Log::error('Github login error:', ['message' => $e->getMessage()]);
+            return redirect()->route('auth.github')->with('error', 'Error al iniciar sesión con Github.');
         }
     }
 
