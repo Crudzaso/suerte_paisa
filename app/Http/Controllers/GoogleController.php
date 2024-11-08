@@ -58,7 +58,7 @@ class GoogleController extends Controller
 
                 event(new UserCreated($user));
             }
-            return redirect()->route('usuarios.layouts')->with('success', 'Has iniciado sesión correctamente ');
+            return redirect()->route('usuarios.index')->with('success', 'Has iniciado sesión correctamente ');
 
         } catch (\Exception $e) {
             \Log::error('Google login error:', ['message' => $e->getMessage()]);

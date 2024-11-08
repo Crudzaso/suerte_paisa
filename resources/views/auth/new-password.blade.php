@@ -24,7 +24,7 @@ License: For each use you must have a valid license purchased only from above li
 		<meta property="og:title" content="Metronic - The World's #1 Selling Tailwind CSS & Bootstrap Admin Template by KeenThemes" />
 		<meta property="og:url" content="https://keenthemes.com/metronic" />
 		<meta property="og:site_name" content="Metronic by Keenthemes" />
-		<link rel="canonical" href="http://preview.keenthemes.comauthentication/layouts/corporate/sign-in.html" />
+		<link rel="canonical" href="http://preview.keenthemes.comauthentication/layouts/corporate/new-password.html" />
 		<link rel="shortcut icon" href="assets/media/logos/favicon.ico" />
 		<!--begin::Fonts(mandatory for all pages)-->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
@@ -39,7 +39,7 @@ License: For each use you must have a valid license purchased only from above li
 		<!--end::Theme mode setup on page load-->
 		<!--begin::Root-->
 		<div class="d-flex flex-column flex-root" id="kt_app_root">
-			<!--begin::Authentication - Sign-in -->
+			<!--begin::Authentication - New password -->
 			<div class="d-flex flex-column flex-lg-row flex-column-fluid">
 				<!--begin::Body-->
 				<div class="d-flex flex-column flex-lg-row-fluid w-lg-50 p-10 order-2 order-lg-1">
@@ -48,82 +48,88 @@ License: For each use you must have a valid license purchased only from above li
 						<!--begin::Wrapper-->
 						<div class="w-lg-500px p-10">
 							<!--begin::Form-->
-							<form class="form w-100" novalidate="novalidate" id="kt_sign_in_form" data-kt-redirect-url="index.html" action="#">
-								<!--begin::Heading-->
-								<div class="text-center mb-11">
-									<!--begin::Title-->
-									<h1 class="text-gray-900 fw-bolder mb-3">Sign In</h1>
-									<!--end::Title-->
-									<!--begin::Subtitle-->
-									<div class="text-gray-500 fw-semibold fs-6">Your Social Campaigns</div>
-									<!--end::Subtitle=-->
+							<form class="form w-100" novalidate="novalidate" id="kt_new_password_form" method="POST" action="{{ route('password.update') }}">
+							@csrf
+
+							<input type="hidden" name="token" value="{{ $token }}">
+							<input type="hidden" name="email" value="{{ $email }}">
+
+							<!--begin::Heading-->
+							<div class="text-center mb-10">
+								<!--begin::Title-->
+								<h1 class="text-gray-900 fw-bolder mb-3">Ingrese su nueva contraseña</h1>
+								<!--end::Title-->
+								<!--begin::Link-->
+								<div class="text-gray-500 fw-semibold fs-6">¿Ya has restablecido la contraseña?
+									<a href="{{ route('login') }}" class="link-primary fw-bold">Iniciar sesión</a>
 								</div>
-								<!--begin::Heading-->
-								<!--begin::Login options-->
-								<div class="row g-3 mb-9">
-									<!--begin::Col-->
-									<div class="col-md-6">
-										<!--begin::Google link=-->
-										<a href="#" class="btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100">
-										<img alt="Logo" src="assets/media/svg/brand-logos/google-icon.svg" class="h-15px me-3" />Sign in with Google</a>
-										<!--end::Google link=-->
-									</div>
-									<!--end::Col-->
-									<!--begin::Col-->
-									<div class="col-md-6">
-										<!--begin::Google link=-->
-										<a href="#" class="btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100">
-										<img alt="Logo" src="assets/media/svg/brand-logos/apple-black.svg" class="theme-light-show h-15px me-3" />
-										<img alt="Logo" src="assets/media/svg/brand-logos/apple-black-dark.svg" class="theme-dark-show h-15px me-3" />Sign in with Apple</a>
-										<!--end::Google link=-->
-									</div>
-									<!--end::Col-->
-								</div>
-								<!--end::Login options-->
-								<!--begin::Separator-->
-								<div class="separator separator-content my-14">
-									<span class="w-125px text-gray-500 fw-semibold fs-7">Or with email</span>
-								</div>
-								<!--end::Separator-->
-								<!--begin::Input group=-->
-								<div class="fv-row mb-8">
-									<!--begin::Email-->
-									<input type="text" placeholder="Email" name="email" autocomplete="off" class="form-control bg-transparent" />
-									<!--end::Email-->
-								</div>
-								<!--end::Input group=-->
-								<div class="fv-row mb-3">
-									<!--begin::Password-->
-									<input type="password" placeholder="Password" name="password" autocomplete="off" class="form-control bg-transparent" />
-									<!--end::Password-->
-								</div>
-								<!--end::Input group=-->
+								<!--end::Link-->
+							</div>
+							<!--end::Heading-->
+
+							<!--begin::Input group-->
+							<div class="fv-row mb-8" data-kt-password-meter="true">
 								<!--begin::Wrapper-->
-								<div class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
-									<div></div>
-									<!--begin::Link-->
-									<a href="authentication/layouts/corporate/reset-password.html" class="link-primary">Forgot Password ?</a>
-									<!--end::Link-->
+								<div class="mb-1">
+									<!--begin::Input wrapper-->
+									<div class="position-relative mb-3">
+										<input class="form-control bg-transparent" type="password" placeholder="Contraseña" name="password" autocomplete="off" required minlength="8" />
+										<span class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2" data-kt-password-meter-control="visibility">
+											<i class="ki-outline ki-eye-slash fs-2"></i>
+											<i class="ki-outline ki-eye fs-2 d-none"></i>
+										</span>
+									</div>
+									<!--end::Input wrapper-->
+									<!--begin::Meter-->
+									<div class="d-flex align-items-center mb-3" data-kt-password-meter-control="highlight">
+										<div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
+										<div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
+										<div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
+										<div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px"></div>
+									</div>
+									<!--end::Meter-->
 								</div>
 								<!--end::Wrapper-->
-								<!--begin::Submit button-->
-								<div class="d-grid mb-10">
-									<button type="submit" id="kt_sign_in_submit" class="btn btn-primary">
-										<!--begin::Indicator label-->
-										<span class="indicator-label">Sign In</span>
-										<!--end::Indicator label-->
-										<!--begin::Indicator progress-->
-										<span class="indicator-progress">Please wait... 
-										<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-										<!--end::Indicator progress-->
-									</button>
+								<!--begin::Hint-->
+								<div class="text-muted">
+									Utilice 8 o más caracteres con una combinación de letras, números y símbolos.
 								</div>
-								<!--end::Submit button-->
-								<!--begin::Sign up-->
-								<div class="text-gray-500 text-center fw-semibold fs-6">Not a Member yet? 
-								<a href="authentication/layouts/corporate/sign-up.html" class="link-primary">Sign up</a></div>
-								<!--end::Sign up-->
-							</form>
+								<!--end::Hint-->
+							</div>
+							<!--end::Input group=-->
+
+							<!--begin::Repeat Password-->
+							<div class="fv-row mb-8">
+								<input type="password" placeholder="Repite tu contraseña" name="password_confirmation" autocomplete="off" class="form-control bg-transparent" required />
+							</div>
+							<!--end::Repeat Password-->
+
+							<!--begin::Input group=-->
+							<div class="fv-row mb-8">
+								<label class="form-check form-check-inline">
+									<input class="form-check-input" type="checkbox" name="toc" value="1" />
+									<span class="form-check-label fw-semibold text-gray-700 fs-6 ms-1">Acepto los 
+									<a href="#" class="ms-1 link-primary">términos y condiciones</a>.</span>
+								</label>
+							</div>
+							<!--end::Input group=-->
+
+							<!--begin::Action-->
+							<div class="d-grid mb-10">
+								<button type="submit" id="kt_new_password_submit" class="btn btn-primary">
+									<!--begin::Indicator label-->
+									<span class="indicator-label">Enviar</span>
+									<!--end::Indicator label-->
+									<!--begin::Indicator progress-->
+									<span class="indicator-progress">Por favor espere... 
+										<span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+									</span>
+									<!--end::Indicator progress-->
+								</button>
+							</div>
+							<!--end::Action-->
+						</form>
+
 							<!--end::Form-->
 						</div>
 						<!--end::Wrapper-->
@@ -135,8 +141,8 @@ License: For each use you must have a valid license purchased only from above li
 						<div class="me-10">
 							<!--begin::Toggle-->
 							<button class="btn btn-flex btn-link btn-color-gray-700 btn-active-color-primary rotate fs-base" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" data-kt-menu-offset="0px, 0px">
-								<img data-kt-element="current-lang-flag" class="w-20px h-20px rounded me-3" src="assets/media/flags/united-states.svg" alt="" />
-								<span data-kt-element="current-lang-name" class="me-1">English</span>
+								<img data-kt-element="current-lang-flag" class="w-20px h-20px rounded me-3" src="assets/logos/españa.png" alt="" />
+								<span data-kt-element="current-lang-name" class="me-1">Español</span>
 								<span class="d-flex flex-center rotate-180">
 									<i class="ki-outline ki-down fs-5 text-muted m-0"></i>
 								</span>
@@ -148,9 +154,9 @@ License: For each use you must have a valid license purchased only from above li
 								<div class="menu-item px-3">
 									<a href="#" class="menu-link d-flex px-5" data-kt-lang="English">
 										<span class="symbol symbol-20px me-4">
-											<img data-kt-element="lang-flag" class="rounded-1" src="assets/media/flags/united-states.svg" alt="" />
+											<img data-kt-element="lang-flag" class="rounded-1" src="assets/logos/españa.png" alt="" />
 										</span>
-										<span data-kt-element="lang-name">English</span>
+										<span data-kt-element="lang-name">Español</span>
 									</a>
 								</div>
 								<!--end::Menu item-->
@@ -200,9 +206,9 @@ License: For each use you must have a valid license purchased only from above li
 						<!--end::Languages-->
 						<!--begin::Links-->
 						<div class="d-flex fw-semibold text-primary fs-base gap-5">
-							<a href="pages/team.html" target="_blank">Terms</a>
-							<a href="pages/pricing/column.html" target="_blank">Plans</a>
-							<a href="pages/contact.html" target="_blank">Contact Us</a>
+							<a href="pages/team.html" target="_blank">Terminos</a>
+							<a href="pages/pricing/column.html" target="_blank">Planes</a>
+							<a href="pages/contact.html" target="_blank">Contactanos</a>
 						</div>
 						<!--end::Links-->
 					</div>
@@ -214,29 +220,38 @@ License: For each use you must have a valid license purchased only from above li
 					<!--begin::Content-->
 					<div class="d-flex flex-column flex-center py-7 py-lg-15 px-5 px-md-15 w-100">
 						<!--begin::Logo-->
-						<a href="index.html" class="mb-0 mb-lg-12">
-							<img alt="Logo" src="assets/media/logos/custom-1.png" class="h-60px h-lg-75px" />
+						<a href="index.html" class="mb-0 mb-lg-12" id="logo-contenedor">
+							<img alt="Logo" src="assets/logos/logo.webp" class="h-100px h-lg-75px" id="logo-image" />
 						</a>
+
+						<script>
+							function toggleLogoVisibility() {
+							var logoContainer = document.getElementById('logo-contenedor');
+							
+							if (window.innerWidth < 995) {
+								logoContainer.style.display = 'block';
+							} else {
+								logoContainer.style.display = 'none'; 
+							}
+							}
+
+							window.addEventListener('resize', toggleLogoVisibility);
+
+							window.addEventListener('load', toggleLogoVisibility);
+						</script>
+
 						<!--end::Logo-->
 						<!--begin::Image-->
-						<img class="d-none d-lg-block mx-auto w-275px w-md-50 w-xl-500px mb-10 mb-lg-20" src="assets/media/misc/auth-screens.png" alt="" />
+						<img class="d-none d-lg-block mx-auto w-275px w-md-50 w-xl-500px mb-10 mb-lg-20" src="assets/logos/logo.webp" alt="" />
 						<!--end::Image-->
 						<!--begin::Title-->
-						<h1 class="d-none d-lg-block text-white fs-2qx fw-bolder text-center mb-7">Fast, Efficient and Productive</h1>
-						<!--end::Title-->
-						<!--begin::Text-->
-						<div class="d-none d-lg-block text-white fs-base text-center">In this kind of post, 
-						<a href="#" class="opacity-75-hover text-warning fw-bold me-1">the blogger</a>introduces a person they’ve interviewed 
-						<br />and provides some background information about 
-						<a href="#" class="opacity-75-hover text-warning fw-bold me-1">the interviewee</a>and their 
-						<br />work following this is a transcript of the interview.</div>
-						<!--end::Text-->
+						<h1 class="d-none d-lg-block text-black fs-2qx fw-bolder text-center mb-7">¡Tu oportunidad de ganar, al estilo 
 					</div>
 					<!--end::Content-->
 				</div>
 				<!--end::Aside-->
 			</div>
-			<!--end::Authentication - Sign-in-->
+			<!--end::Authentication - New password-->
 		</div>
 		<!--end::Root-->
 		<!--begin::Modals-->
@@ -2427,7 +2442,7 @@ License: For each use you must have a valid license purchased only from above li
 		<script src="assets/js/scripts.bundle.js"></script>
 		<!--end::Global Javascript Bundle-->
 		<!--begin::Custom Javascript(used for this page only)-->
-		<script src="assets/js/custom/authentication/sign-in/general.js"></script>
+		<script src="assets/js/custom/authentication/reset-password/new-password.js"></script>
 		<script src="assets/js/custom/utilities/modals/create-campaign.js"></script>
 		<script src="assets/js/custom/utilities/modals/new-target.js"></script>
 		<script src="assets/js/custom/utilities/modals/new-card.js"></script>

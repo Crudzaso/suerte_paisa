@@ -9,6 +9,7 @@ use App\Http\Requests\UserUpdateFormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
+
 use App\Service\DiscordWebhookService;
 
 use App\Events\UserCreated;
