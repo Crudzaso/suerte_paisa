@@ -9,9 +9,10 @@ use Illuminate\Validation\ValidationException;
 
 class ResetPasswordController extends Controller
 {
+ 
     public function showResetForm(Request $request, $token = null)
     {
-        return view('auth.reset-password')->with([
+        return view('auth.new-password')->with([
             'token' => $token, 
             'email' => $request->email
         ]);
@@ -19,26 +20,24 @@ class ResetPasswordController extends Controller
 
     public function reset(Request $request)
     {
-        // Validación de los datos del formulario
         $request->validate([
-            'email' => 'required|email|exists:users,email',
-            'password' => 'required|confirmed|min:8',
-            'token' => 'required'
+            'email' => 'required|email|exists:users,email',  
+            'password' => 'required|confirmed|min:8',     
+            'token' => 'required'             
         ]);
 
-        // Intentar restablecer la contraseña
         $status = Password::reset($request->only('email', 'password', 'password_confirmation', 'token'), function ($user, $password) {
-            $user->password = bcrypt($password); // Encriptar la nueva contraseña
+            $user->password = bcrypt($password);
             $user->save();
         });
 
-        // Manejo de la respuesta
         if ($status === Password::PASSWORD_RESET) {
-            return redirect()->route('login')->with('status', trans($status));
+            return redirect()->route('login')->with('status', 'Tu contraseña ha sido restablecida. Ahora puedes iniciar sesión.');
         }
 
         return back()->withErrors(['email' => trans($status)]);
     }
 }
+
 
 

@@ -8,6 +8,11 @@ use App\Http\Requests\UserCreateFormRequest;
 use App\Http\Requests\UserUpdateFormRequest;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Http;
+
+
+use App\Service\DiscordWebhookService;
+
 use App\Events\UserCreated;
 use App\Events\UserUpdated;
 use App\Events\UserDeleted;
