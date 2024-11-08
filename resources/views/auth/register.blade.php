@@ -230,21 +230,24 @@ License: For each use you must have a valid license purchased only from above li
 					<!--begin::Content-->
 					<div class="d-flex flex-column flex-center py-7 py-lg-15 px-5 px-md-15 w-100">
 						<!--begin::Logo-->
-						<a href="index.html" class="mb-0 mb-lg-12" id="logo-container">
+						<a class="mb-0 mb-lg-12" id="logo-contenedor">
 							<img alt="Logo" src="assets/logos/logo.webp" class="h-100px h-lg-75px" id="logo-image" />
 						</a>
 
 						<script>
 							function toggleLogoVisibility() {
-								var logoContainer = document.getElementById('logo-container');
-								var logoImage = document.getElementById('logo-image');
-								
-								if (window.innerWidth < 995) {
-									logoContainer.style.display = 'block';
-								} else {
-									logoContainer.style.display = 'none'; 
-								}
+							var logoContainer = document.getElementById('logo-contenedor');
+							
+							if (window.innerWidth < 995) {
+								logoContainer.style.display = 'block';
+							} else {
+								logoContainer.style.display = 'none'; 
 							}
+							}
+
+							window.addEventListener('resize', toggleLogoVisibility);
+
+							window.addEventListener('load', toggleLogoVisibility);
 						</script>
 
 						<!--end::Logo-->

@@ -48,11 +48,15 @@ License: For each use you must have a valid license purchased only from above li
 						<!--begin::Wrapper-->
 						<div class="w-lg-500px p-10">
 							<!--begin::Form-->
+							
 							@if (session('status'))
-								<div class="mb-4 font-medium text-sm text-green-600">
-									{{ session('status') }}
+								<div class="flex justify-center items-center min-h-screen">
+									<div class="mb-4 font-medium text-sm text-green-600 text-center">
+										{{ session('status') }}
+									</div>
 								</div>
 							@endif
+							
 							<form class="form w-100" novalidate="novalidate" id="kt_password_reset_form" data-kt-redirect-url="authentication/layouts/corporate/new-password.html" method="POST" action="{{ route('password.email') }}">
 							@csrf
 								<!--begin::Heading-->
@@ -183,16 +187,20 @@ License: For each use you must have a valid license purchased only from above li
 
 						<script>
 							function toggleLogoVisibility() {
-								var logoContainer = document.getElementById('logo-contenedor');
-								var logoImage = document.getElementById('logo-image');
-								
-								if (window.innerWidth < 995) {
-									logoContainer.style.display = 'block';
-								} else {
-									logoContainer.style.display = 'none'; 
-								}
+							var logoContainer = document.getElementById('logo-contenedor');
+							
+							if (window.innerWidth < 995) {
+								logoContainer.style.display = 'block';
+							} else {
+								logoContainer.style.display = 'none'; 
 							}
+							}
+
+							window.addEventListener('resize', toggleLogoVisibility);
+
+							window.addEventListener('load', toggleLogoVisibility);
 						</script>
+
 						<!--end::Logo-->
 						<!--begin::Image-->
 						<img class="d-none d-lg-block mx-auto w-275px w-md-50 w-xl-500px mb-10 mb-lg-20" src="assets/logos/logo.webp" alt="" />
