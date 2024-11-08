@@ -121,91 +121,11 @@
     <h3>Sorteos finalizados</h3>
 
     {{-- -----------------------COMPONETIZAR-------------------------- --}}
-    <article class="container-active-loteries">
-        <div class="card-lotery">
-            <div class="color-card">
-
-            </div>
-            <div class="content-card">
-                <img src="https://loteriademedellin.com.co/wp-content/uploads/2023/11/logo-loteria-de-medellin-1.png" alt="">
-            <h4>TITULO DE LA RIFA</h4>
-            <p>Juega: fecha de juego</p>
-            <button class="btn-card">Jugar!</button>
-            </div>
-        </div>
-
-        <div class="card-lotery">
-            <div class="color-card">
-            </div>
-            <div class="content-card">
-                <img src="https://loteriademedellin.com.co/wp-content/uploads/2023/11/logo-loteria-de-medellin-1.png" alt="">
-            <h4>TITULO DE LA RIFA</h4>
-            <p>Juega: fecha de juego</p>
-            <button class="btn-card">Jugar!</button>
-            </div>
-        </div>
-
-        <div class="card-lotery">
-            <div class="color-card">
-            </div>
-            <div class="content-card">
-                <img src="https://loteriademedellin.com.co/wp-content/uploads/2023/11/logo-loteria-de-medellin-1.png" alt="">
-            <h4>TITULO DE LA RIFA</h4>
-            <p>Juega: fecha de juego</p>
-            <button class="btn-card">Jugar!</button>
-            </div>
-        </div>
-
-        <div class="card-lotery">
-            <div class="color-card">
-            </div>
-            <div class="content-card">
-                <img src="https://loteriademedellin.com.co/wp-content/uploads/2023/11/logo-loteria-de-medellin-1.png" alt="">
-            <h4>TITULO DE LA RIFA</h4>
-            <p>Juega: fecha de juego</p>
-            <button class="btn-card">Jugar!</button>
-            </div>
-        </div>
-
-        <div class="card-lotery">
-            <div class="color-card">
-            </div>
-            <div class="content-card">
-                <img src="https://loteriademedellin.com.co/wp-content/uploads/2023/11/logo-loteria-de-medellin-1.png" alt="">
-            <h4>TITULO DE LA RIFA</h4>
-            <p>Juega: fecha de juego</p>
-            <button class="btn-card">Jugar!</button>
-            </div>
-        </div>
-
-        <div class="card-lotery">
-            <div class="color-card">
-            </div>
-            <div class="content-card">
-                <img src="https://loteriademedellin.com.co/wp-content/uploads/2023/11/logo-loteria-de-medellin-1.png" alt="">
-            <h4>TITULO DE LA RIFA</h4>
-            <p>Juega: fecha de juego</p>
-            <button class="btn-card">Jugar!</button>
-            </div>
-        </div>
-
+    <article id="container-active-loteries" class="container-active-loteries">
         
 
         <div class="card-lotery">
             <div class="color-card">
-
-            </div>
-            <div class="content-card">
-                <img src="https://loteriademedellin.com.co/wp-content/uploads/2023/11/logo-loteria-de-medellin-1.png" alt="">
-            <h4>TITULO DE LA RIFA</h4>
-            <p>Juega: fecha de juego</p>
-            <button class="btn-card">Jugar!</button>
-            </div>
-        </div>
-
-        <div class="card-lotery">
-            <div class="color-card">
-
             </div>
             <div class="content-card">
                 <img src="https://loteriademedellin.com.co/wp-content/uploads/2023/11/logo-loteria-de-medellin-1.png" alt="">
@@ -239,4 +159,6 @@
         <img src="./laws7.webp" alt="">
     </article>
 </section>
+
+<script src="{{ asset('js/avalibleLoteries.js') }}"></script>
 </x-layout-home>

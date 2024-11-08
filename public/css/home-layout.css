@@ -158,7 +158,7 @@ header{
 .color-card{
     width: 25%;
     height: 100%;
-    background-color: #FFA500;
+    background-color: #FFD700;
     margin: 0px;
     padding: 0px;
     border-radius: 23px 0px 0px 23px;
@@ -189,7 +189,7 @@ header{
     .btn-card{
         width: 100px;
         height: 30px;
-        background-color: #FFA500;
+        background-color: #007BFF;
         border: none;
         border-radius: 25px;
         color: white;
