@@ -5,7 +5,6 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\GithubController;
 use App\Http\Controllers\AuthController;
-
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Auth\ForgotPasswordController;
