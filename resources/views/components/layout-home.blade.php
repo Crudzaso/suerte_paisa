@@ -10,9 +10,6 @@
 </head>
 <body>
     <header>
-        <div class="bg-blue-500 text-white p-4">
-            Si puedes ver esto con un fondo azul, Tailwind está funcionando.
-        </div>
         <section class="top-header">
             <article>
                 <p class="top-header-text">Participa en rifas activas 24/7!!</p>
@@ -29,8 +26,22 @@
             </div>
     
             <div class="auth-links md:flex hidden space-x-4 auth-buttons">
-                <a href="">INICIAR SESION</a>
-                <a href="">REGISTRARSE</a>
+
+                {{-- check if the user is authenticated or not and show the options --}}
+                @auth()
+                <a href="">Mi perfil</a>
+                <a href="">Dashboard</a>
+                <form action="{{ route('logout') }}" method="POST" class="mb-3">
+                    @csrf
+                    <button type="submit" class="btn btn-danger">Cerrar Sesión</button>
+                </form>
+                @endauth
+
+                @guest()
+                <a href="">Iniciar sesion</a>
+                <a href="">Registrarse</a>
+                @endguest
+               
             </div>
     
             <!-- Botón de menú hamburguesa -->
@@ -48,8 +59,16 @@
             <a href="">Guía</a>
             <a href="">Transparencia</a>
             <div class="auth-buttons">
-                <a href="">INICIAR SESION</a>
-                <a href="">REGISTRARSE</a>
+                @auth()
+                <a href="">Mi perfil</a>
+                <a href="">Dashboard</a>
+                <a href="">Cerrar sesion</a>
+                @endauth
+
+                @guest()
+                <a href="">Iniciar sesion</a>
+                <a href="">Registrarse</a>
+                @endguest
             </div>
         </div>
     </header>

@@ -37,6 +37,9 @@ Route::prefix('auth')->group(function () {
         ->name('password.update');
 });
 
+Route::get('plantilla', function(){
+    return view('home.home-main');
+})->name('auth.new'); 
 // Rutas protegidas por autenticación
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
     Route::resource('usuarios', UserController::class)->except(['show']);
@@ -53,9 +56,6 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     //THIS ROUTES WERE CREATED TO CHECK THE FUNCTIONALITY OF LOGIN VIEWS  --TO DELETE   :jarenas1
     Route::get('new', function(){
         return view('auth.auth-plantilla.new-password');
-    })->name('auth.new'); 
-    Route::get('plantilla', function(){
-        return view('home.home-main');
     })->name('auth.new'); 
     Route::get('reset', function(){
         return view('auth.auth-plantilla.reset-password');
