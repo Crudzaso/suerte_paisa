@@ -42,7 +42,7 @@ Route::prefix('auth')->group(function () {
         ->name('password.update');
 });
 
-Route::middleware([VerifyRoleMiddleware::class, 'role:admin'])->group(function () {
+Route::middleware(['role:admin'])->group(function () {
     Route::resource('usuarios', UserController::class);
     Route::get('usuarios/eliminados', [UserController::class, 'trashed'])->name('usuarios.trashed');
     Route::post('usuarios/{id}/restaurar', [UserController::class, 'restore'])->name('usuarios.restore');
@@ -50,16 +50,15 @@ Route::middleware([VerifyRoleMiddleware::class, 'role:admin'])->group(function (
 
 
 
-Route::middleware([VerifyRoleMiddleware::class, 'role:user'])->group(function () {
+Route::middleware(['role:admin|user'])->group(function () {
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
+
 });
 
 
 // Rutas protegidas por autenticación
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
-
-    //Route::get('usuarios/{id}', [UserController::class, 'show'])->where('id', '[0-9]+')->name('usuarios.show');
 
     Route::post('/logout', [GoogleController::class, 'logout'])->name('logout');
 
@@ -86,11 +85,3 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         return view('auth.auth-plantilla.two-factor');
     })->name('auth.twofactor'); 
 });
-
-Route::prefix('admin')->middleware('role:admin')->group(function(){
-    
-});
-
-Route::group(['middleware' => ['role:admin']], function () { 
-    
- });
