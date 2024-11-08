@@ -95,12 +95,12 @@ class SendDiscordNotification
                     ],
                     [
                         'name' => 'Direccion',
-                        'value' => $user->address ?? 'no proporcionado',
+                        'value' => $user->address ?? 'No proporcionado',
                         'inline' => false,
                     ],
                     [
                         'name' => 'Realizado por',
-                        'value' => "{$actor->names} {$actor->lastnames} con el id {$actor->id}",
+                        'value' => "{$actor->names} {$actor->lastnames} con el ID {$actor->id}",
                         'inline' => false,
                     ],
                 ],
