@@ -16,7 +16,7 @@
             </article>
         </section>
         <nav class="bottom-header">
-            <a href=""><img class="img-navbar" src="./th-removebg-preview.png" alt=""></a>
+            <a href=""><img class="img-navbar" src="{{ asset('images/logo.png') }}" alt=""></a>
     
             <div class="links md:flex hidden space-x-4">
                 <a href="">Sorteos</a>
