@@ -14,6 +14,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('plantilla', function(){
+    return view('home.home-main');
+})->name('auth.new'); 
+
+
 // Rutas protegidas por autenticación
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
     Route::resource('usuarios', UserController::class)->except(['show']);
