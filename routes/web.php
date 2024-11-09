@@ -4,84 +4,53 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\GithubController;
-use Illuminate\Support\Facades\Auth;
-
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
-
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
-
 use App\Http\Middleware\VerifyRoleMiddleware;
+use Illuminate\Support\Facades\Auth;
 
+// Home Route
 Route::get('/', function () {
-    return view('welcome');
+    Route::post('login', [AuthController::class, 'login'])->name('login');
+    //return view('welcome');
 });
 
-// Rutas para autenticación con Google 
-Route::get('/auth/google', [GoogleController::class, 'login'])->name('auth.google');
-Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('auth.google.callback');
-
-//Rutas para autenticación con Github
-Route::get('auth/github', [GithubController::class, 'login'])->name('github.login');
-
-Route::get('auth/github/callback', [GithubController::class, 'callback'])->name('auth.github.callback');
-
-
-Route::prefix('auth')->group(function () {
-    Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])
-        ->name('password.request');
-
-    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])
-        ->name('password.email');
-
-    Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])
-        ->name('password.reset');
-
-    Route::post('/reset-password', [ResetPasswordController::class, 'reset'])
-        ->name('password.update');
+// Google Authentication Routes
+Route::prefix('auth/google')->group(function () {
+    Route::get('/', [GoogleController::class, 'login'])->name('auth.google');
+    Route::get('/callback', [GoogleController::class, 'callback'])->name('auth.google.callback');
 });
 
+// Github Authentication Routes
+Route::prefix('auth/github')->group(function () {
+    Route::get('/', [GithubController::class, 'login'])->name('github.login');
+    Route::get('/callback', [GithubController::class, 'callback'])->name('auth.github.callback');
+});
+
+// User Routes
+Route::resource('usuarios', UserController::class);
+
+// Admin Routes (Protected by Role Middleware)
 Route::middleware(['role:admin'])->group(function () {
-    Route::resource('usuarios', UserController::class);
     Route::get('usuarios/eliminados', [UserController::class, 'trashed'])->name('usuarios.trashed');
     Route::post('usuarios/{id}/restaurar', [UserController::class, 'restore'])->name('usuarios.restore');
-});
-
-
-
-Route::middleware(['role:admin|user'])->group(function () {
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
-
 });
 
+// Password Reset Routes
+Route::get('reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('auth.reset');
+Route::post('reset', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('new-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('new-password', [ResetPasswordController::class, 'reset'])->name('password.update');
 
-// Rutas protegidas por autenticación
+// Registration Routes
+Route::get('registro', function() { return view('auth.register'); })->name('registro');
+Route::post('registro', [AuthController::class, 'registro'])->name('registro.submit');
+
+// Authenticated Routes (Protected by Auth Middleware)
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
-
     Route::post('/logout', [GoogleController::class, 'logout'])->name('logout');
-
-    Route::get('pruebalayout', function(){
-        return view('layouts.component-layout');
-    })->name('usuarios.layouts'); 
-
-    
-    
-    //THIS ROUTES WERE CREATED TO CHECK THE FUNCTIONALITY OF LOGIN VIEWS  --TO DELETE   :jarenas1
-    Route::get('new', function(){
-        return view('auth.auth-plantilla.new-password');
-    })->name('auth.new'); 
-    Route::get('reset', function(){
-        return view('auth.auth-plantilla.reset-password');
-    })->name('auth.reset'); 
-    Route::get('signin', function(){
-        return view('auth.auth-plantilla.sign-in');
-    })->name('auth.signin'); 
-    Route::get('signup', function(){
-        return view('auth.auth-plantilla.sign-up');
-    })->name('auth.sign'); 
-    Route::get('twofactor', function(){
-        return view('auth.auth-plantilla.two-factor');
-    })->name('auth.twofactor'); 
 });
