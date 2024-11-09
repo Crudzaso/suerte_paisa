@@ -30,7 +30,7 @@
                 {{-- check if the user is authenticated or not and show the options --}}
                 @auth()
                 <a href="">Mi perfil</a>
-                <a href="">Dashboard</a>
+                {{-- <a href="{{ route('dashboard') }}">Dashboard</a> --}}
                 <form action="{{ route('logout') }}" method="POST" class="mb-3">
                     @csrf
                     <button type="submit" class="btn btn-danger">Cerrar Sesión</button>
@@ -38,8 +38,8 @@
                 @endauth
 
                 @guest()
-                <a href="">Iniciar sesion</a>
-                <a href="">Registrarse</a>
+                <a href="{{ route('login') }}">Iniciar sesion</a>
+                <a href="{{ route('registro') }}">Registrarse</a>
                 @endguest
                
             </div>
@@ -61,13 +61,16 @@
             <div class="auth-buttons">
                 @auth()
                 <a href="">Mi perfil</a>
-                <a href="">Dashboard</a>
-                <a href="">Cerrar sesion</a>
+                <a href="{{ route('dashboard') }}">Dashboard</a>
+                <form action="{{ route('logout') }}" method="POST" class="mb-3">
+                    @csrf
+                    <button type="submit" class="btn btn-danger">Cerrar Sesión</button>
+                </form>
                 @endauth
 
                 @guest()
-                <a href="">Iniciar sesion</a>
-                <a href="">Registrarse</a>
+                <a href="{{ route('login') }}">Iniciar sesion</a>
+                <a href="{{ route('registro') }}">Registrarse</a>
                 @endguest
             </div>
         </div>

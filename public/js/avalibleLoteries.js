@@ -31,7 +31,6 @@ const getLoteries = async () => {
             <h4>${lotery.lottery}</h4>
             <p>Juegó: ${lotery.date}</p>
             <p>Resultado: ${lotery.result}</p>
-            <button class="btn-card">Jugar!</button>
             </div>
         </div>
             `
