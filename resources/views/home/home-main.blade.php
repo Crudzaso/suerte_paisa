@@ -119,25 +119,11 @@
 
 <section class="active-loteries">
     <h3>Sorteos finalizados</h3>
-
-    {{-- -----------------------COMPONETIZAR-------------------------- --}}
     <article id="container-active-loteries" class="container-active-loteries">
-        
-
-        <div class="card-lotery">
-            <div class="color-card">
-            </div>
-            <div class="content-card">
-                <img src="https://loteriademedellin.com.co/wp-content/uploads/2023/11/logo-loteria-de-medellin-1.png" alt="">
-            <h4>TITULO DE LA RIFA</h4>
-            <p>Juega: fecha de juego</p>
-            <button class="btn-card">Jugar!</button>
-            </div>
-        </div>
+        {{-- CONTENT FROM JS --}}
     </article>
 </section>
 
-{{-- -------------------------------------------------------------------- --}}
 <section class="transparency-container">
     <article class="company-transapency">
         <img src="./rules1.jpg" alt="">
