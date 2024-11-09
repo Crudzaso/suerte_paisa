@@ -57,7 +57,7 @@ class GithubController extends Controller
                 $this->emailHelper::sendWelcomeEmail($user);
                 event(new UserCreated($user));
             }
-            return redirect()->route('usuarios.layouts')->with('success', 'Has iniciado sesión correctamente ');
+            return redirect()->route('home')->with('success', 'Has iniciado sesión correctamente ');
 
         } catch (\Exception $e) {
             \Log::error('Github login error:', ['message' => $e->getMessage()]);
@@ -68,6 +68,6 @@ class GithubController extends Controller
     public function logout(Request $request)
     {
         Auth::guard('web')->logout();
-        return redirect()->route('login')->with('success', 'Has cerrado sesión correctamente.');
+        return redirect()->route('home')->with('success', 'Has cerrado sesión correctamente.');
     }
 }

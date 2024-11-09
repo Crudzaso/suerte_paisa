@@ -30,7 +30,7 @@
                 {{-- check if the user is authenticated or not and show the options --}}
                 @auth()
                 <a href="">Mi perfil</a>
-                {{-- <a href="{{ route('dashboard') }}">Dashboard</a> --}}
+                <a href="{{ route('dashboard') }}">Dashboard</a>
                 <form action="{{ route('logout') }}" method="POST" class="mb-3">
                     @csrf
                     <button type="submit" class="btn btn-danger">Cerrar Sesión</button>

@@ -58,7 +58,7 @@ class GoogleController extends Controller
 
                 event(new UserCreated($user));
             }
-            return redirect()->route('usuarios.index')->with('success', 'Has iniciado sesión correctamente ');
+            return redirect()->route('home')->with('success', 'Has iniciado sesión correctamente ');
 
         } catch (\Exception $e) {
             \Log::error('Google login error:', ['message' => $e->getMessage()]);
@@ -69,6 +69,6 @@ class GoogleController extends Controller
     public function logout(Request $request)
     {
         Auth::guard('web')->logout();
-        return redirect()->route('login')->with('success', 'Has cerrado sesión correctamente.');
+        return redirect()->route('home')->with('success', 'Has cerrado sesión correctamente.');
     }
 }

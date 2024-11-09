@@ -15,9 +15,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('plantilla', function(){
+Route::get('home', function(){
     return view('home.home-main');
-})->name('auth.new'); 
+})->name('home'); 
 
 
 // Rutas protegidas por autenticación
