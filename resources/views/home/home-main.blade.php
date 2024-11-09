@@ -136,13 +136,13 @@
 
 <section class="transparency-container">
     <article class="company-laws">
-        <img src="./laws1.webp" alt="">
-        <img src="./laws2.webp" alt="">
-        <img src="./laws23.webp" alt="">
-        <img src="./laws4.webp" alt="">
-        <img src="./laws5.webp" alt="">
-        <img src="./laws6.webp" alt="">
-        <img src="./laws7.webp" alt="">
+        <img src="{{ asset('images/laws1.webp') }}" alt="">
+        <img src="{{ asset('images/laws2.webp') }}" alt="">
+        <img src="{{ asset('images/laws3.webp') }}" alt="">
+        <img src="{{ asset('images/laws4.webp') }}" alt="">
+        <img src="{{ asset('images/laws5.webp') }}" alt="">
+        <img src="{{ asset('images/laws6.webp') }}" alt="">
+        <img src="{{ asset('images/laws7webp') }}" alt="">
     </article>
 </section>
 
