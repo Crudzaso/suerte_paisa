@@ -126,11 +126,11 @@
 
 <section class="transparency-container">
     <article class="company-transapency">
-        <img src="./rules1.jpg" alt="">
-        <img src="./rules2.jpg" alt="">
-        <img src="./rules3.jpg" alt="">
-        <img src="./rules4.jpg" alt="">
-        <img src="./rules5.jpg" alt="">
+        <img src="{{ asset('images/rules1.jpg') }}" alt="">
+        <img src="{{ asset('images/rules2.jpg') }}" alt="">
+        <img src="{{ asset('images/rules3.jpg') }}" alt="">
+        <img src="{{ asset('images/rules4.jpg') }}" alt="">
+        <img src="{{ asset('images/rules5.jpg') }}" alt="">
     </article>
 </section>
 
