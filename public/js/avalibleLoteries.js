@@ -5,6 +5,7 @@ const getLoteries = async () => {
     try {
         const response = await fetch('https://api-resultadosloterias.com/api/results');
         if (!response.ok) {
+
             container.innerHTML=`
                 <div class="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800" role="alert">
                 <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -31,6 +32,8 @@ const getLoteries = async () => {
             <h4>${lotery.lottery}</h4>
             <p>Juegó: ${lotery.date}</p>
             <p>Resultado: ${lotery.result}</p>
+
+
             </div>
         </div>
             `

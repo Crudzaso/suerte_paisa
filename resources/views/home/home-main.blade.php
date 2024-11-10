@@ -131,6 +131,7 @@
         <img src="{{ asset('images/rules3.jpg') }}" alt="">
         <img src="{{ asset('images/rules4.jpg') }}" alt="">
         <img src="{{ asset('images/rules5.jpg') }}" alt="">
+
     </article>
 </section>
 
