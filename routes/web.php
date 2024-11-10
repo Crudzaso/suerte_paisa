@@ -20,6 +20,9 @@ Route::get('home', function(){
     return view('home.home-main');
 })->name('home'); 
 
+Route::get('details/{id}', function(){
+    return view('home.home-lottery-details');
+})->name('details'); 
 
 
 // Rutas protegidas por autenticación
