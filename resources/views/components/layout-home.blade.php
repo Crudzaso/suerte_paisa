@@ -33,7 +33,7 @@
                 <a href="{{ route('dashboard') }}">Dashboard</a>
                 <form action="{{ route('logout') }}" method="POST" class="mb-3">
                     @csrf
-                    <button type="submit" class="btn btn-danger">Cerrar Sesión</button>
+                    <button type="submit" class="btn-close-session">Cerrar Sesión</button>
                 </form>
                 @endauth
 
@@ -58,13 +58,13 @@
             <a href="">Resultados</a>
             <a href="">Guía</a>
             <a href="">Transparencia</a>
-            <div class="auth-buttons">
+            <div class="auth-buttons mobile-buttons">
                 @auth()
                 <a href="">Mi perfil</a>
                 <a href="{{ route('dashboard') }}">Dashboard</a>
                 <form action="{{ route('logout') }}" method="POST" class="mb-3">
                     @csrf
-                    <button type="submit" class="btn btn-danger">Cerrar Sesión</button>
+                    <button type="submit" class="btn-close-session">Cerrar Sesión</button>
                 </form>
                 @endauth
 
