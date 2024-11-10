@@ -21,6 +21,8 @@ class App extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('auth.auth-plantilla.two-factor');
+
+        return view('home.home-main');
+
     }
 }

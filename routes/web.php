@@ -9,14 +9,17 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('plantilla', function(){
+
+Route::get('home', function(){
     return view('home.home-main');
-})->name('auth.new'); 
+})->name('home'); 
+
 
 
 // Rutas protegidas por autenticación
@@ -28,7 +31,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::post('/logout', [GoogleController::class, 'logout'])->name('logout');
     Route::get('usuarios/crear', [UserController::class, 'create'])->name('usuarios.create'); 
     Route::post('usuarios', [UserController::class, 'store'])->name('usuarios.store'); 
-    
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard'); 
     Route::get('twofactor', function(){return view('auth.auth-plantilla.two-factor');})->name('auth.twofactor'); 
 });
 
@@ -58,4 +61,3 @@ Route::post('login', [AuthController::class, 'login'])->name('login');
 Route::get('registro', function() {return view('auth.register');})->name('registro');
 
 Route::post('registro', [AuthController::class, 'registro'])->name('registro.submit');
-

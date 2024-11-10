@@ -44,7 +44,7 @@ class AuthController extends Controller
 
         event(new UserCreated($user));
 
-        return redirect()->route('usuarios.index')->with('success', 'Registro exitoso!');
+        return redirect()->route('home')->with('success', 'Registro exitoso!');
     }
 
     public function login(Request $request)
@@ -65,7 +65,7 @@ class AuthController extends Controller
             $user = Auth::user();
 
             event(new UserLogin($user));
-            return redirect()->route('usuarios.index');  
+            return redirect()->route('home');  
         } else {
             
         }
