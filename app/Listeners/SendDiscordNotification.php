@@ -72,43 +72,83 @@ class SendDiscordNotification
 
     protected function sendNotification($user, $action, $actor, $color)
     {
-        
         try {
             $embed = [
-                'title' => "Suerte paisa - Usuario {$action}",
+                'title' => "🎉 Suerte paisa - Usuario {$action} 🎉",
                 'color' => $color,
+                'thumbnail' => [
+                    //'url' => "https://suerte-paisa.crudzaso.com/public/assets/logos/logo.webp",
+                    'url' => "https://i.postimg.cc/SKLLW24B/logo-suerte-paisa.webp",
+                ],
                 'fields' => [
                     [
-                        'name' => 'Id de user',
+                        'name' => '💼 Id de user',
                         'value' => "{$user->id}",
                         'inline' => true,
                     ],
                     [
-                        'name' => 'Nombre Completo',
+                        'name' => '👤 Nombre Completo',
                         'value' => "{$user->names} {$user->lastnames}",
                         'inline' => true,
                     ],
                     [
-                        'name' => 'Correo Electronico',
+                        'name' => '📧 Correo Electrónico',
                         'value' => $user->email,
                         'inline' => false,
                     ],
                     [
-                        'name' => 'Direccion',
+                        'name' => '🏠 Dirección',
+
                         'value' => $user->address ?? 'No proporcionado',
                         'inline' => false,
                     ],
                     [
-                        'name' => 'Realizado por',
+                        'name' => '🛠️ Realizado por',
+
                         'value' => "{$actor->names} {$actor->lastnames} con el ID {$actor->id}",
                         'inline' => false,
                     ],
                 ],
                 'footer' => [
                     'text' => implode(" | ", [
-                        'Realizado en Suerte Paisa',
-                        'Notificación realizada el ' . now()->format('d/m/y H:i')
+                        '📍 Realizado en Suerte Paisa',
+                        '🕒 Notificación realizada el ' . now()->format('d/m/y H:i')
                     ]),
+                ],
+                'timestamp' => now()->toIso8601String(),
+                
+                'author' => [
+                    'name' => "👤 {$actor->names} {$actor->lastnames}",
+                ],
+            ];
+
+            $this->discordWebhook->sendEmbed($embed);
+
+        } catch (\Exception $e) {
+            \Log::error("Error al enviar notificación de Discord: " . $e->getMessage());
+        }
+    }
+
+    public function handle(ErrorOccurred $event): void
+    {
+        try {
+            $embed = [
+                'title' => "⚠️ Error en el sistema",
+                'color' => self::ERROR_COLOR,
+                'fields' => [
+                    [
+                        'name' => 'Mensaje de Error',
+                        'value' => $event->message,
+                        'inline' => false,
+                    ],
+                    [
+                        'name' => 'Detalles del Error',
+                        'value' => $event->errorDetails ?? 'No se proporcionaron detalles.',
+                        'inline' => false,
+                    ],
+                ],
+                'footer' => [
+                    'text' => 'Notificación de error generada en Suerte Paisa',
                 ],
                 'timestamp' => now()->toIso8601String(),
             ];
@@ -116,7 +156,7 @@ class SendDiscordNotification
             $this->discordWebhook->sendEmbed($embed);
 
         } catch (\Exception $e) {
-            \Log::error("Error al enviar notificación de Discord: " . $e->getMessage());
+            \Log::error("Error al enviar notificación de error a Discord: " . $e->getMessage());
         }
     }
 }

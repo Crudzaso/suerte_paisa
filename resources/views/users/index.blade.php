@@ -46,6 +46,7 @@
                 <th>APELLIDOS</th>
                 <th>CORREO</th>
                 <th>DIRECCION</th>
+                <th>ROLES</th>
                 <th>ACCIONES</th>
             </tr>
             </thead>
@@ -57,6 +58,7 @@
                    <td>{{ $user->lastnames }}</td>
                    <td>{{ $user->email }}</td>
                    <td>{{ $user->address }}</td>
+                   <td>{{ $user->roles->isNotEmpty() ? $user->roles->first()->name : 'No asignado' }}</td>
                    <td>
                        <form action="{{ route('usuarios.destroy', $user->id) }}" method="post">
                            @method('DELETE')
