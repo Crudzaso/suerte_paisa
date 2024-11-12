@@ -25,6 +25,7 @@ class UserUpdateFormRequest extends FormRequest
             'names' => 'required|string|max:255',
             'lastnames' => 'required|string|max:255',
             'address' => 'string|max:255',
+            'role' => 'required|exists:roles,id', 
         ];
     }
 

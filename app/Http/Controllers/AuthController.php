@@ -16,6 +16,8 @@ use App\Service\DiscordWebhookService;
 use App\Events\UserLogin;
 use App\Events\UserCreated;
 
+use Spatie\Permission\Models\Role;
+
 class AuthController extends Controller
 {
     protected $discordWebhookService;
@@ -43,6 +45,9 @@ class AuthController extends Controller
                 'password' => Hash::make($validatedData['password']),
                 'address' => $validatedData['address'],
             ]);
+
+            $roleId = Role::where('name', 'user')->first()->id;
+            $user->roles()->attach($roleId);
             
             Auth::login($user);
 

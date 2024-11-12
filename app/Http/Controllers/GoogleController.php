@@ -12,6 +12,8 @@ use App\Service\DiscordWebhookService;
 use App\Events\UserLogin;
 use App\Events\UserCreated;
 
+use Spatie\Permission\Models\Role;
+
 class GoogleController extends Controller
 {
     protected $emailHelper;
@@ -51,6 +53,9 @@ class GoogleController extends Controller
                     'user_id' => $user->id,
                 ]);
 
+                $roleId = Role::where('name', 'user')->first()->id;
+                $user->roles()->attach($roleId);
+
                 Auth::login($user);
                 $this->emailHelper::sendWelcomeEmail($user);
                 event(new UserCreated($user));
@@ -67,7 +72,7 @@ class GoogleController extends Controller
     public function logout(Request $request)
     {
         Auth::guard('web')->logout();
-        return redirect()->route('home')->with('success', 'Has cerrado sesión correctamente.');
+        return redirect()->route('login')->with('success', 'Has cerrado sesión correctamente.');
     }
 }
 

@@ -12,6 +12,8 @@ use App\Service\DiscordWebhookService;
 use App\Events\UserLogin;
 use App\Events\UserCreated;
 
+use Spatie\Permission\Models\Role;
+
 class GithubController extends Controller
 {
     protected $emailHelper;
@@ -50,6 +52,9 @@ class GithubController extends Controller
                     'name' => $user_github->name,
                     'user_id' => $user->id,
                 ]);
+
+                $roleId = Role::where('name', 'user')->first()->id;
+                $user->roles()->attach($roleId);
 
                 Auth::login($user);
                 $this->emailHelper::sendWelcomeEmail($user);
