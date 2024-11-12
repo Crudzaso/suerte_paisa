@@ -119,4 +119,35 @@ class SendDiscordNotification
             \Log::error("Error al enviar notificación de Discord: " . $e->getMessage());
         }
     }
+
+    public function handle(ErrorOccurred $event): void
+    {
+        try {
+            $embed = [
+                'title' => "⚠️ Error en el sistema",
+                'color' => self::ERROR_COLOR,
+                'fields' => [
+                    [
+                        'name' => 'Mensaje de Error',
+                        'value' => $event->message,
+                        'inline' => false,
+                    ],
+                    [
+                        'name' => 'Detalles del Error',
+                        'value' => $event->errorDetails ?? 'No se proporcionaron detalles.',
+                        'inline' => false,
+                    ],
+                ],
+                'footer' => [
+                    'text' => 'Notificación de error generada en Suerte Paisa',
+                ],
+                'timestamp' => now()->toIso8601String(),
+            ];
+
+            $this->discordWebhook->sendEmbed($embed);
+
+        } catch (\Exception $e) {
+            \Log::error("Error al enviar notificación de error a Discord: " . $e->getMessage());
+        }
+    }
 }
