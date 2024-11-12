@@ -7,16 +7,18 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Log;
-use App\Models\User;
 use App\Helpers\EmailHelperGlobal;
+use App\Service\DiscordWebhookService;
 
 class ForgotPasswordController extends Controller
 {
     protected $emailHelper;
+    protected $discordWebhookService;
 
-    public function __construct(EmailHelperGlobal $emailHelper)
+    public function __construct(EmailHelperGlobal $emailHelper, DiscordWebhookService $discordWebhookService)
     {
         $this->emailHelper = $emailHelper;
+        $this->discordWebhookService = $discordWebhookService;
     }
 
     public function showLinkRequestForm()
@@ -26,10 +28,10 @@ class ForgotPasswordController extends Controller
 
     public function sendResetLinkEmail(Request $request)
     {
-        // Validar que el email sea requerido y esté en el formato correcto
-        $request->validate(['email' => 'required|email|exists:users,email']);
-
         try {
+            // Validar que el email sea requerido y esté en el formato correcto
+            $request->validate(['email' => 'required|email|exists:users,email']);
+
             $user = User::where('email', $request->email)->first();
             
             $token = Password::createToken($user);
@@ -44,6 +46,7 @@ class ForgotPasswordController extends Controller
                 'stack' => $e->getTraceAsString(),
             ]);
 
+            $this->discordWebhookService->sendErrorToDiscord("Error al enviar el enlace de restablecimiento: " . $e->getMessage());
             return back()->withErrors(['email' => 'Ocurrió un error al intentar enviar el enlace de restablecimiento.']);
         }
     }
