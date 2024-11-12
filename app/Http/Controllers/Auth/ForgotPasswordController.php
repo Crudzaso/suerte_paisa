@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Log;
+use App\Models\User;
 use App\Helpers\EmailHelperGlobal;
 use App\Service\DiscordWebhookService;
 
@@ -29,7 +30,6 @@ class ForgotPasswordController extends Controller
     public function sendResetLinkEmail(Request $request)
     {
         try {
-            // Validar que el email sea requerido y esté en el formato correcto
             $request->validate(['email' => 'required|email|exists:users,email']);
 
             $user = User::where('email', $request->email)->first();

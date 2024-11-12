@@ -88,5 +88,27 @@ class AuthController extends Controller
             $this->discordWebhookService->sendErrorToDiscord("Error en el login: " . $e->getMessage());
             return redirect()->route('login')->with('error', 'Ocurrió un error al iniciar sesión.');
         }
+      
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required|min:6',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('login')
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+
+            $user = Auth::user();
+
+            event(new UserLogin($user));
+            return redirect()->route('usuarios.index');  
+        } else {
+            
+        }
+        return redirect()->route('login')->with('error', 'Correo electrónico o contraseña incorrectos.');
     }
 }

@@ -16,7 +16,7 @@ class ResetPasswordController extends Controller
     {
         $this->discordWebhookService = $discordWebhookService;
     }
-
+  
     public function showResetForm(Request $request, $token = null)
     {
         return view('auth.new-password')->with([

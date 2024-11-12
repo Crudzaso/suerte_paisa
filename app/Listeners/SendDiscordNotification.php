@@ -98,11 +98,13 @@ class SendDiscordNotification
                     ],
                     [
                         'name' => '🏠 Dirección',
+
                         'value' => $user->address ?? 'No proporcionado',
                         'inline' => false,
                     ],
                     [
                         'name' => '🛠️ Realizado por',
+
                         'value' => "{$actor->names} {$actor->lastnames} con el ID {$actor->id}",
                         'inline' => false,
                     ],
