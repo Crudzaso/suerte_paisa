@@ -17,7 +17,8 @@ class Lottery extends Model
         'logo_url',
         'date_play',
         'result',
-        'prize' 
+        'prize',
+        'price'
     ];
 
     public function users()
