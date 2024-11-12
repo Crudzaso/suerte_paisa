@@ -13,13 +13,13 @@ class PermissionController extends Controller
     public function index()
     {
         $permissions = Permission::all();
-        return view('permissions.index', compact('permissions'));
+        return view('permisos.index', compact('permissions'));
     }
 
     // Mostrar formulario para crear un permiso
     public function create()
     {
-        return view('permissions.savePermission');
+        return view('permisos.savePermission');
     }
 
     // Guardar un nuevo permiso
@@ -32,14 +32,14 @@ class PermissionController extends Controller
         // Crear permiso
         Permission::create(['name' => $request->name]);
 
-        return redirect()->route('permissions.index');
+        return redirect()->route('permisos.index');
     }
 
     // Mostrar formulario para editar un permiso
     public function edit($id)
     {
         $permission = Permission::findOrFail($id);
-        return view('permissions.savePermission', compact('permission'));
+        return view('permisos.savePermission', compact('permission'));
     }
 
     // Actualizar un permiso
@@ -52,7 +52,7 @@ class PermissionController extends Controller
         $permission = Permission::findOrFail($id);
         $permission->update(['name' => $request->name]);
 
-        return redirect()->route('permissions.index');
+        return redirect()->route('permisos.index');
     }
 
     // Eliminar un permiso
@@ -61,6 +61,6 @@ class PermissionController extends Controller
         $permission = Permission::findOrFail($id);
         $permission->delete();
 
-        return redirect()->route('permissions.index');
+        return redirect()->route('permisos.index');
     }
 }

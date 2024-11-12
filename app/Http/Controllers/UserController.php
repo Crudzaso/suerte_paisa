@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Http\Request;
 use App\Http\Requests\UserCreateFormRequest;
 use App\Http\Requests\UserUpdateFormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -11,8 +10,8 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Http;
 
 
+use Illuminate\Http\Request;
 use App\Service\DiscordWebhookService;
-
 use App\Events\UserCreated;
 use App\Events\UserUpdated;
 use App\Events\UserDeleted;
@@ -23,52 +22,67 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
+    protected $discordWebhookService;
+
+    public function __construct(DiscordWebhookService $discordWebhookService)
+    {
+        $this->discordWebhookService = $discordWebhookService;
+    }
+
     public function index()
     {
         try {
             $users = User::paginate(10);
             return view('users.index', compact('users'));
         } catch (\Exception $e) {
+            $this->discordWebhookService->sendErrorToDiscord("Error en el método index: " . $e->getMessage());
             return redirect()->route('usuarios.index')->with('error', 'Error al cargar los usuarios.');
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $roles = Role::all(); // Obtener todos los roles
         return view('users.save', compact('roles'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(UserCreateFormRequest $request)
     {
-        $user = User::create([
-            'names' => $request->names,
-            'lastnames' => $request->lastnames,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'address' => $request->address,
-            'role' => $request->role ?? 'user',
-        ]);
+        try{
+            $user = User::create([
+                'names' => $request->names,
+                'lastnames' => $request->lastnames,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+                'address' => $request->address,
+                'role' => $request->role ?? 'user',
+            ]);
+    
+            if ($request->role) {
+                $user->roles()->attach($request->role);
+            }
+    
+            event(new UserCreated($user));
+    
+            return redirect()->route('usuarios.index')->with('success', 'Usuario creado exitosamente.');
 
-        if ($request->role) {
-            $user->roles()->attach($request->role);
+        } catch (\Exception $e){
+            $this->discordWebhookService->sendErrorToDiscord("Error en el método store: " . $e->getMessage());
+            return redirect()->route('usuarios.index')->with('error', 'Error al crear el usuario.');
         }
-
-        event(new UserCreated($user));
-
-        return redirect()->route('usuarios.index')->with('success', 'Usuario creado exitosamente.');
     }
 
+    public function show(string $id)
+    {
+        try {
+            $user = User::findOrFail($id);
+            return view('users.show', compact('user'));
+        } catch (\Exception $e) {
+            $this->discordWebhookService->sendErrorToDiscord("Error en el método show: " . $e->getMessage());
+            return redirect()->route('usuarios.index')->with('error', 'Usuario no encontrado.');
+        }
+    }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         try {
@@ -77,6 +91,7 @@ class UserController extends Controller
 
             return view('users.save', compact('user', 'roles'));
         } catch (\Exception $e) {
+            $this->discordWebhookService->sendErrorToDiscord("Error en el método edit: " . $e->getMessage());
             return redirect()->route('usuarios.index')->with('error', 'Error al cargar el usuario.');
         }
     }
@@ -115,9 +130,6 @@ class UserController extends Controller
      }
      
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         try {
@@ -127,6 +139,7 @@ class UserController extends Controller
             event(new UserDeleted($user));
             return redirect()->route('usuarios.index')->with('success', 'Usuario eliminado correctamente.');
         } catch (\Exception $e) {
+            $this->discordWebhookService->sendErrorToDiscord("Error en el método destroy: " . $e->getMessage());
             return redirect()->route('usuarios.index')->with('error', 'Error al eliminar el usuario.');
         }
     }
@@ -137,6 +150,7 @@ class UserController extends Controller
             $users = User::onlyTrashed()->paginate(10);
             return view('users.trashed', compact('users'));
         } catch (\Exception $e) {
+            $this->discordWebhookService->sendErrorToDiscord("Error en el método trashed: " . $e->getMessage());
             return redirect()->route('usuarios.index')->with('error', 'Error al cargar los usuarios eliminados.');
         }
     }
@@ -150,6 +164,7 @@ class UserController extends Controller
             event(new UserRestore($user));
             return redirect()->route('usuarios.index')->with('success', 'Usuario restaurado exitosamente.');
         } catch (\Exception $e) {
+            $this->discordWebhookService->sendErrorToDiscord("Error en el método restore: " . $e->getMessage());
             return redirect()->route('usuarios.index')->with('error', 'Error al restaurar el usuario.');
         }
     }

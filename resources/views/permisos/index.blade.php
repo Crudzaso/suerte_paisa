@@ -11,7 +11,7 @@
 <body>
     <div class="container mt-5">
         <h1>Permissions</h1>
-        <a href="{{ route('permissions.create') }}" class="btn btn-primary mb-3">Create New Permission</a>
+        <a href="{{ route('permisos.create') }}" class="btn btn-primary mb-3">Create New Permission</a>
 
         <table class="table table-bordered">
             <thead>
@@ -27,8 +27,8 @@
                         <td>{{ $permission->id }}</td>
                         <td>{{ $permission->name }}</td>
                         <td>
-                            <a href="{{ route('permissions.edit', $permission->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                            <form action="{{ route('permissions.destroy', $permission->id) }}" method="POST" style="display:inline;">
+                            <a href="{{ route('permisos.edit', $permission->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <form action="{{ route('permisos.destroy', $permission->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>

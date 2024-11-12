@@ -10,7 +10,7 @@
     <div class="container mt-5">
         <h1>{{ isset($permission) ? 'Edit Permission' : 'Create Permission' }}</h1>
         
-        <form action="{{ isset($permission) ? route('permissions.update', $permission->id) : route('permissions.store') }}" method="POST">
+        <form action="{{ isset($permission) ? route('permisos.update', $permission->id) : route('permisos.store') }}" method="POST">
             @csrf
             @if (isset($permission))
                 @method('PUT')
@@ -22,7 +22,7 @@
             </div>
             
             <button type="submit" class="btn btn-primary">{{ isset($permission) ? 'Save Changes' : 'Create Permission' }}</button>
-            <a href="{{ route('permissions.index') }}" class="btn btn-secondary">Cancel</a>
+            <a href="{{ route('permisos.index') }}" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
 

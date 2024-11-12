@@ -78,7 +78,7 @@ class SendDiscordNotification
                 'color' => $color,
                 'thumbnail' => [
                     //'url' => "https://suerte-paisa.crudzaso.com/public/assets/logos/logo.webp",
-                    'url' => "https://media.istockphoto.com/id/468417164/es/vector/old-boleto-de.jpg?s=612x612&w=0&k=20&c=GToCpSZVuvk5hYXi8R_r-giyEa2MKGXtxs5Ses6YuMQ=",
+                    'url' => "https://i.postimg.cc/SKLLW24B/logo-suerte-paisa.webp",
                 ],
                 'fields' => [
                     [
@@ -127,5 +127,34 @@ class SendDiscordNotification
         }
     }
 
+    public function handle(ErrorOccurred $event): void
+    {
+        try {
+            $embed = [
+                'title' => "⚠️ Error en el sistema",
+                'color' => self::ERROR_COLOR,
+                'fields' => [
+                    [
+                        'name' => 'Mensaje de Error',
+                        'value' => $event->message,
+                        'inline' => false,
+                    ],
+                    [
+                        'name' => 'Detalles del Error',
+                        'value' => $event->errorDetails ?? 'No se proporcionaron detalles.',
+                        'inline' => false,
+                    ],
+                ],
+                'footer' => [
+                    'text' => 'Notificación de error generada en Suerte Paisa',
+                ],
+                'timestamp' => now()->toIso8601String(),
+            ];
 
+            $this->discordWebhook->sendEmbed($embed);
+
+        } catch (\Exception $e) {
+            \Log::error("Error al enviar notificación de error a Discord: " . $e->getMessage());
+        }
+    }
 }
