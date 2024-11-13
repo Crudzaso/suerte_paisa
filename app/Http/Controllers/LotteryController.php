@@ -14,7 +14,7 @@ class LotteryController extends Controller
     {
         try {
             $lotteries = Lottery::all();
-            return response()->json($lotteries, 200);
+            return view('home.home-main', compact('lotteries'));
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al obtener las loterías', 'message' => $e->getMessage()], 500);
         }

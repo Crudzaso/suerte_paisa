@@ -19,7 +19,10 @@ return new class extends Migration
             $table->string('logo_url')->nullable();
             $table->date('date_play');
             $table->string('result')->nullable();
+            $table->string('prize')->nullable();
+            $table->decimal('price', 8, 2);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
