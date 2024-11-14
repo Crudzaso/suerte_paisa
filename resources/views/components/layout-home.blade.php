@@ -33,9 +33,9 @@
                 <a href="">Mi perfil</a>
 
                  {{-- Verifica si el usuario autenticado tiene el rol "admin" --}}
-                {{-- @if (auth()->user()->hasRole('admin'))
+                @if (auth()->user()->hasRole('admin'))
                 <a href="{{ route('dashboard') }}">Dashboard</a>
-                @endif --}}
+                @endif
 
                 <form action="{{ route('logout') }}" method="POST" class="mb-3">
                     @csrf
