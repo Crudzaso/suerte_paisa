@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Lottery;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Exception;
 
 class UserLotteryController extends Controller
 {
@@ -20,13 +21,23 @@ class UserLotteryController extends Controller
     //method to buy a lottery
 
     public function buyLottery($userId, $lotteryId){
-        $user = User::findOrFail($userId);
+        try{
+            $user = User::findOrFail($userId);
         $lottery = Lottery::findOrFail($lotteryId);
 
-        if($lottery){
-            $user->lotteries()->detach($lotteryId);
-            return redirect()->route('home.home-user', $userId)->with('message', 'La lotería ha sido comprada con éxito.');
+         // get the max number of lottery
+         $maxNumber = $lottery->max_number;
+
+        //Check if el numero is avalible
+            do {
+                // generate number between 0 and $maxNumber
+                $randomNumber = rand(1, $maxNumber);
+                $numberExists = $lottery->users()->wherePivot('number', $randomNumber)->exists();
+            } while ($numberExists);
+             $user->lotteries()->attach($lotteryId, ['number' => $randomNumber]);
+        } catch(Exception $e){
+            return redirect()->route('', $userId)->with('error', 'Error al comprar la lotería.');
         }
-        return redirect()->route('home.home-user', $userId)->with('error', 'Error al comprar la lotería.');
+        
     }
 }

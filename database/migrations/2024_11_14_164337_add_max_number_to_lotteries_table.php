@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('lotteries', function (Blueprint $table) {
-            $table->integer('max_number')->default(100); // Valor por defecto, si deseas
+            $table->integer('max_number')->default(100); // Valor de max numeros rifa
         });
     }
 
