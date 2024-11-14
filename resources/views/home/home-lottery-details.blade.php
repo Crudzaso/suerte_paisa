@@ -1,18 +1,26 @@
 <x-layout-home>
     <section class="content-top">
-        <img src="https://loteriademedellin.com.co/wp-content/uploads/2023/11/logo-loteria-de-medellin-1.png" alt="">
-        <p>Date of play</p>
+        <img src="{{$lottery->logo_url}}" alt="">
+        <p>Juega el: {{$lottery->date_play}}</p>
     </section>
 
     <section class="hero">
         <h2>
-            titulo de la rifa en cuestion
+           {{$lottery->name}} aaaaaaaaaaaaaaaaaaaaa
         </h2>
-        <article class="hero-image-lottery">
-
-        </article>
+            <img class="hero-image-details" src="{{$lottery->banner_url}}" alt="">
     </section>
 
+    <section class="details-section-lott">
+        <article>
+            <h3>Gana {{ $lottery->prize }} en un solo juego!</h3>
+        <p> Lorem, ipsum dolor sit amet consectetur adipisicing elit. Provident debitis culpa officia inventore, cumque quidem iste reiciendis laudantium dolores veniam accusantium doloribus animi quos natus illo nisi, hic eveniet modi.
+            {{$lottery->description}}
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem consectetur recusandae facilis pariatur ducimus! Alias porro aspernatur placeat nulla! Quae omnis facere dolorum sapiente minima facilis ut illum, ad accusantium.
+        </p>
+        </article>
+    </section>
+    
     <section class="button-section">
         <button>Comprar</button>
     </section>

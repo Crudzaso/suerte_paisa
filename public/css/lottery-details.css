@@ -24,20 +24,45 @@
     align-items: center;
 
     h2{
-        font-size: 35px;
+        background: linear-gradient(45deg,#007BFF, #f8e71c);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 55px;
+        font-weight: bold;
     }
 }
 
-.hero-image-lottery{
+
+.hero-image-details{
     margin-top: 5vh;
     width: 100%;
-    height: 450px;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-image: url("https://loteriademedellin.com.co/wp-content/uploads/2024/01/raspa-y-listo-banner-principal-ldm.png");
+    height: 500px;
 }
 
+.details-section-lott{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+
+    article{
+        max-width: 800px;
+        display: flex;
+        flex-direction: column;
+    align-items: center;
+
+    h3{
+        font-size: 25px;
+        margin-top: 3vh;
+    }
+
+    p{
+        padding: 10px;
+        font-size: large;
+        text-align: center;
+    }
+    }
+}
 
 .button-section{
     display: flex;
@@ -90,14 +115,14 @@
         img{
             width: 80px;
             margin-top: 35px;
-            margin-left: 25px;
+            margin-left: 20px;
         }
     
     
         p{
             margin-top: 35px;
-            margin-right: 25px;
-            font-size: 21px;
+            margin-right: 20px;
+            font-size: 17px;
             font-weight: 520;
         }
     }
