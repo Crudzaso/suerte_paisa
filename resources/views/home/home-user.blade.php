@@ -8,7 +8,7 @@
             <label for="name">Contraseña actual</label>
             <div class="password-container">
                 <input type="password" id="current-password" placeholder="Ingresa tu contraseña" required>
-                <button type="button" class="toggle-password" onclick="togglePassword('current-password')"><i class="bi bi-eye-fill"></i></button>
+                <button type="button" class="toggle-password" onclick="togglePassword('current-password')"><i class="bi bi-eye-fill i"></i></button>
             </div>
 
             <label for="email">Correo electronico</label>
@@ -17,13 +17,13 @@
             <label for="new-password">Nueva contraseña</label>
             <div class="password-container">
               <input type="password" id="new-password" placeholder="Nueva contraseña" required>
-              <button type="button" class="toggle-password" onclick="togglePassword('new-password')"><i class="bi bi-eye-fill"></i></button>
+              <button type="button" class="toggle-password" onclick="togglePassword('new-password')"><i class="bi bi-eye-fill i"></i></button>
             </div>
       
             <label for="confirm-password">Confirma la contraseña</label>
             <div class="password-container">
               <input type="password" id="confirm-password" placeholder="Confirmar contraseña" required>
-              <button type="button" class="toggle-password" onclick="togglePassword('confirm-password')"><i class="bi bi-eye-fill"></i></button>
+              <button type="button" class="toggle-password" onclick="togglePassword('confirm-password')"><i class="bi bi-eye-fill i"></i></button>
             </div>
 
             <button type="submit" class="submit-btn">Actualizar perfil</button>
