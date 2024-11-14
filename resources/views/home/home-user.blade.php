@@ -1,18 +1,18 @@
 <x-layout-home>
-    <h3 class="main-title-user-view">Bienvenido a tu informacion USERNAME</h3>
+    <h3 class="main-title-user-view">Bienvenido a tu informacion {{$user->names}}</h3>
     <section class="form-container">
         <form action="">
             <label for="name">Nombre</label>
-            <input type="text" id="name" placeholder="Ingresa tu nombre" required>
+            <input type="text" id="name" placeholder="Ingresa tu nombre" required value="{{$user->names}}">
 
             <label for="name">Contraseña actual</label>
             <div class="password-container">
-                <input type="password" id="current-password" placeholder="Ingresa tu contraseña" required>
+                <input type="password" id="current-password" placeholder="Ingresa tu contraseña" required ">
                 <button type="button" class="toggle-password" onclick="togglePassword('current-password')"><i class="bi bi-eye-fill i"></i></button>
             </div>
 
             <label for="email">Correo electronico</label>
-            <input type="email" id="email" placeholder="Ingresa tu correo" required>
+            <input type="email" id="email" placeholder="Ingresa tu correo" required value="{{$user->email}}">
 
             <label for="new-password">Nueva contraseña</label>
             <div class="password-container">
@@ -42,18 +42,18 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row ">Por jugar</th>
-                <td>16000 millones</td>
-                <td>2020-09-10</td>
-                <td>La mejor rifa de riwi</td>
-              </tr>
-              <tr>
-                <th scope="row">2234-311</th>
-                <td>carro kia picanto</td>
-                <td>2020-09-10</td>
-                <td>La mejor rifa de riwi</td>
-              </tr>
+                @foreach ($lotteries as $lottery )
+                <tr>
+                    @if ($lottery->result == null)
+                    <th scope="row ">Por jugar</th>
+                    @else
+                    <th scope="row ">{{$lottery->result}}</th>
+                    @endif
+                    <td>{{$lottery->prize}}</td>
+                    <td>{{$lottery->date_play}}</td>
+                    <td>{{$lottery->name}}</td>
+                  </tr>
+                @endforeach
             </tbody>
           </table>
     </section>
