@@ -72,7 +72,7 @@ class GoogleController extends Controller
     public function logout(Request $request)
     {
         Auth::guard('web')->logout();
-        return redirect()->route('login')->with('success', 'Has cerrado sesión correctamente.');
+        return redirect()->route('home')->with('success', 'Has cerrado sesión correctamente.');
     }
 }
 

@@ -14,12 +14,11 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LotteryController;
 use App\Http\Middleware\VerifyRoleMiddleware;
 
-// Home Route
 Route::get('/', function () {
     Route::post('login', [AuthController::class, 'login'])->name('login');
 });
 
-Route::get('home', [LotteryController::class, "index"])->name("home");
+Route::get('', [LotteryController::class, "index"])->name("home");
 
 Route::get('detalles/{id}',[lotteryController::class, "show"])->name("details");
 
