@@ -46,7 +46,7 @@ class LotteryController extends Controller
 {
     try {
         $lottery = Lottery::findOrFail($id);
-        return response()->json($lottery, 200);
+        return view("home.home-lottery-details", compact("lottery"));
     } catch (\Exception $e) {
         return response()->json(['error' => 'Lotería no encontrada', 'message' => $e->getMessage()], 404);
     }

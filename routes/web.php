@@ -20,9 +20,8 @@ Route::get('/', function () {
 
 Route::get('home', [LotteryController::class, "index"])->name("home");
 
-Route::get('details/{id}', function(){
-    return view('home.home-lottery-details');
-})->name('details'); 
+Route::get('details/{id}',[lotteryController::class, "show"])->name("details");
+
 
 
 // Rutas protegidas por autenticación
