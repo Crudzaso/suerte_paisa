@@ -22,6 +22,12 @@
     </section>
     
     <section class="button-section">
+        @auth()
         <a href="">Comprar</a>
+        @endauth
+
+        @guest()
+        <a href="/login">Comprar</a>
+        @endguest
     </section>
 </x-layout-home>
