@@ -11,6 +11,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LotteryController;
 use App\Http\Middleware\VerifyRoleMiddleware;
 
 // Home Route
@@ -18,9 +19,10 @@ Route::get('/', function () {
     Route::post('login', [AuthController::class, 'login'])->name('login');
 });
 
-Route::get('home', function(){
-    return view('home.home-main');
-})->name('home'); 
+Route::get('home', [LotteryController::class, "index"])->name("home");
+
+Route::get('detalles/{id}',[lotteryController::class, "show"])->name("details");
+
 
 // Google Authentication Routes
 Route::prefix('auth/google')->group(function () {
@@ -52,6 +54,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         
     });
 });
+
 
 // Password Reset Routes
 Route::get('reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('auth.reset');
