@@ -73,7 +73,7 @@
     border-bottom: #FFD700 28px solid;
     padding: 70px;
 
-    button{
+    a{
         background-color: #007BFF;
         padding: 8px;
         border-radius: 10px;
@@ -85,9 +85,10 @@
         font-size: 20px;
         cursor: pointer;
         transition: all ease-in-out .2s;
+        text-align: center;
     }
 
-    button:hover{
+    a:hover{
         background-color: #0069D9;
         scale: 1.02;
     }

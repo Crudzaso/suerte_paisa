@@ -20,7 +20,7 @@
             <img src="https://loteriademedellin.com.co/wp-content/uploads/2023/11/logo-loteria-de-medellin-1.png" alt="">
         <h4>{{$lottery->name}}</h4>
         <p>{{$lottery->date_play}}</p>
-        <button class="btn-card">Jugar!</button>
+        <a class="btn-card" href="/detalles/{{$lottery->id}}">Jugar!</a>
         </div>
     </div>
     @endif

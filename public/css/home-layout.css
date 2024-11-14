@@ -211,6 +211,7 @@ header{
         height: 30px;
         background-color: #007BFF;
         border: none;
+        text-align: center;
         border-radius: 25px;
         color: white;
         font-weight: bold;

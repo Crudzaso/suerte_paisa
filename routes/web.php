@@ -20,7 +20,7 @@ Route::get('/', function () {
 
 Route::get('home', [LotteryController::class, "index"])->name("home");
 
-Route::get('details/{id}',[lotteryController::class, "show"])->name("details");
+Route::get('detalles/{id}',[lotteryController::class, "show"])->name("details");
 
 
 

@@ -22,6 +22,6 @@
     </section>
     
     <section class="button-section">
-        <button>Comprar</button>
+        <a href="">Comprar</a>
     </section>
 </x-layout-home>
