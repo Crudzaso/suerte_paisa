@@ -27,6 +27,7 @@ class UserCreateFormRequest extends FormRequest
             'email' => 'required|email|unique:users,email|max:255',
             'password' => 'required|string|min:8|confirmed',
             'address' => 'nullable|string|max:255',
+            'role' => 'required|exists:roles,id', 
         ];
     }
 
@@ -41,6 +42,7 @@ class UserCreateFormRequest extends FormRequest
             'password.required' => 'La contraseña es obligatoria.',
             'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
             'password.confirmed' => 'Las contraseñas no coinciden.',
+            'role.confirmed' => 'Rol necesario.',
         ];
     }
 
@@ -52,6 +54,7 @@ class UserCreateFormRequest extends FormRequest
             'email' => 'correo electrónico',
             'password' => 'contraseña',
             'address' => 'dirección',
+            'role' => 'role',
         ];
     }
 

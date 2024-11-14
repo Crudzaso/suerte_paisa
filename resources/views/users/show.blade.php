@@ -24,6 +24,7 @@
                         <li>Correo: {{ $user->email }}</li>
                         <li>Dirección: {{ $user->address }}</li>
                         <li>Password: {{ $user->password }}</li>
+                        <li>Role: {{ $user->role }}</li>
                     </ol>
                     <a href="{{ route('usuarios.index') }}" class="btn btn-secondary">Ir al index</a>
                     
