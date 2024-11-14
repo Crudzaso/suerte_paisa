@@ -12,6 +12,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LotteryController;
+use App\Http\Controllers\UserLotteryController;
 use App\Http\Middleware\VerifyRoleMiddleware;
 
 Route::get('/', function () {
@@ -21,6 +22,8 @@ Route::get('/', function () {
 Route::get('', [LotteryController::class, "index"])->name("home");
 
 Route::get('detalles/{id}',[lotteryController::class, "show"])->name("details");
+
+Route::get('usuario/{id}',[UserLotteryController::class, "getLotteriesByUserId"])->name("userpurchases");
 
 
 // Google Authentication Routes
