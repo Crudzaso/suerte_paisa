@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/home-layout.css') }}">
     <link rel="stylesheet" href="{{ asset('css/lottery-details.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/home-user.css') }}">
     <title>Document</title>
 </head>
 <body>

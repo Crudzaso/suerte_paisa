@@ -57,4 +57,6 @@
             </tbody>
           </table>
     </section>
+
+    <script src="{{ asset('js/formHomeUserInput.js') }}"></script>
 </x-layout-home>
