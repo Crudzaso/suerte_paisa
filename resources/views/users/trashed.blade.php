@@ -6,9 +6,17 @@
 <div class="container mt-5">
     <h1 class="mb-4">Usuarios Archivados</h1>
 
-    @if (session('success'))
+    @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
+        </div>
+    @elseif(session('info'))
+        <div class="alert alert-info">
+            {{ session('info') }}
+        </div>
+    @elseif(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
         </div>
     @endif
 
@@ -34,7 +42,7 @@
                     <td>
                         <form action="{{ route('usuarios.restore', $user->id) }}" method="POST" style="display:inline;">
                             @csrf
-                            <button type="submit" class="btn btn-success btn-sm">Restaurar</button>
+                            <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('¿Estás seguro de que quieres restaurar este usuario?')">Restaurar</button>
                         </form>
                     </td>
                 </tr>

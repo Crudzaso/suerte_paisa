@@ -4978,13 +4978,13 @@
 									<!--begin::Item-->
 									<a href="#" class="btn btn-sm d-flex flex-stack border border-300 bg-gray-100i btn-color-gray-700 btn-active-color-gray-900 px-3 mb-2">
 										<span class="d-flex align-item-center">
-										<i class="ki-outline ki-abstract-41 fs-4 me-2 text-primary"></i>All Features</span>
+										<i class="ki-outline ki-abstract-41 fs-4 me-2 text-primary"></i>Administrar Usuarios</span>
 										<i class="ki-outline ki-check fs-4 text-gray-500 me-n2"></i>
 									</a>
 									<!--end::Item-->
 									<!--begin::Item-->
 									<a href="#" class="btn btn-sm px-3 border border-transparent btn-color-gray-700 btn-active-color-gray-900">
-									<i class="ki-outline ki-calendar fs-4 me-1 text-success"></i>Feature Calendar</a>
+									<i class="ki-outline ki-calendar fs-4 me-1 text-success"></i>Administrar Rifas</a>
 									<!--end::Item-->
 								</div>
 								<!--end::Items-->

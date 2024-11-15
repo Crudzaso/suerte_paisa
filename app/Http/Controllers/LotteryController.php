@@ -4,109 +4,166 @@ namespace App\Http\Controllers;
 
 use App\Models\Lottery;
 use App\Models\User;
+use App\Http\Requests\LotteryCreateFormRequest;
+use App\Http\Requests\LotteryUpdateFormRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Service\DiscordWebhookService;
+use App\Events\LotteryCreated;
+use App\Events\LotteryUpdated;
+use App\Events\LotteryDeleted;
 
 class LotteryController extends Controller
 {
-    // Obtener todas las loterías
+    protected $discordWebhookService;
+
+    public function __construct(DiscordWebhookService $discordWebhookService)
+    {
+        $this->discordWebhookService = $discordWebhookService;
+    }
+
+    /**
+     * Mostrar listado de loterías
+     */
     public function index()
     {
         try {
-            $lotteries = Lottery::all();
-            return view('home.home-main', compact('lotteries'));
+            $lotteries = Lottery::paginate(10); // Paginación de loterías
+            return view('lotteries.index', compact('lotteries'));
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al obtener las loterías', 'message' => $e->getMessage()], 500);
+            $this->discordWebhookService->sendErrorToDiscord("Error en el método index de LotteryController: " . $e->getMessage());
+            return redirect()->route('lotteries.index')->with('error', 'Error al cargar las loterías.');
         }
     }
 
-    // Crear una nueva lotería
-    public function store(Request $request)
+    /**
+     * Mostrar formulario para crear una nueva lotería
+     */
+    public function create()
+    {
+        return view('lotteries.create');
+    }
+
+    /**
+     * Almacenar nueva lotería
+     */
+    public function store(LotteryCreateFormRequest $request)
     {
         try {
-            $validatedData = $request->validate([
-                'name' => 'required|string',
-                'description' => 'string|nullable',
-                'banner_url' => 'string|nullable',
-                'logo_url' => 'string|nullable',
-                'date_play' => 'required|date',
-                'result' => 'string|nullable',
-                'prize' => 'string|nullable',
-                'price' => 'required|numeric'
-            ]);
+            $validatedData = $request->validated(); // Validación de los datos
+            
+            $lottery = Lottery::create($validatedData); // Crear la lotería en la base de datos
+            
+            event(new LotteryCreated($lottery)); // Evento cuando se crea una lotería
 
-            $lottery = Lottery::create($validatedData);
-            return response()->json($lottery, 201);
+            return redirect()->route('lotteries.index')->with('success', 'Lotería creada correctamente.');
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al crear la lotería', 'message' => $e->getMessage()], 500);
+            $this->discordWebhookService->sendErrorToDiscord("Error en el método store de LotteryController: " . $e->getMessage());
+            return redirect()->route('lotteries.index')->with('error', 'Error al crear la lotería.');
         }
     }
 
-    public function show($id)
-{
-    try {
-        $lottery = Lottery::findOrFail($id);
-        return view("home.home-lottery-details", compact("lottery"));
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Lotería no encontrada', 'message' => $e->getMessage()], 404);
-    }
-}
-
-
-    // Actualizar una lotería
-    public function update(Request $request, $id)
+    /**
+     * Mostrar detalles de una lotería
+     */
+    public function show(string $id)
     {
         try {
-            $validatedData = $request->validate([
-                'name' => 'string|nullable',
-                'description' => 'string|nullable',
-                'banner_url' => 'string|nullable',
-                'logo_url' => 'string|nullable',
-                'date_play' => 'date|nullable',
-                'result' => 'string|nullable',
-                'prize' => 'string|nullable',
-                'price' => 'numeric|nullable'
-            ]);
-
-            $lottery = Lottery::findOrFail($id);
-            $lottery->update($validatedData);
-
-            return response()->json($lottery, 200);
+            $lottery = Lottery::findOrFail($id); // Buscar la lotería por ID
+            return view('lotteries.show', compact('lottery'));
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al actualizar la lotería', 'message' => $e->getMessage()], 500);
+            $this->discordWebhookService->sendErrorToDiscord("Error en el método show de LotteryController: " . $e->getMessage());
+            return redirect()->route('lotteries.index')->with('error', 'Lotería no encontrada.');
         }
     }
 
-    // Eliminar una lotería (soft delete)
-    public function destroy($id)
+    /**
+     * Mostrar formulario de edición de una lotería
+     */
+    public function edit(string $id)
     {
         try {
-            $lottery = Lottery::findOrFail($id);
-            $lottery->delete();
-
-            return response()->json(['message' => 'Lotería eliminada correctamente'], 200);
+            $lottery = Lottery::findOrFail($id); // Buscar la lotería por ID
+            return view('lotteries.edit', compact('lottery'));
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al eliminar la lotería', 'message' => $e->getMessage()], 500);
+            $this->discordWebhookService->sendErrorToDiscord("Error en el método edit de LotteryController: " . $e->getMessage());
+            return redirect()->route('lotteries.index')->with('error', 'Error al cargar la lotería para editar.');
         }
     }
 
-    // Crear una compra de número (relación usuario-lotería)
-    public function purchaseNumber(Request $request, $lotteryId)
+    /**
+     * Actualizar la lotería
+     */
+    public function update(LotteryUpdateFormRequest $request, string $id)
     {
         try {
-            $validatedData = $request->validate([
-                'user_id' => 'required|exists:users,id'
-            ]);
+            $lottery = Lottery::findOrFail($id); // Buscar la lotería por ID
+            
+            $validatedData = $request->validated(); // Validar los datos de la solicitud
+            $lottery->update($validatedData); // Actualizar la lotería en la base de datos
 
-            $lottery = Lottery::findOrFail($lotteryId);
-            $user = User::findOrFail($validatedData['user_id']);
+            event(new LotteryUpdated($lottery)); // Evento cuando se actualiza la lotería
 
-            // Crear la relación en la tabla intermedia
-            $user->lotteries()->attach($lottery->id);
-
-            return response()->json(['message' => 'Número comprado correctamente'], 201);
+            return redirect()->route('lotteries.index')->with('success', 'Lotería actualizada correctamente.');
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al comprar el número', 'message' => $e->getMessage()], 500);
+            $this->discordWebhookService->sendErrorToDiscord("Error en el método update de LotteryController: " . $e->getMessage());
+            return redirect()->route('lotteries.index')->with('error', 'Error al actualizar la lotería.');
+        }
+    }
+
+    /**
+     * Eliminar la lotería
+     */
+    public function destroy(string $id)
+    {
+        try {
+            $lottery = Lottery::findOrFail($id); // Buscar la lotería por ID
+            $lottery->delete(); // Eliminar la lotería (soft delete)
+
+            event(new LotteryDeleted($lottery)); // Evento cuando se elimina una lotería
+
+            return redirect()->route('lotteries.index')->with('success', 'Lotería eliminada correctamente.');
+        } catch (\Exception $e) {
+            $this->discordWebhookService->sendErrorToDiscord("Error en el método destroy de LotteryController: " . $e->getMessage());
+            return redirect()->route('lotteries.index')->with('error', 'Error al eliminar la lotería.');
+        }
+    }
+
+    /**
+     * Mostrar loterías eliminadas
+     */
+    public function trashed()
+    {
+        try {
+            $lotteries = Lottery::onlyTrashed()->paginate(10); // Obtener loterías eliminadas
+
+            if ($lotteries->isEmpty()) {
+                return redirect()->route('lotteries.index')->with('info', 'No hay loterías eliminadas.');
+            }
+
+            return view('lotteries.trashed', compact('lotteries'));
+        } catch (\Exception $e) {
+            $this->discordWebhookService->sendErrorToDiscord("Error en el método trashed de LotteryController: " . $e->getMessage());
+            return redirect()->route('lotteries.index')->with('error', 'Error al cargar las loterías eliminadas.');
+        }
+    }
+
+    /**
+     * Restaurar una lotería eliminada
+     */
+    public function restore(string $id)
+    {
+        try {
+            $lottery = Lottery::withTrashed()->findOrFail($id); 
+
+            if ($lottery->trashed()) {
+                $lottery->restore(); // Restaurar lotería
+                return redirect()->route('lotteries.trashed')->with('success', 'Lotería restaurada correctamente.');
+            } else {
+                return redirect()->route('lotteries.trashed')->with('info', 'La lotería no está eliminada.');
+            }
+        } catch (\Exception $e) {
+            $this->discordWebhookService->sendErrorToDiscord("Error en el método restore de LotteryController: " . $e->getMessage());
+            return redirect()->route('lotteries.trashed')->with('error', 'Error al restaurar la lotería.');
         }
     }
 }

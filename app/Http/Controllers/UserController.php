@@ -36,7 +36,7 @@ class UserController extends Controller
             return view('users.index', compact('users'));
         } catch (\Exception $e) {
             $this->discordWebhookService->sendErrorToDiscord("Error en el método index: " . $e->getMessage());
-            return redirect()->route('usuarios.index')->with('error', 'Error al cargar los usuarios.');
+            return redirect()->route('dashboard.users')->with('error', 'Error al cargar los usuarios.');
         }
     }
 
@@ -68,20 +68,25 @@ class UserController extends Controller
 
         } catch (\Exception $e){
             $this->discordWebhookService->sendErrorToDiscord("Error en el método store: " . $e->getMessage());
-            return redirect()->route('usuarios.index')->with('error', 'Error al crear el usuario.');
+            return redirect()->route('dashboard.users')->with('error', 'Error al crear el usuario.');
         }
     }
 
     public function show(string $id)
     {
         try {
-            $user = User::findOrFail($id);
+            \Log::info('Buscando usuario con ID: ' . $id);
+            
+            $user = User::withTrashed()->findOrFail($id);
+            
             return view('users.show', compact('user'));
         } catch (\Exception $e) {
+            \Log::error('Error al buscar usuario con ID: ' . $id);
             $this->discordWebhookService->sendErrorToDiscord("Error en el método show: " . $e->getMessage());
-            return redirect()->route('usuarios.index')->with('error', 'Usuario no encontrado.');
+            return redirect()->route('dashboard.users')->with('error', 'Usuario no encontrado.');
         }
     }
+
 
     public function edit(string $id)
     {
@@ -125,7 +130,7 @@ class UserController extends Controller
      
              return redirect()->route('usuarios.index')->with('success', 'Usuario actualizado correctamente.');
          } catch (\Exception $e) {
-             return redirect()->route('usuarios.index')->with('error', 'Error al actualizar el usuario.');
+             return redirect()->route('dashboard.users')->with('error', 'Error al actualizar el usuario.');
          }
      }
      
@@ -140,18 +145,26 @@ class UserController extends Controller
             return redirect()->route('usuarios.index')->with('success', 'Usuario eliminado correctamente.');
         } catch (\Exception $e) {
             $this->discordWebhookService->sendErrorToDiscord("Error en el método destroy: " . $e->getMessage());
-            return redirect()->route('usuarios.index')->with('error', 'Error al eliminar el usuario.');
+            return redirect()->route('dashboard.users')->with('error', 'Error al eliminar el usuario.');
         }
     }
 
     public function trashed()
     {
         try {
+            // Obtener usuarios eliminados (soft deleted)
             $users = User::onlyTrashed()->paginate(10);
+            
+            // Si no hay usuarios eliminados, se puede redirigir con un mensaje
+            if ($users->isEmpty()) {
+                return redirect()->route('usuarios.index')->with('info', 'No hay usuarios eliminados.');
+            }
+
+            // Devolver la vista con los usuarios eliminados
             return view('users.trashed', compact('users'));
         } catch (\Exception $e) {
-            $this->discordWebhookService->sendErrorToDiscord("Error en el método trashed: " . $e->getMessage());
-            return redirect()->route('usuarios.index')->with('error', 'Error al cargar los usuarios eliminados.');
+            // Manejo de errores
+            return redirect()->route('dashboard.users')->with('error', 'Error al cargar los usuarios eliminados.');
         }
     }
 
@@ -159,13 +172,17 @@ class UserController extends Controller
     {
         try {
             $user = User::withTrashed()->findOrFail($id);
-            $user->restore();
 
-            event(new UserRestore($user));
-            return redirect()->route('usuarios.index')->with('success', 'Usuario restaurado exitosamente.');
+            if ($user->trashed()) {
+                $user->restore();
+                return redirect()->route('usuarios.trashed')->with('success', 'Usuario restaurado exitosamente.');
+            } else {
+                return redirect()->route('usuarios.trashed')->with('info', 'El usuario ya está restaurado.');
+            }
         } catch (\Exception $e) {
-            $this->discordWebhookService->sendErrorToDiscord("Error en el método restore: " . $e->getMessage());
-            return redirect()->route('usuarios.index')->with('error', 'Error al restaurar el usuario.');
+            return redirect()->route('dashboard.users')->with('error', 'Error al restaurar el usuario.');
         }
     }
+
+
 }

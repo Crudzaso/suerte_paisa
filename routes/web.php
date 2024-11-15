@@ -26,6 +26,12 @@ Route::get('detalles/{id}',[lotteryController::class, "show"])->name("details");
 Route::get('usuario/{id}',[UserLotteryController::class, "getLotteriesByUserId"])->name("userpurchases");
 
 
+// Ruta para el Dashboard de Loterías
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->get('/dashboard-loterias', [DashboardController::class, 'lottery'])->name('dashboard.lottery');
+
+// Ruta para el Dashboard de Usuarios
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->get('/dashboard-usuarios', [DashboardController::class, 'users'])->name('dashboard.users');
+
 // Google Authentication Routes
 Route::prefix('auth/google')->group(function () {
     Route::get('/', [GoogleController::class, 'login'])->name('auth.google');
@@ -51,9 +57,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     
     // Admin Routes (Protected by Role Middleware)
     Route::middleware(['role:admin'])->group(function () {
+        Route::get('usuarios/{id}', [UserController::class, 'show'])->name('usuarios.show');
         Route::get('usuarios/eliminados', [UserController::class, 'trashed'])->name('usuarios.trashed');
         Route::post('usuarios/{id}/restaurar', [UserController::class, 'restore'])->name('usuarios.restore');
-        
     });
 });
 

@@ -18,7 +18,8 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable implements Auditable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, SoftDeletes, HasRoles;
+    use HasFactory, Notifiable, HasRoles;
+    use SoftDeletes;
     use HasApiTokens;
     use HasProfilePhoto;
     use TwoFactorAuthenticatable;
