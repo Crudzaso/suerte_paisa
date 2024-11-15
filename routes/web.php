@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\GithubController;
@@ -13,11 +13,14 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LotteryController;
 use App\Http\Controllers\UserLotteryController;
-use App\Http\Middleware\VerifyRoleMiddleware;
+use App\Mail\PruebaCorreo;
+use Illuminate\Support\Facades\Mail;
 
-Route::get('/', function () {
-    return redirect()->route('lotteries.index');
-});
+
+Route::get('/home', function () {
+    return redirect()->route('home-main');
+})->name('home');
+
 
 // Loterías
 Route::get('detalles/{id}', [LotteryController::class, 'show'])->name('lotteries.show');
@@ -84,3 +87,18 @@ Route::post('new-password', [ResetPasswordController::class, 'reset'])->name('pa
 Route::get('registro', function () { return view('auth.register'); })->name('registro');
 Route::post('registro', [AuthController::class, 'registro'])->name('registro.submit');
 
+Route::get('/formulario-correo', function () {
+    return view('emails.prueba');
+})->name('formulario-correo');
+
+Route::post('/enviar-correo', function (Request $request) {
+    $request->validate([
+        'email' => 'required|email',
+        'contenido' => 'required|string',
+    ]);
+
+    $correo = new PruebaCorreo($request->contenido);
+    Mail::to($request->email)->send($correo);
+
+    return back()->with('success', 'Correo enviado con éxito.');
+})->name('enviar-correo');
