@@ -40,6 +40,7 @@
                 <th scope="col">Premio</th>
                 <th scope="col">Fecha de juego</th>
                 <th scope="col">Nombre</th>
+                <th scope="col">Numero</th>
               </tr>
             </thead>
             <tbody>
@@ -53,6 +54,7 @@
                     <td>{{$lottery->prize}}</td>
                     <td>{{$lottery->date_play}}</td>
                     <td>{{$lottery->name}}</td>
+                    <td>{{$lottery->pivot->number}}</td>
                   </tr>
                 @endforeach
             </tbody>

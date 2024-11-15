@@ -39,7 +39,10 @@ class User extends Authenticatable implements Auditable
     ];
 
     public function lotteries(): BelongsToMany
-{
+{{
+    return $this->belongsToMany(Lottery::class, 'lottery_user') // Especificando la tabla intermedia si es necesario
+                ->withPivot('number');  // Accede a la columna 'number' de la tabla intermedia
+}
     return $this->belongsToMany(Lottery::class, 'lottery_user');
 }
 }
