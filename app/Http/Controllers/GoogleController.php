@@ -11,6 +11,7 @@ use App\Helpers\EmailHelperGlobal;
 use App\Service\DiscordWebhookService;
 use App\Events\UserLogin;
 use App\Events\UserCreated;
+use App\Events\ErrorOccurred;
 
 use Spatie\Permission\Models\Role;
 
@@ -63,8 +64,7 @@ class GoogleController extends Controller
 
             return redirect()->route('home')->with('success', 'Has iniciado sesión correctamente.');
         } catch (\Exception $e) {
-            \Log::error('Google login error:', ['message' => $e->getMessage()]);
-            $this->discordWebhookService->sendErrorToDiscord("Error al iniciar sesión con Google: " . $e->getMessage());
+            event(new ErrorOccurred('Error al iniciar sesión con Google', $e->getMessage()));
             return redirect()->route('auth.google')->with('error', 'Error al iniciar sesión con Google.');
         }
     }
