@@ -9,100 +9,23 @@
 </section>
 <section class="active-loteries">
     <h3>Sorteos activos</h3>
-
-    {{-- -----------------------COMPONETIZAR-------------------------- --}}
-    <article class="container-active-loteries">
-        <div class="card-lotery">
-            <div class="color-card">
-
-            </div>
-            <div class="content-card">
-                <img src="https://loteriademedellin.com.co/wp-content/uploads/2023/11/logo-loteria-de-medellin-1.png" alt="">
-            <h4>TITULO DE LA RIFA</h4>
-            <p>Juega: fecha de juego</p>
-            <button class="btn-card">Jugar!</button>
-            </div>
+    <article  class="container-active-loteries">
+    @foreach ($lotteries as $lottery)
+    
+    @if ($lottery->result == null)
+    <div class="card-lotery">
+        <div class="color-card">
         </div>
-
-        <div class="card-lotery">
-            <div class="color-card">
-            </div>
-            <div class="content-card">
-                <img src="https://loteriademedellin.com.co/wp-content/uploads/2023/11/logo-loteria-de-medellin-1.png" alt="">
-            <h4>TITULO DE LA RIFA</h4>
-            <p>Juega: fecha de juego</p>
-            <button class="btn-card">Jugar!</button>
-            </div>
+        <div class="content-card">
+            <img src="https://loteriademedellin.com.co/wp-content/uploads/2023/11/logo-loteria-de-medellin-1.png" alt="">
+        <h4>{{$lottery->name}}</h4>
+        <p>{{$lottery->date_play}}</p>
+        <a class="btn-card" href="/detalles/{{$lottery->id}}">Jugar!</a>
         </div>
+    </div>
+    @endif
+    @endforeach
 
-        <div class="card-lotery">
-            <div class="color-card">
-            </div>
-            <div class="content-card">
-                <img src="https://loteriademedellin.com.co/wp-content/uploads/2023/11/logo-loteria-de-medellin-1.png" alt="">
-            <h4>TITULO DE LA RIFA</h4>
-            <p>Juega: fecha de juego</p>
-            <button class="btn-card">Jugar!</button>
-            </div>
-        </div>
-
-        <div class="card-lotery">
-            <div class="color-card">
-            </div>
-            <div class="content-card">
-                <img src="https://loteriademedellin.com.co/wp-content/uploads/2023/11/logo-loteria-de-medellin-1.png" alt="">
-            <h4>TITULO DE LA RIFA</h4>
-            <p>Juega: fecha de juego</p>
-            <button class="btn-card">Jugar!</button>
-            </div>
-        </div>
-
-        <div class="card-lotery">
-            <div class="color-card">
-            </div>
-            <div class="content-card">
-                <img src="https://loteriademedellin.com.co/wp-content/uploads/2023/11/logo-loteria-de-medellin-1.png" alt="">
-            <h4>TITULO DE LA RIFA</h4>
-            <p>Juega: fecha de juego</p>
-            <button class="btn-card">Jugar!</button>
-            </div>
-        </div>
-
-        <div class="card-lotery">
-            <div class="color-card">
-
-            </div>
-            <div class="content-card">
-                <img src="https://loteriademedellin.com.co/wp-content/uploads/2023/11/logo-loteria-de-medellin-1.png" alt="">
-            <h4>TITULO DE LA RIFA</h4>
-            <p>Juega: fecha de juego</p>
-            <button class="btn-card">Jugar!</button>
-            </div>
-        </div>
-
-        <div class="card-lotery">
-            <div class="color-card">
-
-            </div>
-            <div class="content-card">
-                <img src="https://loteriademedellin.com.co/wp-content/uploads/2023/11/logo-loteria-de-medellin-1.png" alt="">
-            <h4>TITULO DE LA RIFA</h4>
-            <p>Juega: fecha de juego</p>
-            <button class="btn-card">Jugar!</button>
-            </div>
-        </div>
-
-        <div class="card-lotery">
-            <div class="color-card">
-
-            </div>
-            <div class="content-card">
-                <img src="https://loteriademedellin.com.co/wp-content/uploads/2023/11/logo-loteria-de-medellin-1.png" alt="">
-            <h4>TITULO DE LA RIFA</h4>
-            <p>Juega: fecha de juego</p>
-            <button class="btn-card">Jugar!</button>
-            </div>
-        </div>
     </article>
 </section>
 
@@ -121,6 +44,25 @@
     <h3>Sorteos finalizados</h3>
     <article id="container-active-loteries" class="container-active-loteries">
         {{-- CONTENT FROM JS --}}
+
+        {{-- CONTENT FROM CONTROLLER --}}
+        @foreach ($lotteries as $lottery)
+            @if ($lottery->result ==! null)
+            <div class="card-lotery">
+                <div class="color-card">
+                </div>
+                <div class="content-card">
+                    <img src="https://loteriademedellin.com.co/wp-content/uploads/2023/11/logo-loteria-de-medellin-1.png" alt="">
+                <h4>{{$lottery->name}}</h4>
+                <p>{{$lottery->date_play}}</p>
+                <p>Resultado: {{$lottery->result}}</p>
+                </div>
+            </div>
+            @endif
+        @endforeach
+            </div>
+        </div>
+        
     </article>
 </section>
 
@@ -143,7 +85,9 @@
         <img src="{{ asset('images/laws4.webp') }}" alt="">
         <img src="{{ asset('images/laws5.webp') }}" alt="">
         <img src="{{ asset('images/laws6.webp') }}" alt="">
-        <img src="{{ asset('images/laws7webp') }}" alt="">
+
+        <img src="{{ asset('images/laws7.webp') }}" alt="">
+
     </article>
 </section>
 

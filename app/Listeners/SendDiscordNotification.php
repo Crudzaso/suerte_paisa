@@ -10,6 +10,7 @@ use App\Events\UserUpdated;
 use App\Events\UserDeleted;
 use App\Events\UserRestore;
 use App\Events\UserLogin;
+use App\Events\ErrorOccurred;
 use App\Service\DiscordWebhookService;
 
 class SendDiscordNotification
@@ -21,6 +22,7 @@ class SendDiscordNotification
     private const COLOR_UPDATED = 0xfff700;
     private const COLOR_DELETED = 0xff2d00;
     private const COLOR_RESTORED = 0xde5e00;
+    private const ERROR_COLOR = 0xff0000; 
 
     /**
      * Create the event listener.
@@ -77,7 +79,7 @@ class SendDiscordNotification
                 'title' => "🎉 Suerte paisa - Usuario {$action} 🎉",
                 'color' => $color,
                 'thumbnail' => [
-                    //'url' => "https://suerte-paisa.crudzaso.com/public/assets/logos/logo.webp",
+
                     'url' => "https://i.postimg.cc/SKLLW24B/logo-suerte-paisa.webp",
                 ],
                 'fields' => [
@@ -129,28 +131,42 @@ class SendDiscordNotification
         }
     }
 
-    public function handle(ErrorOccurred $event): void
+    public function handleErrorOccurred(ErrorOccurred $event): void
     {
         try {
             $embed = [
-                'title' => "⚠️ Error en el sistema",
+                'title' => "Suerte paisa - Error en el sistema",
                 'color' => self::ERROR_COLOR,
+                'thumbnail' => [
+                    'url' => "https://i.postimg.cc/SKLLW24B/logo-suerte-paisa.webp",
+                ],
                 'fields' => [
                     [
-                        'name' => 'Mensaje de Error',
+                        'name' => '📝 Mensaje de Error',
+
                         'value' => $event->message,
                         'inline' => false,
                     ],
                     [
-                        'name' => 'Detalles del Error',
+
+                        'name' => '📋 Detalles del Error',
+
                         'value' => $event->errorDetails ?? 'No se proporcionaron detalles.',
                         'inline' => false,
                     ],
                 ],
                 'footer' => [
-                    'text' => 'Notificación de error generada en Suerte Paisa',
+
+                    'text' => implode(" | ", [
+                        '⚠️  Error en Suerte Paisa',
+                        '🕒 Notificación realizada el ' . now()->format('d/m/y H:i')
+                    ]),
                 ],
                 'timestamp' => now()->toIso8601String(),
+                'author' => [
+                    'name' => "⚠️ Sistema de Monitoreo de Errores",
+                ],
+
             ];
 
             $this->discordWebhook->sendEmbed($embed);
@@ -159,4 +175,5 @@ class SendDiscordNotification
             \Log::error("Error al enviar notificación de error a Discord: " . $e->getMessage());
         }
     }
+
 }

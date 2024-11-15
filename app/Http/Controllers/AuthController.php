@@ -15,6 +15,9 @@ use App\Helpers\EmailHelperGlobal;
 use App\Service\DiscordWebhookService;
 use App\Events\UserLogin;
 use App\Events\UserCreated;
+use App\Events\ErrorOccurred;
+
+use Spatie\Permission\Models\Role;
 
 use Spatie\Permission\Models\Role;
 
@@ -55,8 +58,8 @@ class AuthController extends Controller
 
             return redirect()->route('home')->with('success', 'Registro exitoso!');
         } catch (\Exception $e) {
-            \Log::error('Error en registro:', ['message' => $e->getMessage()]);
-            $this->discordWebhookService->sendErrorToDiscord("Error en el registro: " . $e->getMessage());
+
+            event(new ErrorOccurred('Error en el registro', $e->getMessage()));
             return redirect()->route('register')->with('error', 'Ocurrió un error al registrar el usuario.');
         }
     }
@@ -84,8 +87,9 @@ class AuthController extends Controller
                 return redirect()->route('login')->with('error', 'Correo electrónico o contraseña incorrectos.');
             }
         } catch (\Exception $e) {
-            \Log::error('Error en login:', ['message' => $e->getMessage()]);
-            $this->discordWebhookService->sendErrorToDiscord("Error en el login: " . $e->getMessage());
+
+            event(new ErrorOccurred('Error al iniciar sesión', $e->getMessage()));
+
             return redirect()->route('login')->with('error', 'Ocurrió un error al iniciar sesión.');
         }
       
