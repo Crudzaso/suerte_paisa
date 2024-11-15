@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="{{ asset('css/home-user.css') }}">
     <link rel="stylesheet" href="{{ asset('css/lottery-details.css') }}">
     
-    <title>Document</title>
+    <title>Suerte paisa</title>
 </head>
 <body>
     <header>
@@ -34,7 +34,7 @@
 
                 {{-- check if the user is authenticated or not and show the options --}}
                 @auth()
-                <a href="">Mi perfil</a>
+                <a href="{{ route('userpurchases', ['id' => auth()->user()->id]) }}">Mi perfil</a>
 
                  {{-- Verifica si el usuario autenticado tiene el rol "admin" --}}
                 @if (auth()->user()->hasRole('admin'))
