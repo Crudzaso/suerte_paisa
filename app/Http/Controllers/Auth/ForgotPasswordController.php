@@ -7,7 +7,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Log;
-use App\Models\User;
 use App\Helpers\EmailHelperGlobal;
 use App\Service\DiscordWebhookService;
 

@@ -16,21 +16,18 @@ use App\Http\Controllers\UserLotteryController;
 use App\Http\Middleware\VerifyRoleMiddleware;
 
 Route::get('/', function () {
-    Route::post('login', [AuthController::class, 'login'])->name('login');
+    return redirect()->route('lotteries.index');
 });
 
-Route::get('', [LotteryController::class, "index"])->name("home");
+// Loterías
+Route::get('detalles/{id}', [LotteryController::class, 'show'])->name('lotteries.show');
+Route::get('usuario/{id}', [UserLotteryController::class, 'getLotteriesByUserId'])->name('userpurchases');
 
-Route::get('detalles/{id}',[lotteryController::class, "show"])->name("details");
+// Dashboard de Loterías
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard-loterias', [DashboardController::class, 'lottery'])->name('dashboard.lottery');
 
-Route::get('usuario/{id}',[UserLotteryController::class, "getLotteriesByUserId"])->name("userpurchases");
-
-
-// Ruta para el Dashboard de Loterías
-Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->get('/dashboard-loterias', [DashboardController::class, 'lottery'])->name('dashboard.lottery');
-
-// Ruta para el Dashboard de Usuarios
-Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->get('/dashboard-usuarios', [DashboardController::class, 'users'])->name('dashboard.users');
+// Dashboard de Usuarios
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard-usuarios', [DashboardController::class, 'users'])->name('dashboard.users');
 
 // Google Authentication Routes
 Route::prefix('auth/google')->group(function () {
@@ -51,17 +48,30 @@ Route::resource('permisos', PermissionController::class);
 
 // Authenticated Routes (Protected by Auth Middleware)
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
+    // Rutas generales protegidas
+    Route::get('/dashboard/loterias', [DashboardController::class, 'lottery'])->name('dashboard.lottery');
+    Route::get('/dashboard/usuarios', [DashboardController::class, 'users'])->name('dashboard.users');
     Route::post('logout', [GoogleController::class, 'logout'])->name('logout');
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard'); 
-    Route::get('twofactor', function () { return view('auth.auth-plantilla.two-factor'); })->name('auth.twofactor'); 
-    
-    // Admin Routes (Protected by Role Middleware)
+
+    // Rutas exclusivas para admins
     Route::middleware(['role:admin'])->group(function () {
+        // Rutas de Usuarios
         Route::get('usuarios/{id}', [UserController::class, 'show'])->name('usuarios.show');
         Route::get('usuarios/eliminados', [UserController::class, 'trashed'])->name('usuarios.trashed');
         Route::post('usuarios/{id}/restaurar', [UserController::class, 'restore'])->name('usuarios.restore');
+
+        Route::get('loterias', [LotteryController::class, 'index'])->name('loterias.index');
+        Route::get('loterias/eliminadas', [LotteryController::class, 'trashed'])->name('loterias.trashed');
+        Route::get('loterias/crear', [LotteryController::class, 'create'])->name('loterias.create');
+        Route::post('loterias', [LotteryController::class, 'store'])->name('loterias.store');
+        Route::get('loterias/{id}', [LotteryController::class, 'show'])->name('loterias.show');
+        Route::get('loterias/{id}/editar', [LotteryController::class, 'edit'])->name('loterias.edit');
+        Route::put('loterias/{id}', [LotteryController::class, 'update'])->name('loterias.update');
+        Route::delete('loterias/{id}', [LotteryController::class, 'destroy'])->name('loterias.destroy');
+        Route::post('loterias/{id}/restaurar', [LotteryController::class, 'restore'])->name('loterias.restore');
     });
 });
+
 
 
 // Password Reset Routes
@@ -73,3 +83,4 @@ Route::post('new-password', [ResetPasswordController::class, 'reset'])->name('pa
 // Registration Routes
 Route::get('registro', function () { return view('auth.register'); })->name('registro');
 Route::post('registro', [AuthController::class, 'registro'])->name('registro.submit');
+

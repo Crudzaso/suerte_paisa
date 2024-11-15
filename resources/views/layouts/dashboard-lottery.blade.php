@@ -23,8 +23,8 @@
                 @csrf
                 <button type="submit" class="btn btn-danger">Cerrar Sesión</button>
             </form>
-            <a href="{{ route('lotteries.trashed') }}" class="btn btn-warning me-2">Ver loterías eliminadas</a>
-            <a href="{{ route('lotteries.create') }}" class="btn btn-success">Agregar Lotería</a>
+            <a href="{{ route('loterias.trashed') }}" class="btn btn-warning me-2">Ver loterías eliminadas</a>
+            <a href="{{ route('loterias.create') }}" class="btn btn-success">Agregar Lotería</a>
         </div>
 
         <div class="table-responsive">
@@ -41,22 +41,23 @@
                     </tr>
                 </thead>
                 <tbody>
-                @forelse($lotteries as $lottery)
+                @forelse($loterias as $loteria)
+
                     <tr>
-                        <td>{{ $lottery->id }}</td>
-                        <td>{{ $lottery->name }}</td>
-                        <td>{{ $lottery->description ?? 'No disponible' }}</td>
-                        <td>{{ $lottery->date_play->format('d-m-Y') }}</td>
-                        <td>{{ $lottery->price }} $</td>
-                        <td>{{ $lottery->result ?? 'No disponible' }}</td>
+                        <td>{{ $loteria->id }}</td>
+                        <td>{{ $loteria->name }}</td>
+                        <td>{{ $loteria->description ?? 'No disponible' }}</td>
+                        <td>{{ $loteria->date_play->format('d-m-Y') }}</td>
+                        <td>{{ $loteria->price }} $</td>
+                        <td>{{ $loteria->result ?? 'No disponible' }}</td>
                         <td>
-                            <form action="{{ route('lotteries.destroy', $lottery->id) }}" method="post" class="d-inline">
+                            <form action="{{ route('loterias.destroy', $loteria->id) }}" method="post" class="d-inline">
                                 @method('DELETE')
                                 @csrf
-                                <a href="{{ route('lotteries.show', $lottery->id) }}" class="btn btn-sm btn-info me-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver detalles">
+                                <a href="{{ route('loterias.show', $loteria->id) }}" class="btn btn-sm btn-info me-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver detalles">
                                     Detalles
                                 </a>
-                                <a href="{{ route('lotteries.edit', $lottery->id) }}" class="btn btn-sm btn-warning me-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar lotería">
+                                <a href="{{ route('loterias.edit', $loteria->id) }}" class="btn btn-sm btn-warning me-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar lotería">
                                     Editar
                                 </a>
                                 <button type="submit" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar lotería">
@@ -75,7 +76,7 @@
         </div>
 
         <div class="d-flex justify-content-center">
-            {{ $lotteries->links() }}
+            {{ $loterias->links() }}
         </div>
     </div>
 @endsection
