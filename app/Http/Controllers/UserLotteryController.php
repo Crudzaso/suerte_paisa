@@ -25,18 +25,15 @@ class UserLotteryController extends Controller
         try{
             
             $user = $request->user();
-            if (!$user) {
-                return redirect()->route('login')->with('error', 'Debes iniciar sesión para comprar un número.');
-            }
     
             $userId = $user->id; 
             $lotteryId = $request->input('lottery_id');
 
             $user = User::findOrFail($userId);
-        $lottery = Lottery::findOrFail($lotteryId);
+            $lottery = Lottery::findOrFail($lotteryId);
 
          // get the max number of lottery
-         $maxNumber = $lottery->max_number;
+            $maxNumber = $lottery->max_number;
 
         //Check if el numero is avalible
             do {
@@ -45,7 +42,6 @@ class UserLotteryController extends Controller
             } while ($numberExists);
 
              $user->lotteries()->attach($lotteryId, ['number' => $randomNumber]);
-             $lotteries = Lottery::all();
              return redirect()->back()->with('success', 'Número comprado con éxito. Su número es: ' . $randomNumber);
              
         } catch(Exception $e){
