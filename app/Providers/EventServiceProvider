@@ -3,7 +3,10 @@
 namespace App\Providers;
 
 use App\Events\ErrorOccurred;
+use App\Events\LotteryPurchased;
+use App\Events\LotteryPurchaseError;
 use App\Listeners\SendErrorNotification;
+use App\Listeners\SendLotteryNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -16,6 +19,12 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         ErrorOccurred::class => [
             SendErrorNotification::class,
+        ],
+        LotteryPurchased::class => [
+            SendLotteryNotification::class,
+        ],
+        LotteryPurchaseError::class => [
+            SendLotteryNotification::class,
         ],
     ];
 }

@@ -2,14 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\LotteryPurchased;
 use App\Models\Lottery;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\EmailHelperGlobal;
+use App\Service\DiscordWebhookService;
 
 class UserLotteryController extends Controller
 {
+
+    protected $discordWebhookService;
+    public function __construct(DiscordWebhookService $discordWebhookService)
+    {
+        $this->discordWebhookService = $discordWebhookService;
+    }
      // get the lotteries associated with one user
     public function getLotteriesByUserId($userId)
     {
@@ -42,10 +51,11 @@ class UserLotteryController extends Controller
             } while ($numberExists);
 
              $user->lotteries()->attach($lotteryId, ['number' => $randomNumber]);
+             event(new LotteryPurchased($user, $lottery));
              return redirect()->back()->with('success', 'Número comprado con éxito. Su número es: ' . $randomNumber);
              
         } catch(Exception $e){
-            return redirect()->route('', $userId)->with('error', 'Error al comprar la lotería.');
+            return redirect()->back()->with('error', 'Error al comprar la lotería.');
         }
         
     }
