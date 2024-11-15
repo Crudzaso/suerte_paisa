@@ -1,7 +1,8 @@
 <x-layout-home>
+  
     <h3 class="main-title-user-view">Bienvenido a tu informacion {{$user->names}}</h3>
     <section class="form-container">
-        <form action="">
+        <form action="" class="form-user">
             <label for="name">Nombre</label>
             <input type="text" id="name" placeholder="Ingresa tu nombre" required value="{{$user->names}}">
 

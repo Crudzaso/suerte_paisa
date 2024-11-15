@@ -6,6 +6,7 @@ use App\Models\Lottery;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class UserLotteryController extends Controller
 {
@@ -20,8 +21,17 @@ class UserLotteryController extends Controller
 
     //method to buy a lottery
 
-    public function buyLottery($userId, $lotteryId){
+    public function buyLottery(Request $request){
         try{
+            
+            $user = $request->user();
+            if (!$user) {
+                return redirect()->route('login')->with('error', 'Debes iniciar sesión para comprar un número.');
+            }
+    
+            $userId = $user->id; 
+            $lotteryId = $request->input('lottery_id');
+
             $user = User::findOrFail($userId);
         $lottery = Lottery::findOrFail($lotteryId);
 
@@ -30,11 +40,14 @@ class UserLotteryController extends Controller
 
         //Check if el numero is avalible
             do {
-                // generate number between 0 and $maxNumber
                 $randomNumber = rand(1, $maxNumber);
                 $numberExists = $lottery->users()->wherePivot('number', $randomNumber)->exists();
             } while ($numberExists);
+
              $user->lotteries()->attach($lotteryId, ['number' => $randomNumber]);
+             $lotteries = Lottery::all();
+             return redirect()->back()->with('success', 'Número comprado con éxito. Su número es: ' . $randomNumber);
+             
         } catch(Exception $e){
             return redirect()->route('', $userId)->with('error', 'Error al comprar la lotería.');
         }

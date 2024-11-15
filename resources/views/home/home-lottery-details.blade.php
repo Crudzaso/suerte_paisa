@@ -1,4 +1,15 @@
 <x-layout-home>
+    @if(session('success'))
+    <script>
+        alert("{{ session('success') }}");
+    </script>
+@endif
+
+@if(session('error'))
+    <script>
+        alert("{{ session('error') }}");
+    </script>
+@endif
     <section class="content-top">
         <img src="{{$lottery->logo_url}}" alt="">
         <p>Juega el: {{$lottery->date_play}}</p>
@@ -23,7 +34,12 @@
     
     <section class="button-section">
         @auth()
-        <a href="">Comprar</a>
+        <form action="{{ route('assign.number') }}" method="POST">
+            @csrf
+            <input type="hidden" name="lottery_id" value="{{ $lottery->id }}">
+        
+            <button type="submit" class="btn btn-primary">Comprar Número</button>
+        </form>
         @endauth
 
         @guest()
