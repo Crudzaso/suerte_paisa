@@ -21,16 +21,19 @@
             </article>
         </section>
         <nav class="bottom-header">
-            <a href=""><img class="img-navbar" src="{{ asset('images/logo.png') }}" alt=""></a>
+            <a href="{{ route('home') }}"><img class="img-navbar" src="{{ asset('images/logo.png') }}" alt=""></a>
     
-            <div class="links md:flex hidden space-x-4">
-                <a href="">Sorteos</a>
-                <a href="">Resultados</a>
-                <a href="">Guía</a>
-                <a href="">Transparencia</a>
-            </div>
+            @if (Route::currentRouteName() === 'home')
+                <div class="links lg:flex hidden space-x-4">
+                    <a href="">Sorteos</a>
+                    <a href="">Resultados</a>
+                    <a href="">Guía</a>
+                    <a href="">Transparencia</a>
+                </div>
+            @endif
+            
     
-            <div class="auth-links md:flex hidden space-x-4 auth-buttons">
+            <div class="auth-links lg:flex hidden space-x-4 auth-buttons">
 
                 {{-- check if the user is authenticated or not and show the options --}}
                 @auth()
@@ -57,7 +60,7 @@
             </div>
     
             <!-- Botón de menú hamburguesa -->
-            <button id="menu-toggle" class="hamburger-menu block md:hidden p-2">
+            <button id="menu-toggle" class="hamburger-menu block lg:hidden p-2">
                 <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                 </svg>
@@ -66,16 +69,18 @@
     
         <!-- Menú desplegable en modo móvil -->
         <div id="mobile-menu" class="md:hidden mobile-hamburguer ocultar">
+            @if (Route::currentRouteName() === 'home')
             <a href="">Sorteos</a>
             <a href="">Resultados</a>
             <a href="">Guía</a>
             <a href="">Transparencia</a>
+            @endif
             <div class="auth-buttons mobile-buttons">
                 @auth()
                 <a href="">Mi perfil</a>
 
                 <a href="{{ route('dashboard') }}">Dashboard</a>
-                <form action="{{ route('logout') }}" method="POST" class="mb-3">
+                <form class="form-logout" action="{{ route('logout') }}" method="POST" class="mb-3">
                     @csrf
                     <button type="submit" class="btn-close-session">Cerrar Sesión</button>
                 </form>
