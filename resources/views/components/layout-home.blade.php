@@ -70,6 +70,7 @@
         <!-- Menú desplegable en modo móvil -->
         <div id="mobile-menu" class="md:hidden mobile-hamburguer ocultar">
             @if (Route::currentRouteName() === 'home')
+
             <a href="">Sorteos</a>
             <a href="">Resultados</a>
             <a href="">Guía</a>
@@ -81,6 +82,7 @@
 
                 <a href="{{ route('dashboard') }}">Dashboard</a>
                 <form class="form-logout" action="{{ route('logout') }}" method="POST" class="mb-3">
+
                     @csrf
                     <button type="submit" class="btn-close-session">Cerrar Sesión</button>
                 </form>

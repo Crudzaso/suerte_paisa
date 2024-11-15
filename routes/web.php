@@ -15,6 +15,7 @@ use App\Http\Controllers\LotteryController;
 use App\Http\Controllers\UserLotteryController;
 use App\Http\Middleware\VerifyRoleMiddleware;
 
+// Home Route
 Route::get('/', function () {
     Route::post('login', [AuthController::class, 'login'])->name('login');
 });
@@ -64,6 +65,7 @@ Route::get('reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->n
 Route::post('reset', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::get('new-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('new-password', [ResetPasswordController::class, 'reset'])->name('password.update');
+
 
 // Registration Routes
 Route::get('registro', function () { return view('auth.register'); })->name('registro');

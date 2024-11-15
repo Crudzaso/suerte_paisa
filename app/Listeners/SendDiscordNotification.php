@@ -79,6 +79,7 @@ class SendDiscordNotification
                 'title' => "🎉 Suerte paisa - Usuario {$action} 🎉",
                 'color' => $color,
                 'thumbnail' => [
+
                     'url' => "https://i.postimg.cc/SKLLW24B/logo-suerte-paisa.webp",
                 ],
                 'fields' => [
@@ -142,16 +143,20 @@ class SendDiscordNotification
                 'fields' => [
                     [
                         'name' => '📝 Mensaje de Error',
+
                         'value' => $event->message,
                         'inline' => false,
                     ],
                     [
+
                         'name' => '📋 Detalles del Error',
+
                         'value' => $event->errorDetails ?? 'No se proporcionaron detalles.',
                         'inline' => false,
                     ],
                 ],
                 'footer' => [
+
                     'text' => implode(" | ", [
                         '⚠️  Error en Suerte Paisa',
                         '🕒 Notificación realizada el ' . now()->format('d/m/y H:i')
@@ -161,6 +166,7 @@ class SendDiscordNotification
                 'author' => [
                     'name' => "⚠️ Sistema de Monitoreo de Errores",
                 ],
+
             ];
 
             $this->discordWebhook->sendEmbed($embed);

@@ -20,11 +20,13 @@ class EventServiceProvider extends ServiceProvider
         ErrorOccurred::class => [
             SendErrorNotification::class,
         ],
+
         LotteryPurchased::class => [
             SendLotteryNotification::class,
         ],
         LotteryPurchaseError::class => [
             SendLotteryNotification::class,
         ],
+
     ];
 }

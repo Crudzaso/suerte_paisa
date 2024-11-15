@@ -25,6 +25,7 @@
     </div>
     @endif
     @endforeach
+
     </article>
 </section>
 
@@ -43,6 +44,7 @@
     <h3>Sorteos finalizados</h3>
     <article id="container-active-loteries" class="container-active-loteries">
         {{-- CONTENT FROM JS --}}
+
         {{-- CONTENT FROM CONTROLLER --}}
         @foreach ($lotteries as $lottery)
             @if ($lottery->result ==! null)
@@ -83,7 +85,9 @@
         <img src="{{ asset('images/laws4.webp') }}" alt="">
         <img src="{{ asset('images/laws5.webp') }}" alt="">
         <img src="{{ asset('images/laws6.webp') }}" alt="">
+
         <img src="{{ asset('images/laws7.webp') }}" alt="">
+
     </article>
 </section>
 

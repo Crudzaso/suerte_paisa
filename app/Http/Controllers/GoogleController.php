@@ -15,6 +15,8 @@ use App\Events\ErrorOccurred;
 
 use Spatie\Permission\Models\Role;
 
+use Spatie\Permission\Models\Role;
+
 class GoogleController extends Controller
 {
     protected $emailHelper;
@@ -64,7 +66,9 @@ class GoogleController extends Controller
 
             return redirect()->route('home')->with('success', 'Has iniciado sesión correctamente.');
         } catch (\Exception $e) {
+
             event(new ErrorOccurred('Error al iniciar sesión con Google', $e->getMessage()));
+
             return redirect()->route('auth.google')->with('error', 'Error al iniciar sesión con Google.');
         }
     }

@@ -22,6 +22,7 @@ class App extends Component
     public function render(): View|Closure|string
     {
 
+
         return redirect()->route('home'); 
 
     }
