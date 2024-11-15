@@ -48,6 +48,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::post('logout', [GoogleController::class, 'logout'])->name('logout');
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard'); 
     Route::get('twofactor', function () { return view('auth.auth-plantilla.two-factor'); })->name('auth.twofactor'); 
+    Route::post('/usuarios/lotteries/assign-number', [UserLotteryController::class, 'buyLottery'])->name('assign.number');
     
     // Admin Routes (Protected by Role Middleware)
     Route::middleware(['role:admin'])->group(function () {

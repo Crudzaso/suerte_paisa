@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('css/home-layout.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/lottery-details.css') }}">
     <link rel="stylesheet" href="{{ asset('css/home-user.css') }}">
-    <title>Document</title>
+    <link rel="stylesheet" href="{{ asset('css/lottery-details.css') }}">
+    
+    <title>Suerte paisa</title>
 </head>
 <body>
     <header>
@@ -19,20 +21,23 @@
             </article>
         </section>
         <nav class="bottom-header">
-            <a href=""><img class="img-navbar" src="{{ asset('images/logo.png') }}" alt=""></a>
+            <a href="{{ route('home') }}"><img class="img-navbar" src="{{ asset('images/logo.png') }}" alt=""></a>
     
-            <div class="links md:flex hidden space-x-4">
-                <a href="">Sorteos</a>
-                <a href="">Resultados</a>
-                <a href="">Guía</a>
-                <a href="">Transparencia</a>
-            </div>
+            @if (Route::currentRouteName() === 'home')
+                <div class="links lg:flex hidden space-x-4">
+                    <a href="">Sorteos</a>
+                    <a href="">Resultados</a>
+                    <a href="">Guía</a>
+                    <a href="">Transparencia</a>
+                </div>
+            @endif
+            
     
-            <div class="auth-links md:flex hidden space-x-4 auth-buttons">
+            <div class="auth-links lg:flex hidden space-x-4 auth-buttons">
 
                 {{-- check if the user is authenticated or not and show the options --}}
                 @auth()
-                <a href="">Mi perfil</a>
+                <a href="{{ route('userpurchases', ['id' => auth()->user()->id]) }}">Mi perfil</a>
 
                  {{-- Verifica si el usuario autenticado tiene el rol "admin" --}}
                 @if (auth()->user()->hasRole('admin'))
@@ -55,7 +60,7 @@
             </div>
     
             <!-- Botón de menú hamburguesa -->
-            <button id="menu-toggle" class="hamburger-menu block md:hidden p-2">
+            <button id="menu-toggle" class="hamburger-menu block lg:hidden p-2">
                 <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                 </svg>
@@ -64,16 +69,18 @@
     
         <!-- Menú desplegable en modo móvil -->
         <div id="mobile-menu" class="md:hidden mobile-hamburguer ocultar">
+            @if (Route::currentRouteName() === 'home')
             <a href="">Sorteos</a>
             <a href="">Resultados</a>
             <a href="">Guía</a>
             <a href="">Transparencia</a>
+            @endif
             <div class="auth-buttons mobile-buttons">
                 @auth()
                 <a href="">Mi perfil</a>
 
                 <a href="{{ route('dashboard') }}">Dashboard</a>
-                <form action="{{ route('logout') }}" method="POST" class="mb-3">
+                <form class="form-logout" action="{{ route('logout') }}" method="POST" class="mb-3">
                     @csrf
                     <button type="submit" class="btn-close-session">Cerrar Sesión</button>
                 </form>

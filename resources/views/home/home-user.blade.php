@@ -1,7 +1,8 @@
 <x-layout-home>
+  
     <h3 class="main-title-user-view">Bienvenido a tu informacion {{$user->names}}</h3>
     <section class="form-container">
-        <form action="">
+        <form action="" class="form-user">
             <label for="name">Nombre</label>
             <input type="text" id="name" placeholder="Ingresa tu nombre" required value="{{$user->names}}">
 
@@ -39,6 +40,7 @@
                 <th scope="col">Premio</th>
                 <th scope="col">Fecha de juego</th>
                 <th scope="col">Nombre</th>
+                <th scope="col">Numero</th>
               </tr>
             </thead>
             <tbody>
@@ -52,6 +54,7 @@
                     <td>{{$lottery->prize}}</td>
                     <td>{{$lottery->date_play}}</td>
                     <td>{{$lottery->name}}</td>
+                    <td>{{$lottery->pivot->number}}</td>
                   </tr>
                 @endforeach
             </tbody>

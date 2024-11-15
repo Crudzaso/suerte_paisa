@@ -1,4 +1,27 @@
 <x-layout-home>
+    @if(session('success'))
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: "{{ session('success') }}",
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'OK'
+        });
+    </script>
+@endif
+
+@if(session('error'))
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: "{{ session('error') }}",
+            confirmButtonColor: '#d33',
+            confirmButtonText: 'Intentalo despues'
+        });
+    </script>
+@endif
     <section class="content-top">
         <img src="{{$lottery->logo_url}}" alt="">
         <p>Juega el: {{$lottery->date_play}}</p>
@@ -6,7 +29,7 @@
 
     <section class="hero">
         <h2>
-           {{$lottery->name}} aaaaaaaaaaaaaaaaaaaaa
+           {{$lottery->name}}
         </h2>
             <img class="hero-image-details" src="{{$lottery->banner_url}}" alt="">
     </section>
@@ -14,16 +37,20 @@
     <section class="details-section-lott">
         <article>
             <h3>Gana {{ $lottery->prize }} en un solo juego!</h3>
-        <p> Lorem, ipsum dolor sit amet consectetur adipisicing elit. Provident debitis culpa officia inventore, cumque quidem iste reiciendis laudantium dolores veniam accusantium doloribus animi quos natus illo nisi, hic eveniet modi.
+        <p>
             {{$lottery->description}}
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem consectetur recusandae facilis pariatur ducimus! Alias porro aspernatur placeat nulla! Quae omnis facere dolorum sapiente minima facilis ut illum, ad accusantium.
         </p>
         </article>
     </section>
     
     <section class="button-section">
         @auth()
-        <a href="">Comprar</a>
+        <form action="{{ route('assign.number') }}" method="POST">
+            @csrf
+            <input type="hidden" name="lottery_id" value="{{ $lottery->id }}">
+        
+            <button type="submit" class="btn btn-primary">Comprar Número</button>
+        </form>
         @endauth
 
         @guest()
