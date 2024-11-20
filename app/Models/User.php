@@ -12,10 +12,14 @@ use Laravel\Sanctum\HasApiTokens;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Spatie\Permission\Traits\HasRoles;
+
+
 class User extends Authenticatable implements Auditable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes, HasRoles;
     use HasApiTokens;
     use HasProfilePhoto;
     use TwoFactorAuthenticatable;
@@ -34,4 +38,12 @@ class User extends Authenticatable implements Auditable
         'password',
         'address',
     ];
+
+    public function lotteries(): BelongsToMany
+{{
+    return $this->belongsToMany(Lottery::class, 'lottery_user') // Especificando la tabla intermedia si es necesario
+                ->withPivot('number');  // Accede a la columna 'number' de la tabla intermedia
+}
+    return $this->belongsToMany(Lottery::class, 'lottery_user');
+}
 }
