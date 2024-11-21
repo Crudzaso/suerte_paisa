@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\GithubController;
 use App\Http\Controllers\RoleController;
+use App\Mail\TestMail;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -70,3 +71,8 @@ Route::post('new-password', [ResetPasswordController::class, 'reset'])->name('pa
 // Registration Routes
 Route::get('registro', function () { return view('auth.register'); })->name('registro');
 Route::post('registro', [AuthController::class, 'registro'])->name('registro.submit');
+
+Route::get('/send-mail', function () {
+    Mail::to('echeverrysamuel74@gmail.com')->send(new TestMail());
+    return 'Correo enviado correctamente.';
+});
