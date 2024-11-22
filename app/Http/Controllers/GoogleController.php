@@ -15,8 +15,6 @@ use App\Events\ErrorOccurred;
 
 use Spatie\Permission\Models\Role;
 
-use Spatie\Permission\Models\Role;
-
 class GoogleController extends Controller
 {
     protected $emailHelper;

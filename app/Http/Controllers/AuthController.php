@@ -53,6 +53,8 @@ class AuthController extends Controller
 
             event(new UserCreated($user));
 
+            $this->emailHelper::sendWelcomeEmail($user);
+
             return redirect()->route('home')->with('success', 'Registro exitoso!');
         } catch (\Exception $e) {
 
