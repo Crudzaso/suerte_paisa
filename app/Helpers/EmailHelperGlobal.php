@@ -2,51 +2,51 @@
 
 namespace App\Helpers;
 
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use App\Mail\PasswordResetEmail;
+use App\Mail\RegistroExitoso; 
 
 class EmailHelperGlobal
 {
+    // Configuración predeterminada desde .env
     protected static function getEmailConfig()
     {
         return [
             'fromEmail' => env('MAIL_FROM_ADDRESS'),
             'fromName' => env('MAIL_FROM_NAME'),
-            'apiToken' => env('MAIL_PASSWORD'),
         ];
     }
 
     protected static function sendEmailRequest($toEmail, $toName, $subject, $htmlContent)
     {
-        $config = self::getEmailConfig();
-
-        $response = Http::withToken($config['apiToken'])
-            ->withHeaders(['Content-Type' => 'application/json'])
-            ->post('https://api.mailersend.com/v1/email', [
-                'from' => [
-                    'email' => $config['fromEmail'],
-                    'name' => $config['fromName'],
-                ],
-                'to' => [[
-                    'email' => $toEmail,
-                    'name' => $toName,
-                ]],
+        try {
+            // Configuramos los datos del correo
+            $data = [
                 'subject' => $subject,
-                'html' => $htmlContent,
-            ]);
+                'htmlContent' => $htmlContent,
+                'toEmail' => $toEmail,
+                'toName' => $toName,
+            ];
 
-        if (!$response->successful()) {
-            Log::error('Error al enviar correo:', [
-                'response' => $response->json(),
-                'status' => $response->status(),
-                'request_data' => [
-                    'to' => $toEmail,
-                    'subject' => $subject,
-                ],
+            // Enviar el correo utilizando el Mail de Laravel
+            Mail::send([], [], function ($message) use ($data) {
+                $message->to($data['toEmail'], $data['toName'])
+                        ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
+                        ->subject($data['subject'])
+                        ->html($data['htmlContent']); // Usamos el método html() aquí
+            });
+
+        } catch (\Exception $e) {
+            // Si ocurre un error, lo registramos en los logs
+            Log::error('Error al enviar el correo:', [
+                'error' => $e->getMessage(),
+                'data' => $data
             ]);
         }
     }
 
+    // Generación del contenido del mensaje HTML
     public static function generateMessage($userName, $messageContent, $footer = null)
     {
         return "
@@ -63,7 +63,7 @@ class EmailHelperGlobal
         ";
     }
 
-    // Mensaje de registro
+    // Enviar correo de bienvenida
     public static function sendWelcomeEmail($user)
     {
         $subject = '¡Bienvenido a Suerte Paisa!';
@@ -77,7 +77,7 @@ class EmailHelperGlobal
         self::sendEmailRequest($user->email, $user->names, $subject, $htmlContent);
     }
 
-    // Mensaje de login
+    // Enviar notificación de inicio de sesión
     public static function sendLoginNotification($user)
     {
         $subject = 'Notificación de Inicio de Sesión - Suerte Paisa';
@@ -91,13 +91,14 @@ class EmailHelperGlobal
         self::sendEmailRequest($user->email, $user->names, $subject, $htmlContent);
     }
 
-    // Mensaje de cambio de contraseña
+    // Enviar correo de restablecimiento de contraseña
     public static function sendPasswordResetEmail($user, $resetLink)
     {
         $subject = 'Restablecimiento de Contraseña - Suerte Paisa';
         
         $messageContent = 'Has recibido este mensaje porque se solicitó un restablecimiento de contraseña para tu cuenta en Suerte Paisa.';
 
+        // Botón para restablecer la contraseña
         $buttonHtml = "<div style='margin-top: 20px;'><a href='{$resetLink}' style='display: inline-block; padding: 12px 24px; background-color: #2d3748; color: #ffffff; border-radius: 4px; text-decoration: none;'>Restablecer contraseña</a></div>";
 
         $footer = 'Este enlace de restablecimiento de contraseña expirará en 60 minutos. Si no has solicitado esta acción, simplemente ignora este mensaje.';
