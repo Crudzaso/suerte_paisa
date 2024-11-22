@@ -81,7 +81,10 @@ class AuthController extends Controller
                 $user = Auth::user();
 
                 event(new UserLogin($user));
-                return redirect()->route('home');
+
+                $this->emailHelper::sendLoginNotification($user);
+
+                return redirect()->route('home');  
             } else {
                 return redirect()->route('login')->with('error', 'Correo electrónico o contraseña incorrectos.');
             }
