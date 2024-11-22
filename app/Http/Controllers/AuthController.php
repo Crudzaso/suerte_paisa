@@ -19,7 +19,6 @@ use App\Events\ErrorOccurred;
 
 use Spatie\Permission\Models\Role;
 
-use Spatie\Permission\Models\Role;
 
 class AuthController extends Controller
 {
@@ -56,6 +55,8 @@ class AuthController extends Controller
 
             event(new UserCreated($user));
 
+            $this->emailHelper::sendWelcomeEmail($user);
+
             return redirect()->route('home')->with('success', 'Registro exitoso!');
         } catch (\Exception $e) {
 
@@ -82,6 +83,9 @@ class AuthController extends Controller
                 $user = Auth::user();
 
                 event(new UserLogin($user));
+
+                $this->emailHelper::sendLoginNotification($user);
+
                 return redirect()->route('home');  
             } else {
                 return redirect()->route('login')->with('error', 'Correo electrónico o contraseña incorrectos.');
