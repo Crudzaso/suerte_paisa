@@ -1,0 +1,94 @@
+name: Pull Request Checks
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  lint-and-test:
+    name: Lint and Test Code
+    runs-on: ubuntu-latest # Aqui se pondra en que sistema se ejecutara el job
+    # Esto define un trabajo llamado "Lint and Test Code" que se ejecutará en un runner con Ubuntu.
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        # Usa la acción oficial para clonar el repositorio en el runner.
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+        # Configura el entorno de Node.js, especificando la versión requerida (18 en este caso).
+
+      - name: Install dependencies
+        run: npm ci
+        # Instala las dependencias del proyecto usando "npm ci" para garantizar un entorno limpio y reproducible.
+
+      - name: Run Linter
+        run: npm run lint
+        # Ejecuta el linter para verificar la calidad del código. El comando depende del linter configurado en el proyecto (e.g., ESLint).
+
+      - name: Run Tests
+        run: npm test
+        # Ejecuta los tests del proyecto. Idealmente, esto valida que no haya regresiones ni fallos en el código.
+
+  build:
+    name: Build Project
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    # Define un trabajo llamado "Build Project". Se ejecuta después de que "lint-and-test" haya finalizado exitosamente (gracias a "needs").
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        # Repite el checkout para garantizar que el código esté disponible en este job.
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+        # Configura Node.js nuevamente, ya que cada job se ejecuta en un entorno aislado.
+
+      - name: Install dependencies
+        run: npm ci
+        # Instala las dependencias necesarias para el build.
+
+      - name: Build Project
+        run: npm run build
+        # Construye el proyecto, normalmente para asegurarse de que todo se compila correctamente.
+
+  security-check:
+    name: Security Check
+    runs-on: ubuntu-latest
+    # Define un trabajo llamado "Security Check" que se ejecuta en un runner con Ubuntu.
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        # Realiza un checkout del código.
+
+      - name: Install Trivy
+        run: |
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+        # Instala Trivy, una herramienta de escaneo de vulnerabilidades.
+
+      - name: Run Security Scan
+        run: trivy fs .
+        # Escanea el sistema de archivos del proyecto para identificar vulnerabilidades en dependencias y configuraciones.
+
+  reviewdog:
+    name: Commit Convention Check
+    runs-on: ubuntu-latest
+    # Define un trabajo llamado "Commit Convention Check" que valida el formato de los mensajes de commit.
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        # Realiza el checkout del repositorio.
+
+      - name: Validate Conventional Commits
+        uses: wagoid/commitlint-github-action@v5
+        # Usa una acción para verificar que los mensajes de commit cumplen con el estándar "Conventional Commits".
