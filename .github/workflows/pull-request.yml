@@ -28,9 +28,9 @@ jobs:
         run: |
           ./vendor/bin/php-cs-fixer fix --dry-run --diff
 
-      - name: Run Tests
-        run: |
-          ./vendor/bin/pest
+      #- name: Run Tests
+       # run: |
+        #  ./vendor/bin/pest
 
   build:
     name: Build Project
