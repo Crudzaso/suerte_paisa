@@ -27,7 +27,7 @@ class UserCreateFormRequest extends FormRequest
             'email' => 'required|email|unique:users,email|max:255',
             'password' => 'required|string|min:8|confirmed',
             'address' => 'nullable|string|max:255',
-            'role' => 'required|exists:roles,id', 
+            'role' => 'required|exists:roles,id',
         ];
     }
 

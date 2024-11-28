@@ -79,4 +79,3 @@ class GoogleController extends Controller
         return redirect()->route('home')->with('success', 'Has cerrado sesión correctamente.');
     }
 }
-

@@ -10,19 +10,17 @@ class RegistroExitoso extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $usuario; 
+    public $usuario;
 
     public function __construct($usuario)
     {
-        $this->usuario = $usuario; 
+        $this->usuario = $usuario;
     }
 
     public function build()
     {
-        return $this->view('emails.registro') 
+        return $this->view('emails.registro')
                     ->subject('Registro Exitoso')
-                    ->with(['usuario' => $this->usuario]); 
+                    ->with(['usuario' => $this->usuario]);
     }
 }
-
-
