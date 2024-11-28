@@ -16,9 +16,6 @@ use App\Service\DiscordWebhookService;
 use App\Events\UserLogin;
 use App\Events\UserCreated;
 use App\Events\ErrorOccurred;
-
-use Spatie\Permission\Models\Role;
-
 use Spatie\Permission\Models\Role;
 
 class AuthController extends Controller
