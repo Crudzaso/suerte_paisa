@@ -67,4 +67,4 @@ Route::post('new-password', [ResetPasswordController::class, 'reset'])->name('pa
 
 // Registration Routes
 Route::get('registro', function () { return view('auth.register'); })->name('registro');
-Route::post('registro', [AuthController::class, 'registro'])->name('registro.submit');
+Route::post('registro-auth', [AuthController::class, 'registro'])->name('registro.submit');
