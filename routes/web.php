@@ -20,7 +20,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('login', [AuthController::class, 'login'])->name('login');
+Route::post('ingreso', [AuthController::class, 'login'])->name('login');
 
 Route::get('home', [LotteryController::class, 'index'])->name('home');
 
