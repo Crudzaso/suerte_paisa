@@ -30,7 +30,7 @@ jobs:
 
       - name: Run Tests
         run: |
-          ./vendor/bin/phpunit
+          ./vendor/bin/pest
 
   build:
     name: Build Project
