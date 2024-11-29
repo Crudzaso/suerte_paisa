@@ -23,7 +23,7 @@ class App extends Component
     {
 
 
-        return redirect()->route('home'); 
+        return redirect()->route('home');
 
     }
 }

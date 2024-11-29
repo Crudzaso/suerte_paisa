@@ -34,7 +34,7 @@ class ForgotPasswordController extends Controller
             $user = User::where('email', $request->email)->first();
             
             $token = Password::createToken($user);
-            $resetLink = route('password.reset', ['token' => $token, 'email' => $user->email]);
+            $resetLink = route('auth.password.reset', ['token' => $token, 'email' => $user->email]);
 
             $this->emailHelper::sendPasswordResetEmail($user, $resetLink);
 

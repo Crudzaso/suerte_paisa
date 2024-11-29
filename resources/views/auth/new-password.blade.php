@@ -48,7 +48,7 @@ License: For each use you must have a valid license purchased only from above li
 						<!--begin::Wrapper-->
 						<div class="w-lg-500px p-10">
 							<!--begin::Form-->
-							<form class="form w-100" novalidate="novalidate" id="kt_new_password_form" method="POST" action="{{ route('password.update') }}">
+							<form class="form w-100" novalidate="novalidate" id="kt_new_password_form" method="POST" action="{{ route('auth.password.update') }}">
 							@csrf
 
 							<input type="hidden" name="token" value="{{ $token }}">

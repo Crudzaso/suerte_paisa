@@ -20,7 +20,7 @@ return new class extends Migration
             $table->date('date_play');
             $table->string('result')->nullable();
             $table->string('prize')->nullable();
-            $table->decimal('price', 8, 2);
+            $table->decimal('price', 8, 2)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

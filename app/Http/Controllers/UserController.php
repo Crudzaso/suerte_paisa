@@ -41,7 +41,7 @@ class UserController extends Controller
 
     public function store(UserCreateFormRequest $request)
     {
-        try{
+        try {
             $user = User::create([
                 'names' => $request->names,
                 'lastnames' => $request->lastnames,
@@ -59,7 +59,7 @@ class UserController extends Controller
     
             return redirect()->route('usuarios.index')->with('success', 'Usuario creado exitosamente.');
 
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
 
             event(new ErrorOccurred('Error al crear el usuario', $e->getMessage()));
             return redirect()->route('usuarios.index')->with('error', 'Error al crear el usuario.');
@@ -96,37 +96,37 @@ class UserController extends Controller
      * Update the specified resource in storage.
      */
     
-     public function update(UserUpdateFormRequest $request, string $id)
-     {
-         try {
-             $user = User::findOrFail($id);
+    public function update(UserUpdateFormRequest $request, string $id)
+    {
+        try {
+            $user = User::findOrFail($id);
              
-             $user->names = $request->input('names');
-             $user->lastnames = $request->input('lastnames');
-             $user->email = $request->input('email');
+            $user->names = $request->input('names');
+            $user->lastnames = $request->input('lastnames');
+            $user->email = $request->input('email');
      
-             if ($request->input('password')) {
-                 $user->password = bcrypt($request->input('password'));
-             }
+            if ($request->input('password')) {
+                $user->password = bcrypt($request->input('password'));
+            }
 
-             $user->address = $request->input('address');
+            $user->address = $request->input('address');
 
-             if ($request->input('role')) {
+            if ($request->input('role')) {
                 $user->roles()->sync([$request->input('role')]);
             }
      
-             $user->save();
+            $user->save();
      
-             event(new UserUpdated($user));
+            event(new UserUpdated($user));
      
-             return redirect()->route('usuarios.index')->with('success', 'Usuario actualizado correctamente.');
-         } catch (\Exception $e) {
+            return redirect()->route('usuarios.index')->with('success', 'Usuario actualizado correctamente.');
+        } catch (\Exception $e) {
 
             event(new ErrorOccurred('Error al actualizar el usuario', $e->getMessage()));
 
-             return redirect()->route('usuarios.index')->with('error', 'Error al actualizar el usuario.');
-         }
-     }
+            return redirect()->route('usuarios.index')->with('error', 'Error al actualizar el usuario.');
+        }
+    }
      
 
     public function destroy(string $id)

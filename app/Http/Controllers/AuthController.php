@@ -16,16 +16,16 @@ use App\Service\DiscordWebhookService;
 use App\Events\UserLogin;
 use App\Events\UserCreated;
 use App\Events\ErrorOccurred;
-
 use Spatie\Permission\Models\Role;
-
 
 class AuthController extends Controller
 {
+    protected $emailHelper;
     protected $discordWebhookService;
 
-    public function __construct(DiscordWebhookService $discordWebhookService)
+    public function __construct(EmailHelperGlobal $emailHelper, DiscordWebhookService $discordWebhookService)
     {
+        $this->emailHelper = $emailHelper;
         $this->discordWebhookService = $discordWebhookService;
     }
 
@@ -36,7 +36,7 @@ class AuthController extends Controller
                 'names' => 'required|string|max:255',
                 'lastnames' => 'required|string|max:255',
                 'email' => 'required|email|unique:users,email',
-                'password' => 'required|string|min:6|confirmed', 
+                'password' => 'required|string|min:6|confirmed',
                 'address' => 'required|string|max:255',
             ]);
 
@@ -55,7 +55,7 @@ class AuthController extends Controller
 
             event(new UserCreated($user));
 
-            $this->emailHelper::sendWelcomeEmail($user);
+            $this->emailHelper->sendWelcomeEmail($user);
 
             return redirect()->route('home')->with('success', 'Registro exitoso!');
         } catch (\Exception $e) {
@@ -86,7 +86,7 @@ class AuthController extends Controller
 
                 $this->emailHelper::sendLoginNotification($user);
 
-                return redirect()->route('home');  
+                return redirect()->route('home');
             } else {
                 return redirect()->route('login')->with('error', 'Correo electrónico o contraseña incorrectos.');
             }
@@ -96,11 +96,12 @@ class AuthController extends Controller
 
             return redirect()->route('login')->with('error', 'Ocurrió un error al iniciar sesión.');
         }
-      
+
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required|min:6',
         ]);
+        
 
         if ($validator->fails()) {
             return redirect()->route('login')
@@ -113,10 +114,16 @@ class AuthController extends Controller
             $user = Auth::user();
 
             event(new UserLogin($user));
-            return redirect()->route('usuarios.index');  
+            return redirect()->route('usuarios.index');
         } else {
             
         }
         return redirect()->route('login')->with('error', 'Correo electrónico o contraseña incorrectos.');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::guard('web')->logout();
+        return redirect()->route('login')->with('success', 'Has cerrado sesión correctamente.');
     }
 }
