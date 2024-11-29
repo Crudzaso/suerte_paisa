@@ -70,11 +70,4 @@ class GoogleController extends Controller
             return redirect()->route('auth.google')->with('error', 'Error al iniciar sesión con Google.');
         }
     }
-
-    public function logout(Request $request)
-    {
-        Auth::guard('web')->logout();
-        return redirect()->route('home')->with('success', 'Has cerrado sesión correctamente.');
-    }
 }
-

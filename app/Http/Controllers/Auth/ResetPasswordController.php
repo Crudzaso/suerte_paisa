@@ -20,7 +20,7 @@ class ResetPasswordController extends Controller
     public function showResetForm(Request $request, $token = null)
     {
         return view('auth.new-password')->with([
-            'token' => $token, 
+            'token' => $token,
             'email' => $request->email
         ]);
     }
@@ -29,9 +29,9 @@ class ResetPasswordController extends Controller
     {
         try {
             $request->validate([
-                'email' => 'required|email|exists:users,email',  
-                'password' => 'required|confirmed|min:8',     
-                'token' => 'required'             
+                'email' => 'required|email|exists:users,email',
+                'password' => 'required|confirmed|min:8',
+                'token' => 'required'
             ]);
 
             $status = Password::reset($request->only('email', 'password', 'password_confirmation', 'token'), function ($user, $password) {

@@ -8,7 +8,8 @@ class DiscordWebhookService
 {
     protected $webhookUrl;
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->webhookUrl = config('services.discord.webhook_url');
     }
 

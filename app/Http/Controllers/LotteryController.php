@@ -43,14 +43,14 @@ class LotteryController extends Controller
     }
 
     public function show($id)
-{
-    try {
-        $lottery = Lottery::findOrFail($id);
-        return view("home.home-lottery-details", compact("lottery"));
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Lotería no encontrada', 'message' => $e->getMessage()], 404);
+    {
+        try {
+            $lottery = Lottery::findOrFail($id);
+            return view("home.home-lottery-details", compact("lottery"));
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Lotería no encontrada', 'message' => $e->getMessage()], 404);
+        }
     }
-}
 
 
     // Actualizar una lotería

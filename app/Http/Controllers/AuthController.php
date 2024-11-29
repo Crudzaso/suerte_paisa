@@ -16,9 +16,7 @@ use App\Service\DiscordWebhookService;
 use App\Events\UserLogin;
 use App\Events\UserCreated;
 use App\Events\ErrorOccurred;
-
 use Spatie\Permission\Models\Role;
-
 
 class AuthController extends Controller
 {
@@ -36,7 +34,7 @@ class AuthController extends Controller
                 'names' => 'required|string|max:255',
                 'lastnames' => 'required|string|max:255',
                 'email' => 'required|email|unique:users,email',
-                'password' => 'required|string|min:6|confirmed', 
+                'password' => 'required|string|min:6|confirmed',
                 'address' => 'required|string|max:255',
             ]);
 
@@ -83,10 +81,7 @@ class AuthController extends Controller
                 $user = Auth::user();
 
                 event(new UserLogin($user));
-
-                $this->emailHelper::sendLoginNotification($user);
-
-                return redirect()->route('home');  
+                return redirect()->route('home');
             } else {
                 return redirect()->route('login')->with('error', 'Correo electrónico o contraseña incorrectos.');
             }
@@ -113,10 +108,16 @@ class AuthController extends Controller
             $user = Auth::user();
 
             event(new UserLogin($user));
-            return redirect()->route('usuarios.index');  
+            return redirect()->route('usuarios.index');
         } else {
             
         }
         return redirect()->route('login')->with('error', 'Correo electrónico o contraseña incorrectos.');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::guard('web')->logout();
+        return redirect()->route('login')->with('success', 'Has cerrado sesión correctamente.');
     }
 }
