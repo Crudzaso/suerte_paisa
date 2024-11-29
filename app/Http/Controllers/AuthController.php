@@ -20,10 +20,12 @@ use Spatie\Permission\Models\Role;
 
 class AuthController extends Controller
 {
+    protected $emailHelper;
     protected $discordWebhookService;
 
-    public function __construct(DiscordWebhookService $discordWebhookService)
+    public function __construct(EmailHelperGlobal $emailHelper, DiscordWebhookService $discordWebhookService)
     {
+        $this->emailHelper = $emailHelper;
         $this->discordWebhookService = $discordWebhookService;
     }
 
@@ -53,7 +55,7 @@ class AuthController extends Controller
 
             event(new UserCreated($user));
 
-            $this->emailHelper::sendWelcomeEmail($user);
+            $this->emailHelper->sendWelcomeEmail($user);
 
             return redirect()->route('home')->with('success', 'Registro exitoso!');
         } catch (\Exception $e) {
@@ -81,6 +83,9 @@ class AuthController extends Controller
                 $user = Auth::user();
 
                 event(new UserLogin($user));
+
+                $this->emailHelper::sendLoginNotification($user);
+
                 return redirect()->route('home');
             } else {
                 return redirect()->route('login')->with('error', 'Correo electrónico o contraseña incorrectos.');
@@ -91,11 +96,12 @@ class AuthController extends Controller
 
             return redirect()->route('login')->with('error', 'Ocurrió un error al iniciar sesión.');
         }
-      
+
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required|min:6',
         ]);
+        
 
         if ($validator->fails()) {
             return redirect()->route('login')
