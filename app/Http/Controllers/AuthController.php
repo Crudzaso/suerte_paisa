@@ -114,4 +114,10 @@ class AuthController extends Controller
         }
         return redirect()->route('login')->with('error', 'Correo electrónico o contraseña incorrectos.');
     }
+
+    public function logout(Request $request)
+    {
+        Auth::guard('web')->logout();
+        return redirect()->route('login')->with('success', 'Has cerrado sesión correctamente.');
+    }
 }

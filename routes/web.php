@@ -20,7 +20,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('ingreso', [AuthController::class, 'login'])->name('login');
+Route::post('login', [AuthController::class, 'login'])->name('login');
 
 Route::get('home', [LotteryController::class, 'index'])->name('home');
 
@@ -61,10 +61,15 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
 
 // Password Reset Routes
 Route::get('reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('auth.reset');
-Route::post('reset-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
-Route::get('new-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
-Route::post('new-password', [ResetPasswordController::class, 'reset'])->name('password.update');
+//Route::post('reset-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+//Route::get('new-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+//Route::post('new-password', [ResetPasswordController::class, 'reset'])->name('password.update');
+
+Route::post('reset-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('auth.password.email');
+Route::get('new-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('auth.password.reset');
+Route::post('new-password', [ResetPasswordController::class, 'reset'])->name('auth.password.update');
+
 
 // Registration Routes
 Route::get('registro', function () { return view('auth.register'); })->name('registro');
-Route::post('registro-auth', [AuthController::class, 'registro'])->name('registro.submit');
+Route::post('registro', [AuthController::class, 'registro'])->name('registro.submit');

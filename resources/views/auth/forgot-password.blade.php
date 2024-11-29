@@ -57,7 +57,7 @@ License: For each use you must have a valid license purchased only from above li
 								</div>
 							@endif
 							
-							<form class="form w-100" novalidate="novalidate" id="kt_password_reset_form" data-kt-redirect-url="authentication/layouts/corporate/new-password.html" method="POST" action="{{ route('password.email') }}">
+							<form class="form w-100" novalidate="novalidate" id="kt_password_reset_form" data-kt-redirect-url="authentication/layouts/corporate/new-password.html" method="POST" action="{{ route('auth.password.email') }}">
 							@csrf
 								<!--begin::Heading-->
 								<div class="text-center mb-10">
