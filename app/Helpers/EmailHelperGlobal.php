@@ -5,7 +5,7 @@ namespace App\Helpers;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use App\Mail\PasswordResetEmail;
-use App\Mail\RegistroExitoso; 
+use App\Mail\RegistroExitoso;
 
 class EmailHelperGlobal
 {
