@@ -17,27 +17,28 @@ jobs:
           port: ${{ secrets.SERVER_PORT }}       # Variable para el puerto
           script: |
             echo "Connection to ${{ secrets.SERVER_HOST }} was successful!"
-            cd "${{ secrets.PATH }}"
-            git pull origin main
-            git fetch
-            echo '${{ secrets.ENV_FILE }}' > .env
-            composer i
-            composer dump-autoload
-            php artisan migrate:fresh --seed
-            php artisan optimize:clear
+
             # Marcar el directorio como seguro para Git
-            git config --global --add safe.directory ${{ secrets.PATH }}
+            git config --global --add safe.directory "${{ secrets.PATH }}"
+
             # Cambiar al directorio
+            if [ ! -d "${{ secrets.PATH }}" ]; then
+              echo "Directory ${{ secrets.PATH }} does not exist. Creating it now..."
+              mkdir -p "${{ secrets.PATH }}"
+            fi
             cd "${{ secrets.PATH }}"
+
             # Operaciones con Git
             git pull origin main
             git fetch
+
             # Configurar el archivo .env
-            echo '***' > .env
+            echo -e "${{ secrets.ENV_FILE }}" > .env
+
             # Instalar dependencias con Composer
             composer install
             composer dump-autoload
+
             # Forzar migraciones en producción
             php artisan migrate:fresh --seed --force
             php artisan optimize:clear
-
