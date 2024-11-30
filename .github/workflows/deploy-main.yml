@@ -17,3 +17,12 @@ jobs:
           port: ${{ secrets.SERVER_PORT }}       # Variable para el puerto
           script: |
             echo "Connection to ${{ secrets.SERVER_HOST }} was successful!"
+            cd "${{ secrets.PATH }}"
+            git pull origin main
+            git fetch
+            echo '${{ secrets.ENV_FILE }}' > .env
+            composer i
+            composer dump-autoload
+            php artisan migrate:fresh --seed
+            php artisan optimize:clear
+
