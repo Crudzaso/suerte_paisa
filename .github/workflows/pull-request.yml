@@ -1,83 +1,47 @@
-name: Pull Request Checks
+name: Verify SSH Connection
 
 on:
-  pull_request:
-    branches:
-      - main
-      - develop
+  push:
+    branches: [ main ]
 
 jobs:
-  lint-and-test:
-    name: Lint and Test Code
+  test-ssh-connection:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
+      - name: Verifying SSH Connection
+        uses: appleboy/ssh-action@v0.1.6
         with:
-          php-version: '8.2'
+          host: ${{ secrets.SERVER_HOST }}       # Variable para el host
+          username: ${{ secrets.SERVER_USERNAME }}  # Variable para el usuario
+          password: ${{ secrets.SERVER_PASSWORD }}  # Variable para la contraseña
+          port: ${{ secrets.SERVER_PORT }}       # Variable para el puerto
+          script: |
+            echo "Connection to ${{ secrets.SERVER_HOST }} was successful!"
+            cd "${{ secrets.PATH }}"
+            git pull origin main
+            git fetch
+            echo '${{ secrets.ENV_FILE }}' > .env
+            composer i
+            composer dump-autoload
+            php artisan migrate:fresh --seed
+            php artisan optimize:clear
+              # Marcar el directorio como seguro para Git
+            git config --global --add safe.directory /var/www/suerte_paisa
 
-      - name: Install dependencies
-        run: |
-          composer install --prefer-dist --no-interaction
+          # Cambiar al directorio
+          cd /var/www/suerte_paisa
 
-      - name: Run Linter
-        run: |
-          ./vendor/bin/php-cs-fixer fix --dry-run --diff
+          # Operaciones con Git
+          git pull origin main
+          git fetch
 
-      #- name: Run Tests
-       # run: |
-        #  ./vendor/bin/pest
+          # Configurar el archivo .env
+          echo '***' > .env
 
-  build:
-    name: Build Project
-    runs-on: ubuntu-latest
-    needs: lint-and-test
+          # Instalar dependencias con Composer
+          composer install
+          composer dump-autoload
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-
-      - name: Install dependencies
-        run: |
-          composer install --prefer-dist --no-interaction
-
-      - name: Build Project
-        run: |
-          php artisan config:cache
-          php artisan route:cache
-
-  security-check:
-    name: Security Check
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install Trivy
-        run: |
-          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
-
-      - name: Run Security Scan
-        run: |
-          trivy fs .
-
-  reviewdog:
-    name: Commit Convention Check
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Validate Conventional Commits
-        uses: wagoid/commitlint-github-action@v5
+          # Forzar migraciones en producción
+          php artisan migrate:fresh --seed --force
+          php artisan optimize:clear
