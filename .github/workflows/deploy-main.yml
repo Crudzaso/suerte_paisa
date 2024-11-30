@@ -1,25 +1,48 @@
-name: CI/CD - Crudzaso
+name: Verify SSH Connection
 
 on:
   push:
     branches: [ main ]
 
 jobs:
-  build-and-deploy:
+  test-ssh-connection:
     runs-on: ubuntu-latest
     steps:
-      - name: executing remote ssh commands using password
+      - name: Verifying SSH Connection
         uses: appleboy/ssh-action@v0.1.6
         with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
+          host: ${{ secrets.SERVER_HOST }}       # Variable para el host
+          username: ${{ secrets.SERVER_USERNAME }}  # Variable para el usuario
+          password: ${{ secrets.SERVER_PASSWORD }}  # Variable para la contraseña
+          port: ${{ secrets.SERVER_PORT }}       # Variable para el puerto
           script: |
+            echo "Connection to ${{ secrets.SERVER_HOST }} was successful!"
+
+            # Establecer permisos en el directorio
+            sudo chown -R $USER:$USER "${{ secrets.PATH }}"
+            sudo chmod -R 755 "${{ secrets.PATH }}"
+
+            # Marcar el directorio como seguro para Git
+            git config --global --add safe.directory "${{ secrets.PATH }}"
+
+            # Cambiar al directorio
+            if [ ! -d "${{ secrets.PATH }}" ]; then
+              echo "Directory ${{ secrets.PATH }} does not exist. Creating it now..."
+              mkdir -p "${{ secrets.PATH }}"
+            fi
             cd "${{ secrets.PATH }}"
+
+            # Operaciones con Git
             git pull origin main
             git fetch
-            echo '${{ secrets.ENV_FILE }}' > .env
-            composer i
+
+            # Configurar el archivo .env
+            echo -e "${{ secrets.ENV_FILE }}" | sed 's/^[ \t]*//;s/[ \t]*$//' > .env
+
+            # Instalar dependencias con Composer
+            composer install
             composer dump-autoload
-            php artisan migrate:fresh --seed
+
+            # Forzar migraciones en producción
+            php artisan migrate:fresh --seed --force
             php artisan optimize:clear
