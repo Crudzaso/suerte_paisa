@@ -26,9 +26,9 @@ jobs:
             php artisan migrate:fresh --seed
             php artisan optimize:clear
             # Marcar el directorio como seguro para Git
-            git config --global --add safe.directory /var/www/suerte_paisa
+            git config --global --add safe.directory ${{ secrets.PATH }}
             # Cambiar al directorio
-            cd /var/www/suerte_paisa
+            cd "${{ secrets.PATH }}"
             # Operaciones con Git
             git pull origin main
             git fetch
