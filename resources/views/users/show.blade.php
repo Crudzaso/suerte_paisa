@@ -1,43 +1,45 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-    <title>Usuario</title>
-    <style>
-        .user-card {
-            min-height: 400px; /* Ajusta la altura mínima del contenedor */
-        }
-    </style>
-</head>
-<body>
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 offset-md-2"> <!-- Cambiado a col-md-8 para un contenedor más grande -->
-            <div class="card user-card">
-                <div class="card-body">
-                    <h4 class="card-title">Detalles del Usuario</h4>
-                    <ol>
-                        <li>Nombres: {{ $user->names }}</li>
-                        <li>Apellidos: {{ $user->lastnames }}</li>
-                        <li>Correo: {{ $user->email }}</li>
-                        <li>Dirección: {{ $user->address }}</li>
-                        <li>Password: {{ $user->password }}</li>
-                        <li>Role: {{ $user->role }}</li>
-                    </ol>
-                    <a href="{{ route('usuarios.index') }}" class="btn btn-secondary">Ir al index</a>
-                    
+<x-layout-home>
+    <div class="container mt-4 mb-4">
+        <h1 class="mb-4">Detalles del Usuario</h1>
+
+        @if(session('error'))
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle"></i> {{ session('error') }}
+            </div>
+        @endif
+
+        @if(session('success'))
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i> {{ session('success') }}
+            </div>
+        @endif
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h4 class="card-title mb-4">Información del Usuario</h4>
+                <ul class="list-unstyled">
+                    <li><strong>Nombres:</strong> {{ $user->names }}</li>
+                    <li><strong>Apellidos:</strong> {{ $user->lastnames }}</li>
+                    <li><strong>Correo:</strong> {{ $user->email }}</li>
+                    <li><strong>Dirección:</strong> {{ $user->address }}</li>
+                    <li><strong>Rol:</strong> {{ $user->roles->first()->name }}</li>
+                </ul>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{{ route('dashboard') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Ir al index
+                    </a>
+
                     @if($user->trashed())
                         <form action="{{ route('usuarios.restore', $user->id) }}" method="POST" style="display:inline;">
                             @csrf
-                            <button type="submit" class="btn btn-success">Restaurar Usuario</button>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-sync"></i> Restaurar Usuario
+                            </button>
                         </form>
                     @endif
                 </div>
             </div>
         </div>
     </div>
-</div>
-</body>
-</html>
+</x-layout-home>
