@@ -52,4 +52,3 @@ jobs:
 
         - name: Validate Conventional Commits
           uses: wagoid/commitlint-github-action@v5
-
