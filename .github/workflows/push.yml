@@ -70,3 +70,4 @@ jobs:
       - name: Run Security Scan
         run: |
           trivy fs .
+
