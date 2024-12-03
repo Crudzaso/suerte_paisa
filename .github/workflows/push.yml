@@ -1,0 +1,54 @@
+name: Push Workflow
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Install dependencies
+        run: |
+          composer install --prefer-dist --no-interaction
+
+      - name: Run Linter
+        run: |
+          ./vendor/bin/php-cs-fixer fix --dry-run --diff
+
+  build:
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Install dependencies
+        run: |
+          composer install --prefer-dist --no-interaction
+
+      - name: Cache Config and Routes
+        run: |
+          php artisan config:cache
+          php artisan route:cache
+
+  reviewdog:
+      name: Commit Convention Check
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Validate Conventional Commits
+          uses: wagoid/commitlint-github-action@v5
