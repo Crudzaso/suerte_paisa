@@ -3,9 +3,7 @@ name: Push Workflow
 on:
   push:
     branches:
-      - main
-      - develop
-      - feature/2419/github-action-push
+      - '**'
 
 jobs:
   build:
