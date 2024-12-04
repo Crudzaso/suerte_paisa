@@ -1,48 +1,26 @@
-name: Verify SSH Connection
+name: CI/CD - Crudzaso
 
 on:
   push:
     branches: [ main ]
 
 jobs:
-  test-ssh-connection:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Verifying SSH Connection
+      - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@v0.1.6
         with:
-          host: ${{ secrets.SERVER_HOST }}       # Variable para el host
-          username: ${{ secrets.SERVER_USERNAME }}  # Variable para el usuario
-          password: ${{ secrets.SERVER_PASSWORD }}  # Variable para la contraseña
-          port: ${{ secrets.SERVER_PORT }}       # Variable para el puerto
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          
           script: |
-            echo "Connection to ${{ secrets.SERVER_HOST }} was successful!"
-
-            # Establecer permisos en el directorio
-            sudo chown -R $USER:$USER "${{ secrets.PATH }}"
-            sudo chmod -R 755 "${{ secrets.PATH }}"
-
-            # Marcar el directorio como seguro para Git
-            git config --global --add safe.directory "${{ secrets.PATH }}"
-
-            # Cambiar al directorio
-            if [ ! -d "${{ secrets.PATH }}" ]; then
-              echo "Directory ${{ secrets.PATH }} does not exist. Creating it now..."
-              mkdir -p "${{ secrets.PATH }}"
-            fi
             cd "${{ secrets.PATH }}"
-
-            # Operaciones con Git
             git pull origin main
             git fetch
-
-            # Configurar el archivo .env
-            echo -e "${{ secrets.ENV_FILE }}" | sed 's/^[ \t]*//;s/[ \t]*$//' > .env
-
-            # Instalar dependencias con Composer
-            composer install
+            echo '${{ secrets.ENV_FILE }}' > .env
+            composer i
             composer dump-autoload
-
-            # Forzar migraciones en producción
-            php artisan migrate:fresh --seed --force
+            php artisan migrate:fresh --seed
             php artisan optimize:clear
