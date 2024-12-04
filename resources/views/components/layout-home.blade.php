@@ -40,7 +40,7 @@
                 <a href="{{ route('userpurchases', ['id' => auth()->user()->id]) }}">Mi perfil</a>
 
                  {{-- Verifica si el usuario autenticado tiene el rol "admin" --}}
-                @if (auth()->user()->hasRole('admin'))
+                @if (auth()->user()->hasRole('admin|organizador'))
                 <a href="{{ route('dashboard') }}">Dashboard</a>
                 @endif
 
@@ -95,7 +95,7 @@
             </div>
         </div>
     </header>
-    <main>
+    <main class="ml-10 mr-10">
         {{$slot}}
     </main>
     <footer>
