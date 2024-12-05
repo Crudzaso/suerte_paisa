@@ -27,4 +27,8 @@ class Lottery extends Model
                     ->withPivot('number')
                     ->withTimestamps();
     }
+
+    public function creator(){
+        return $this->belongsTo(User::class, 'created_user');
+    }
 }

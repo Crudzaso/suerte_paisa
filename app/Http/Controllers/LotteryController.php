@@ -6,6 +6,7 @@ use App\Models\Lottery;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class LotteryController extends Controller
 {
@@ -41,15 +42,20 @@ class LotteryController extends Controller
                 'date_play' => 'required|date',
                 'result' => 'string|nullable',
                 'prize' => 'string|nullable',
-                'price' => 'required|numeric'
+                'price' => 'required|numeric',
             ]);
 
-            $lottery = Lottery::create($validatedData);
-            return redirect()->route('dashboard')->with('Creada', 'Se creo una nueva loteria.');
+            $lottery = new Lottery($validatedData);
+            $lottery->created_user = Auth::id();
+
+            $lottery->save();
+            
+            return redirect()->route('dashboard')->with('Creada', 'Se creó una nueva lotería.');
         } catch (\Exception $e) {
-            return redirect()->route('dashboard')->with('error', 'Error crear la loterias.');
+            return redirect()->route('dashboard')->with('error', 'Error al crear la lotería: ' . $e->getMessage());
         }
     }
+
 
     public function show($id)
     {
