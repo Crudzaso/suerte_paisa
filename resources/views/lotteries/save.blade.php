@@ -54,23 +54,23 @@
             </div>
 
             @if(isset($lottery))
-                @role('admin')
-                    <div class="mb-3">
-                        <label for="date_play" class="form-label">Fecha del Sorteo</label>
-                        <input type="date" class="form-control" id="date_play" name="date_play" value="{{ old('date_play', $lottery->date_play ?? '') }}" placeholder="Fecha del sorteo">
-                    </div>
+        @role('admin')
+            <div class="mb-3">
+                <label for="date_play" class="form-label">Fecha del Sorteo</label>
+                <input type="date" class="form-control" id="date_play" name="date_play" value="{{ old('date_play', $lottery->date_play ?? '') }}" placeholder="Fecha del sorteo">
+            </div>
 
-                    <div class="mb-3">
-                        <label for="prize" class="form-label">Premio</label>
-                        <input type="text" class="form-control" id="prize" name="prize" value="{{ old('prize', $lottery->prize ?? '') }}" placeholder="Premio de la lotería">
-                    </div>
+            <div class="mb-3">
+                <label for="prize" class="form-label">Premio</label>
+                <input type="text" class="form-control" id="prize" name="prize" value="{{ old('prize', $lottery->prize ?? '') }}" placeholder="Premio de la lotería">
+            </div>
 
-                    <div class="mb-3">
-                        <label for="price" class="form-label">Precio</label>
-                        <input type="number" step="0.01" class="form-control" id="price" name="price" value="{{ old('price', $lottery->price ?? '') }}" placeholder="Precio de la lotería">
-                    </div>
-                @endrole
-            @else
+            <div class="mb-3">
+                <label for="price" class="form-label">Precio</label>
+                <input type="number" step="0.01" class="form-control" id="price" name="price" value="{{ old('price', $lottery->price ?? '') }}" placeholder="Precio de la lotería">
+            </div>
+        @else
+            @role('organizer')
                 <div class="mb-3">
                     <label for="date_play" class="form-label">Fecha del Sorteo</label>
                     <input type="date" class="form-control" id="date_play" name="date_play" value="{{ old('date_play', $lottery->date_play ?? '') }}" placeholder="Fecha del sorteo">
@@ -85,7 +85,41 @@
                     <label for="price" class="form-label">Precio</label>
                     <input type="number" step="0.01" class="form-control" id="price" name="price" value="{{ old('price', $lottery->price ?? '') }}" placeholder="Precio de la lotería">
                 </div>
-            @endif
+            @else
+                <div class="mb-3">
+                    <label for="date_play" class="form-label">Fecha del Sorteo</label>
+                    <input type="date" class="form-control text-gray-500" id="date_play" name="date_play" value="{{ old('date_play', $lottery->date_play ?? '') }}" placeholder="Fecha del sorteo" disabled>
+                </div>
+
+                <div class="mb-3">
+                    <label for="prize" class="form-label">Premio</label>
+                    <input type="text" class="form-control text-gray-500" id="prize" name="prize" value="{{ old('prize', $lottery->prize ?? '') }}" placeholder="Premio de la lotería" disabled>
+                </div>
+
+                <div class="mb-3">
+                    <label for="price" class="form-label">Precio</label>
+                    <input type="number" step="0.01" class="form-control text-gray-500" id="price" name="price" value="{{ old('price', $lottery->price ?? '') }}" placeholder="Precio de la lotería" disabled>
+                </div>
+            @endrole
+            @endrole
+        @else
+            <div class="mb-3">
+                <label for="date_play" class="form-label">Fecha del Sorteo</label>
+                <input type="date" class="form-control" id="date_play" name="date_play" value="{{ old('date_play') }}" placeholder="Fecha del sorteo">
+            </div>
+
+            <div class="mb-3">
+                <label for="prize" class="form-label">Premio</label>
+                <input type="text" class="form-control" id="prize" name="prize" value="{{ old('prize') }}" placeholder="Premio de la lotería">
+            </div>
+
+            <div class="mb-3">
+                <label for="price" class="form-label">Precio</label>
+                <input type="number" step="0.01" class="form-control" id="price" name="price" value="{{ old('price') }}" placeholder="Precio de la lotería">
+            </div>
+        @endif
+
+
 
             <!-- Botones de acción -->
             <div class="d-flex justify-content-between">

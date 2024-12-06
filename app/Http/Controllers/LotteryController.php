@@ -60,9 +60,10 @@ class LotteryController extends Controller
     public function show($id)
     {
         try {
+            dd("hola");
             $lottery = Lottery::findOrFail($id);
-            //return view('lotteries.save', compact('lottery'));
-            return view("home.home-lottery-details", compact("lottery"));
+
+            return view("lotteries.show", compact("lottery"));
         } catch (\Exception $e) {
             return redirect()->route('dashboard')->with('error', 'Error ver una loteria.');
         }

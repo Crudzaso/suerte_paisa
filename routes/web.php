@@ -22,7 +22,7 @@ Route::get('/', function () {
 
 Route::post('login', [AuthController::class, 'login'])->name('login.submit');
 Route::get('home', [LotteryController::class, 'index'])->name('home');
-Route::get('detalles/{id}', [LotteryController::class, 'show'])->name('details');
+Route::get('detalles/{id}', [UserLotteryController::class, 'getNumbersLotteries'])->name('details');
 Route::get('usuario/{id}', [UserLotteryController::class, 'getLotteriesByUserId'])->name('userpurchases');
 
 // Google Authentication Routes
