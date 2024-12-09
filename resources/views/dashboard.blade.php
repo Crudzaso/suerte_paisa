@@ -1,17 +1,18 @@
 <x-layout-home> 
-    <div>
-        <h1>Dasboard</h1>
-        <img src="https://i.redd.it/a9yryl215zw91.jpg" alt="">
+    <div class="p-3 bg-gray-100">
+        <div class="m-6">
+            <h1 class="flex font-bold text-gray-800 justify-center">Dashboard</h1>
+        </div>
+
+        <div>
+            @if(session('success'))
+                <div class="bg-green-500 text-white p-4 rounded-lg shadow-md mb-4">
+                    <span class="font-semibold">¡Éxito! </span>{{ session('success') }}
+                </div>
+            @endif
+        </div>
     </div>
 
-    <div>
-        <!-- Mensaje de éxito si existe -->
-        @if(session('success'))
-            <div class="bg-green-500 text-white p-4 rounded mb-4">
-                {{ session('success') }}
-            </div>
-        @endif
-    </div>
 
     <section>
         <h2>Loterias</h2>
@@ -65,6 +66,7 @@
         </div>
     </section>
 
+    @role('admin')
     <section>
         <h2>Usuarios</h2>
         
@@ -132,5 +134,6 @@
             </div>
         </div>
     </section>
+    @endrole
 
 </x-layout-home>

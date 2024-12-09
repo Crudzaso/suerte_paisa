@@ -8,18 +8,9 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
-use App\Helpers\EmailHelperGlobal;
-use App\Service\DiscordWebhookService;
 
 class UserLotteryController extends Controller
 {
-
-    protected $discordWebhookService;
-    public function __construct(DiscordWebhookService $discordWebhookService)
-    {
-        $this->discordWebhookService = $discordWebhookService;
-    }
-    // get the lotteries associated with one user
     public function getLotteriesByUserId($userId)
     {
         $user = User::findOrFail($userId);
@@ -28,36 +19,61 @@ class UserLotteryController extends Controller
         return view("home.home-user", compact('user', 'lotteries'));
     }
 
-    //method to buy a lottery
+    public function getNumbersLotteries($lotteryId)
+    {
+        $lottery = Lottery::findOrFail($lotteryId);
+
+        
+        $purchasedNumbers = $lottery->users()
+            ->wherePivot('number', '!=', null)
+            ->get()
+            ->pluck('pivot.number')
+            ->toArray();
+
+        if (empty($purchasedNumbers)) {
+            $purchasedNumbers = [];
+        }
+
+        //dd($purchasedNumbers);
+
+        return view('home.home-lottery-details', compact('lottery', 'purchasedNumbers'));
+    }
+
+
 
     public function buyLottery(Request $request)
     {
         try {
-            
             $user = $request->user();
-    
-            $userId = $user->id;
             $lotteryId = $request->input('lottery_id');
+            $numbers = $request->input('numbers');
 
-            $user = User::findOrFail($userId);
+            if (empty($numbers)) {
+                return redirect()->back()->with('error', 'Por favor, selecciona al menos un número.');
+            }
+
             $lottery = Lottery::findOrFail($lotteryId);
+            $errorNumbers = [];
 
-            // get the max number of lottery
-            $maxNumber = $lottery->max_number;
+            foreach ($numbers as $number) {
+                if ($lottery->users()->wherePivot('number', $number)->exists()) {
+                    $errorNumbers[] = $number;
+                } else {
+                    $user->lotteries()->attach($lotteryId, ['number' => $number]);
+                }
+            }
 
-            //Check if el numero is avalible
-            do {
-                $randomNumber = rand(1, $maxNumber);
-                $numberExists = $lottery->users()->wherePivot('number', $randomNumber)->exists();
-            } while ($numberExists);
+            if ($errorNumbers) {
+                return redirect()->back()->with('error', 'Los números ya comprados: ' . implode(', ', $errorNumbers));
+            }
 
-            $user->lotteries()->attach($lotteryId, ['number' => $randomNumber]);
             event(new LotteryPurchased($user, $lottery));
-            return redirect()->back()->with('success', 'Número comprado con éxito. Su número es: ' . $randomNumber);
-             
+            return redirect()->back()->with('success', 'Números comprados con éxito.');
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Error al comprar la lotería.');
+            return redirect()->back()->with('error', 'Error al comprar los números de la lotería.');
         }
-        
     }
+
+
+
 }

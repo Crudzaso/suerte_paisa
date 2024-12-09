@@ -16,13 +16,15 @@ class DashboardController extends Controller
 
             $user = Auth::User();
 
+            //dd(Auth::User()->id);
+
             switch ($user->roles->first()->name) {
                 case 'admin':
                     $lotteries = Lottery::paginate(5);
                     break;
                     
                 case 'organizador':
-                    $lotteries = $user->lotteries()->paginate(5);
+                    $lotteries = $user->createdLotteries()->paginate(5);
                     break;
 
                 default:

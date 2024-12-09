@@ -38,4 +38,9 @@ class User extends Authenticatable implements Auditable
                     ->withPivot('number');  // Accede a la columna 'number' de la tabla intermedia
         
     }
+
+    public function createdLotteries()
+    {
+        return $this->hasMany(Lottery::class, 'created_user');
+    }
 }
