@@ -3,62 +3,39 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Lottery;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        return view('layouts.dashboard');
-    }
+        try {
+            $users = User::paginate(10);
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+            $user = Auth::User();
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+            //dd(Auth::User()->id);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+            switch ($user->roles->first()->name) {
+                case 'admin':
+                    $lotteries = Lottery::paginate(5);
+                    break;
+                    
+                case 'organizador':
+                    $lotteries = $user->createdLotteries()->paginate(5);
+                    break;
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+                default:
+                    # code...
+                    break;
+            }
+            
+            return view('dashboard', compact('lotteries', 'users'));
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }

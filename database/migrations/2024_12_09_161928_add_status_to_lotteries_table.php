@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('lotteries', function (Blueprint $table) {
-            $table->decimal('price', 8, 2)->nullable()->after('prize');
+            $table->string('status')->default('COMENZADO');
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('lotteries', function (Blueprint $table) {
-            $table->dropColumn('price');
+            $table->dropColumn('status');
         });
     }
 };

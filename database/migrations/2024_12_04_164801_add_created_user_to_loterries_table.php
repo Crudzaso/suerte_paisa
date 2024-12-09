@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('lotteries', function (Blueprint $table) {
-            $table->string('prize')->nullable()->after('result'); // Añade la columna prize
+            $table->unsignedBigInteger('created_user')->nullable();
+            $table->foreign('created_user')->references('id')->on('users')->onDelete('set null');
         });
     }
 
@@ -22,7 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('lotteries', function (Blueprint $table) {
-            $table->dropColumn('prize'); // Elimina la columna prize si la migración es revertida
+            $table->dropForeign(['created_user']);
+            $table->dropCollumn('created_user');
         });
     }
 };

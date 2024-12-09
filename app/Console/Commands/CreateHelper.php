@@ -7,9 +7,9 @@ use Illuminate\Filesystem\Filesystem;
 
 class CreateHelper extends Command
 {
-    protected $signature = 'helper:create {name}'; 
+    protected $signature = 'helper:create {name}';
 
-    protected $description = 'Crea un nuevo helper'; 
+    protected $description = 'Crea un nuevo helper';
 
     public function handle()
     {

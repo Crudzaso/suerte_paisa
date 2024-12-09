@@ -5,7 +5,7 @@ namespace App\Helpers;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use App\Mail\PasswordResetEmail;
-use App\Mail\RegistroExitoso; 
+use App\Mail\RegistroExitoso;
 
 class EmailHelperGlobal
 {
@@ -50,14 +50,19 @@ class EmailHelperGlobal
     public static function generateMessage($userName, $messageContent, $footer = null)
     {
         return "
-            <div style='background-color: #f9fafc; padding: 20px; text-align: center;'>
-                <div style='background-color: #ffffff; padding: 30px; border-radius: 8px; display: inline-block; text-align: left;'>
-                    <h2 style='color: #333333;'>¡Hola, {$userName}!</h2>
-                    <p style='color: #555555;'>
+            <div style='background-color: #f9fafc; padding: 20px; font-family: Arial, sans-serif;'>
+                <div style='max-width: 600px; margin: auto; background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border-top: 6px solid #FFD700; border-bottom: 6px solid #FFD700;'>
+                    <div style='text-align: center; margin-bottom: 20px;'>
+                        <img src='https://res.cloudinary.com/dm6hc1mqx/image/upload/v1732842790/pjlnjvpnfp8gr2tgxtdc.png' alt='Suerte Paisa Logo' style='max-width: 150px; border-radius: 8px;'>
+                    </div>
+                    <h2 style='color: #0057B7; text-align: center; margin-bottom: 20px;'>¡Hola, {$userName}!</h2>
+                    <p style='color: #333333; font-size: 16px; line-height: 1.6;'>
                         {$messageContent}
                     </p>
-                    " . ($footer ? "<p style='color: #555555;'>$footer</p>" : "") . "
-                    <p style='color: #555555; margin-top: 20px;'>Saludos,<br><strong>Suerte Paisa</strong></p>
+                    " . ($footer ? "<p style='color: #555555; font-size: 14px; line-height: 1.4; margin-top: 20px;'>$footer</p>" : "") . "
+                    <p style='color: #333333; font-size: 16px; margin-top: 30px; text-align: center;'>
+                        Saludos,<br><strong style='color: #0057B7;'>Suerte Paisa</strong>
+                    </p>
                 </div>
             </div>
         ";
@@ -82,9 +87,9 @@ class EmailHelperGlobal
     {
         $subject = 'Notificación de Inicio de Sesión - Suerte Paisa';
 
-        $messageContent = "Has ingresado en nuestra página, <strong>Bienvenido</strong>. Si no fuiste tú, por favor cambia tu contraseña inmediatamente.";
+        $messageContent = "Has ingresado en nuestra página, <strong>¡Bienvenido!</strong>. Si no fuiste tú, considera cambiar tu contraseña inmediatamente.";
 
-        $footer = 'Si no reconoces este inicio de sesión, considera revisar tu actividad reciente.';
+        $footer = 'Si no reconoces este inicio de sesión, por favor revisa tu actividad reciente.';
 
         $htmlContent = self::generateMessage($user->names, $messageContent, $footer);
 
@@ -95,16 +100,18 @@ class EmailHelperGlobal
     public static function sendPasswordResetEmail($user, $resetLink)
     {
         $subject = 'Restablecimiento de Contraseña - Suerte Paisa';
-        
+
         $messageContent = 'Has recibido este mensaje porque se solicitó un restablecimiento de contraseña para tu cuenta en Suerte Paisa.';
 
         // Botón para restablecer la contraseña
-        $buttonHtml = "<div style='margin-top: 20px;'><a href='{$resetLink}' style='display: inline-block; padding: 12px 24px; background-color: #2d3748; color: #ffffff; border-radius: 4px; text-decoration: none;'>Restablecer contraseña</a></div>";
-
-        $footer = 'Este enlace de restablecimiento de contraseña expirará en 60 minutos. Si no has solicitado esta acción, simplemente ignora este mensaje.';
+        $buttonHtml = "<div style='margin-top: 20px; text-align: center;'>
+            <a href='{$resetLink}' style='display: inline-block; padding: 12px 24px; background-color: #FFD700; color: #FFFFFF; border-radius: 4px; text-decoration: none; font-size: 16px;'>Restablecer contraseña</a>
+        </div>";
+        $footer = 'Este enlace de restablecimiento de contraseña expirará en 60 minutos. Si no has solicitado esta acción, simplemente pasa por alto este mensaje.';
 
         $htmlContent = self::generateMessage($user->names, $messageContent . $buttonHtml, $footer);
 
         self::sendEmailRequest($user->email, $user->names, $subject, $htmlContent);
     }
+
 }

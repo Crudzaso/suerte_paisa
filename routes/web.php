@@ -17,15 +17,13 @@ use App\Http\Middleware\VerifyRoleMiddleware;
 
 // Home Route
 Route::get('/', function () {
-    Route::post('login', [AuthController::class, 'login'])->name('login');
+    return view('welcome');
 });
 
-Route::get('', [LotteryController::class, "index"])->name("home");
-
-Route::get('detalles/{id}',[lotteryController::class, "show"])->name("details");
-
-Route::get('usuario/{id}',[UserLotteryController::class, "getLotteriesByUserId"])->name("userpurchases");
-
+Route::post('login', [AuthController::class, 'login'])->name('login.submit');
+Route::get('home', [LotteryController::class, 'index'])->name('home');
+Route::get('detalles/{id}', [UserLotteryController::class, 'getNumbersLotteries'])->name('details');
+Route::get('usuario/{id}', [UserLotteryController::class, 'getLotteriesByUserId'])->name('userpurchases');
 
 // Google Authentication Routes
 Route::prefix('auth/google')->group(function () {
@@ -39,32 +37,33 @@ Route::prefix('auth/github')->group(function () {
     Route::get('/callback', [GithubController::class, 'callback'])->name('auth.github.callback');
 });
 
-// User Routes
-Route::resource('usuarios', UserController::class);
-Route::resource('roles', RoleController::class);
-Route::resource('permisos', PermissionController::class);
 
 // Authenticated Routes (Protected by Auth Middleware)
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
-    Route::post('logout', [GoogleController::class, 'logout'])->name('logout');
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard'); 
+    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('twofactor', function () { return view('auth.auth-plantilla.two-factor'); })->name('auth.twofactor'); 
+    
     Route::post('/usuarios/lotteries/assign-number', [UserLotteryController::class, 'buyLottery'])->name('assign.number');
     
-    // Admin Routes (Protected by Role Middleware)
+    Route::middleware(['role:admin|organizador'])->group(function () {
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard'); 
+        Route::resource('lotteries', LotteryController::class);
+    });
+    
     Route::middleware(['role:admin'])->group(function () {
         Route::get('usuarios/eliminados', [UserController::class, 'trashed'])->name('usuarios.trashed');
         Route::post('usuarios/{id}/restaurar', [UserController::class, 'restore'])->name('usuarios.restore');
-        
+        Route::resource('roles', RoleController::class);
+        Route::resource('permisos', PermissionController::class);
     });
 });
-
+Route::resource('usuarios', UserController::class);
 
 // Password Reset Routes
 Route::get('reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('auth.reset');
-Route::post('reset', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
-Route::get('new-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
-Route::post('new-password', [ResetPasswordController::class, 'reset'])->name('password.update');
+Route::post('reset-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('auth.password.email');
+Route::get('new-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('auth.password.reset');
+Route::post('new-password', [ResetPasswordController::class, 'reset'])->name('auth.password.update');
 
 
 // Registration Routes

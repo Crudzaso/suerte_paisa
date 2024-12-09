@@ -55,7 +55,7 @@ License: For each use you must have a valid license purchased only from above li
 								</div>
 							@endif
 							
-							<form class="form w-100" method="POST" action="{{ route('login') }}">
+							<form class="form w-100" method="POST" action="{{ route('login.submit') }}">
 							@csrf
 								<!--begin::Heading-->
 								<div class="text-center mb-11">

@@ -22,7 +22,7 @@ class SendDiscordNotification
     private const COLOR_UPDATED = 0xfff700;
     private const COLOR_DELETED = 0xff2d00;
     private const COLOR_RESTORED = 0xde5e00;
-    private const ERROR_COLOR = 0xff0000; 
+    private const ERROR_COLOR = 0xff0000;
 
     /**
      * Create the event listener.

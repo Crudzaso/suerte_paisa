@@ -22,7 +22,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        return view('roles.saveRole');    
+        return view('roles.saveRole');
     }
 
     /**

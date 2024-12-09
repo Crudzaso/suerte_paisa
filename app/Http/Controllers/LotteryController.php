@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Lottery;
 use App\Models\User;
+use App\Enums\LotteryStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class LotteryController extends Controller
 {
@@ -16,7 +18,16 @@ class LotteryController extends Controller
             $lotteries = Lottery::all();
             return view('home.home-main', compact('lotteries'));
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al obtener las loterías', 'message' => $e->getMessage()], 500);
+            return redirect()->route('home')->with('error', 'Error ver las loterias.');
+        }
+    }
+
+    public function create()
+    {
+        try {
+            return view('lotteries.save');
+        } catch (\Exception $e) {
+            return redirect()->route('dashboard')->with('error', 'Error al mostrar el formulario para crear una lotería. ');
         }
     }
 
@@ -32,26 +43,43 @@ class LotteryController extends Controller
                 'date_play' => 'required|date',
                 'result' => 'string|nullable',
                 'prize' => 'string|nullable',
-                'price' => 'required|numeric'
+                'price' => 'required|numeric',
             ]);
 
-            $lottery = Lottery::create($validatedData);
-            return response()->json($lottery, 201);
+            $lottery = new Lottery($validatedData);
+            $lottery->created_user = Auth::id();
+            $lottery->status = LotteryStatus::COMENZADO;
+
+            $lottery->save();
+            
+            return redirect()->route('dashboard')->with('Creada', 'Se creó una nueva lotería.');
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al crear la lotería', 'message' => $e->getMessage()], 500);
+            return redirect()->route('dashboard')->with('error', 'Error al crear la lotería: ' . $e->getMessage());
         }
     }
 
-    public function show($id)
-{
-    try {
-        $lottery = Lottery::findOrFail($id);
-        return view("home.home-lottery-details", compact("lottery"));
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Lotería no encontrada', 'message' => $e->getMessage()], 404);
-    }
-}
 
+    public function show($id)
+    {
+        try {
+            dd("hola");
+            $lottery = Lottery::findOrFail($id);
+
+            return view("lotteries.show", compact("lottery"));
+        } catch (\Exception $e) {
+            return redirect()->route('dashboard')->with('error', 'Error ver una loteria.');
+        }
+    }
+
+    public function edit($id)
+    {
+        try {
+            $lottery = Lottery::findOrFail($id);
+            return view('lotteries.save', compact('lottery'));
+        } catch (\Exception $e) {
+            return redirect()->route('dashboard')->with('error', 'Lotería no encontrada para editar. ');
+        }
+    }
 
     // Actualizar una lotería
     public function update(Request $request, $id)
@@ -71,26 +99,24 @@ class LotteryController extends Controller
             $lottery = Lottery::findOrFail($id);
             $lottery->update($validatedData);
 
-            return response()->json($lottery, 200);
+            return redirect()->route('dashboard')->with('Actualizada', 'Se creo una nueva loteria.');
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al actualizar la lotería', 'message' => $e->getMessage()], 500);
+            return redirect()->route('dashboard')->with('error', 'Error en actualizar la loteria.');
         }
     }
 
-    // Eliminar una lotería (soft delete)
     public function destroy($id)
     {
         try {
             $lottery = Lottery::findOrFail($id);
             $lottery->delete();
 
-            return response()->json(['message' => 'Lotería eliminada correctamente'], 200);
+            return redirect()->route('dashboard')->with('Eliminada', 'Se elimino una loteria.');
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al eliminar la lotería', 'message' => $e->getMessage()], 500);
+            return redirect()->route('dashboard')->with('error', 'Error eliminar la loteria.');
         }
     }
 
-    // Crear una compra de número (relación usuario-lotería)
     public function purchaseNumber(Request $request, $lotteryId)
     {
         try {
@@ -106,7 +132,7 @@ class LotteryController extends Controller
 
             return response()->json(['message' => 'Número comprado correctamente'], 201);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al comprar el número', 'message' => $e->getMessage()], 500);
+            return redirect()->route('dashboard')->with('error', 'Error al comprar un numero de loteria.');
         }
     }
 }
