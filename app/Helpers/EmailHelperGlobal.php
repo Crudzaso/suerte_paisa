@@ -107,7 +107,6 @@ class EmailHelperGlobal
         $buttonHtml = "<div style='margin-top: 20px; text-align: center;'>
             <a href='{$resetLink}' style='display: inline-block; padding: 12px 24px; background-color: #FFD700; color: #FFFFFF; border-radius: 4px; text-decoration: none; font-size: 16px;'>Restablecer contraseña</a>
         </div>";
-
         $footer = 'Este enlace de restablecimiento de contraseña expirará en 60 minutos. Si no has solicitado esta acción, simplemente pasa por alto este mensaje.';
 
         $htmlContent = self::generateMessage($user->names, $messageContent . $buttonHtml, $footer);
