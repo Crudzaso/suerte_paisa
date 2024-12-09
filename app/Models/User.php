@@ -39,7 +39,8 @@ class User extends Authenticatable implements Auditable
         
     }
 
-    public function createdLotteries(){
+    public function createdLotteries()
+    {
         return $this->hasMany(Lottery::class, 'created_user');
     }
 }

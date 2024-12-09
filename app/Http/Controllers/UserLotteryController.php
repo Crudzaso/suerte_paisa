@@ -77,4 +77,3 @@ class UserLotteryController extends Controller
 
 
 }
-
