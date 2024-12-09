@@ -79,17 +79,20 @@ class AuthController extends Controller
                     ->withInput();
             }
 
-            if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-                $user = Auth::user();
+            $user = User::withTrashed()->where('email', $request->email)->first();
 
-                event(new UserLogin($user));
+            if ($user) {
+                if ($user->trashed()) {
+                    $user->restore();
+                }
 
-                $this->emailHelper::sendLoginNotification($user);
-
-                return redirect()->route('home');
-            } else {
-                return redirect()->route('login')->with('error', 'Correo electrónico o contraseña incorrectos.');
+                if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+                    event(new UserLogin($user));
+                    $this->emailHelper::sendLoginNotification($user);
+                    return redirect()->route('home')->with('success', 'Inicio de sesión exitoso.');
+                }
             }
+            
         } catch (\Exception $e) {
 
             event(new ErrorOccurred('Error al iniciar sesión', $e->getMessage()));

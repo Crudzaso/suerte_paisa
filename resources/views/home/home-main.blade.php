@@ -33,21 +33,8 @@
     {{-- ---------------------------------------------- --}}
 
     <section class="information-container container my-5 bg-light p-4 rounded-lg shadow-sm">
-        <div class="row">
-            <!-- Selección de fecha -->
-            <div class="col-md-6 mb-4">
-            <label for="result-date" class="form-label text-primary font-semibold">
-                <i class="bi bi-calendar3"></i> Selecciona un día
-            </label>
-            <input
-                type="date"
-                id="result-date"
-                class="form-control border-2 border-blue-400 focus:ring focus:ring-blue-300 focus:outline-none rounded-md"
-            />
-            </div>
-
-            <!-- Selección de sorteo -->
-            <div class="col-md-6 mb-4">
+    <div class="row">
+        <div class="col-12 mb-4">
             <label for="lottery-selector" class="form-label text-primary font-semibold">
                 <i class="bi bi-card-list"></i> Selecciona un sorteo
             </label>
@@ -57,18 +44,26 @@
             >
                 <option value="" selected disabled>Elige un sorteo</option>
                 @foreach ($lotteries as $lottery)
-                <option
-                    value="{{ $lottery->id }}"
-                    data-result="{{ $lottery->result }}"
-                    data-date="{{ $lottery->date_play }}"
-                >
-                    {{ $lottery->name }}
-                </option>
+                    <option 
+                        value="{{ $lottery->id }}" 
+                        data-result="{{ $lottery->result }}"
+                    >
+                        {{ $lottery->name }}
+                    </option>
                 @endforeach
             </select>
+        </div>
+
+        <div id="lottery-result" class="col-12 d-none">
+            <div class="bg-white p-4 rounded-md shadow-md text-center">
+                <h2 class="text-2xl font-bold text-gray-800" id="lottery-name"></h2>
+                <p class="text-lg text-gray-600">
+                    Resultado: <span class="font-semibold text-primary" id="lottery-result-value"></span>
+                </p>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
 
     <section class="active-loteries">
@@ -123,4 +118,5 @@
     </section>
 
     <script src="{{ asset('js/avalibleLoteries.js') }}"></script>
+    <script src="{{ asset('js/viewLotteryResult.js') }}"></script>
 </x-layout-home>

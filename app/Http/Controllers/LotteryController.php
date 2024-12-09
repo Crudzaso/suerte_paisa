@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Lottery;
 use App\Models\User;
+use App\Enums\LotteryStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -47,6 +48,7 @@ class LotteryController extends Controller
 
             $lottery = new Lottery($validatedData);
             $lottery->created_user = Auth::id();
+            $lottery->status = LotteryStatus::COMENZADO;
 
             $lottery->save();
             
